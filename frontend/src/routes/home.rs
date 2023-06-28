@@ -386,14 +386,14 @@ pub fn home() -> Html {
             (false, false) => HOVER_DATE_DIV_CSS,
         };
         let weekday_label_css = if for_selected_date {
-            "text-white text-sm font-semibold"
+            "text-gray dark:text-white text-sm font-semibold"
         } else {
-            "text-white text-sm"
+            "text-gray dark:text-white text-sm"
         };
         let date_label_css = if for_selected_date {
-            "text-white my-auto font-bold"
+            "text-gray dark:text-white my-auto font-bold"
         } else {
-            "text-white group-hover:text-gray-100 my-auto group-hover:font-bold transition-all duration-300"
+            "text-gray dark:text-white dark:group-hover:text-white group-hover:text-gray-100 my-auto group-hover:font-bold transition-all duration-300"
         };
 
         let id = d.format(DATE_FORMAT);
@@ -411,8 +411,8 @@ pub fn home() -> Html {
     let calendar = html! {
         <div class="relative mt-4 py-2">
             <div class="flex justify-center overflow-x-scroll mx-auto">
-                <div class="flex text-white group w-16" onclick={ prev_week_onclick.clone() }>
-                    <div class="flex items-center"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="flex text-gray dark:text-white group w-16" onclick={ prev_week_onclick.clone() }>
+                    <div class="flex items-center"><i class="fas fa-chevron-left"></i></div>
                 </div>
                 {
                     week.iter().map(|d| html! {
@@ -421,8 +421,8 @@ pub fn home() -> Html {
                         </div>
                     }).collect::<Html>()
                 }
-                <div class="flex text-white justify-end group w-16" onclick={ next_week_onclick.clone() }>
-                    <div class="flex items-center"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="flex text-gray dark:text-white justify-end group w-16" onclick={ next_week_onclick.clone() }>
+                    <div class="flex items-center"><i class="fas fa-chevron-right"></i></div>
                 </div>
             </div>
         </div>
@@ -452,7 +452,7 @@ pub fn home() -> Html {
                                         class={ format!("{} text-center", INPUT_CSS) }
                                         />
                                     <label for={ idx.to_string() } class={ INPUT_LABEL_CSS }>
-                                        <i class="fa fa-input-numeric"></i>{ format!(" {}: ", practice) }
+                                        <i class="fas fa-input-numeric"></i>{ format!(" {}: ", practice) }
                                     </label>
                                 </div>
                                 },
@@ -485,7 +485,7 @@ pub fn home() -> Html {
                                         placeholder={ idx.to_string() }
                                         />
                                     <label for={ idx.to_string() } class={ INPUT_LABEL_CSS }>
-                                        <i class="fa fa-clock"></i>
+                                        <i class="fas fa-clock"></i>
                                         { format!(" {}: ", practice) }
                                     </label>
                                 </div>
@@ -506,7 +506,7 @@ pub fn home() -> Html {
                                         placeholder={ idx.to_string() }
                                         />
                                     <label for={ idx.to_string() } class={ INPUT_LABEL_CSS }>
-                                        <i class="fa fa-clock"></i>
+                                        <i class="fas fa-clock"></i>
                                         { format!(" {}: ", practice) }
                                     </label>
                                 </div>
