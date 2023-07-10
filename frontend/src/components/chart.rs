@@ -25,7 +25,7 @@ pub fn chart(props: &Props) -> Html {
     let mut layout = Layout::new()
         .paper_background_color(NamedColor::Transparent)
         .plot_background_color(NamedColor::Transparent)
-        .font(Font::new().color(NamedColor::DarkGray  ))
+        .font(Font::new().color(NamedColor::Gray  ))
         .margin(Margin::new().left(40).right(40).top(10))
         .auto_size(true);
 
@@ -38,8 +38,8 @@ pub fn chart(props: &Props) -> Html {
         .static_plot(true);
 
     let trace = Bar::new(props.x_values.clone(), props.y_values.clone())
-        .marker(Marker::new().color(NamedColor::DarkOrange ))
-        .opacity(0.5);
+        .marker(Marker::new().color(NamedColor::Orange ))
+        .opacity(0.7);
 
     plot.add_trace(trace);
     plot.set_layout(layout);

@@ -73,10 +73,16 @@ pub fn pwd(props: &Props) -> Html {
                     maxlength="256"
                     readonly={ props.readonly }
                     />
-                <label for="new_pwd"
-                    class={ INPUT_LABEL_CSS }>
-                    <i class="fas fa-key icon"></i>{ format!(" {}", Locale::current().new_password()) }
-                </label>
+                    <label for="new_pwd" class={ INPUT_LABEL_CSS }>
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+</svg>
+                    </button>
+                  </span>
+                  { format!(" {}", Locale::current().new_password()) }
+                    </label>
             </div>
             <div class="relative">
                 <input
@@ -93,10 +99,16 @@ pub fn pwd(props: &Props) -> Html {
                     maxlength="256"
                     readonly={ props.readonly }
                     />
-                <label for="confirm_pwd"
-                    class={ INPUT_LABEL_CSS }>
-                    <i class="fas fa-key icon"></i>{ format!(" {}", Locale::current().confirm_password()) }
-                </label>
+                    <label for="confirm_pwd" class={ INPUT_LABEL_CSS }>
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+</svg>
+                    </button>
+                  </span>
+                  { format!(" {}", Locale::current().confirm_password()) }
+                    </label>
             </div>
         </>
     }

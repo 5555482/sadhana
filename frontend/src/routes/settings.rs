@@ -128,10 +128,16 @@ pub fn settings() -> Html {
                             disabled=true
                             required=true
                             />
-                        <label for="email"
-                            class={ INPUT_LABEL_CSS }>
-                            <i class="fas fa-envelope icon"></i>{ format!(" {}", Locale::current().email_address()) }
-                        </label>
+                            <label for="email" class={ INPUT_LABEL_CSS }>
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                                    <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25" />
+</svg>
+                                    </button>
+                                  </span>
+                                  { format!(" {}", Locale::current().email_address()) }
+                                    </label>
                     </div>
                     <div class="relative">
                         <input
@@ -144,10 +150,16 @@ pub fn settings() -> Html {
                             readonly={ !*editing }
                             minlength="3"
                             />
-                        <label for="name"
-                            class={ INPUT_LABEL_CSS }>
-                            <i class="fas fa-user icon"></i>{ format!(" {}", Locale::current().name()) }
-                        </label>
+                            <label for="name" class={ INPUT_LABEL_CSS }>
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                            <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+</svg>
+                            </button>
+                          </span>
+                          { format!(" {}", Locale::current().name()) }
+                            </label>
                     </div>
                     <Pwd onchange={ pwd_onchange.clone() } readonly={ !*editing } required={ !user_password.is_empty() }/>
                     <div class="relative flex space-x-2.5 justify-center sm:text-base">
@@ -159,7 +171,17 @@ pub fn settings() -> Html {
                         </a>
                     </div>
                     <div class="relative flex space-x-2.5 justify-center sm:text-base">
-                    <label for="toggle"><i class="fas fa-moon icon"></i>{"Dark mode"}</label>
+
+                    <label for="toggle" class={ INPUT_LABEL_CSS }>
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                  </svg>
+                    </button>
+                  </span>
+                  {"Dark mode"}
+                    </label>
                     <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                     <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
                     <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-zinc-400 dark:bg-zinc-300 cursor-pointer"></label>

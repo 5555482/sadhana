@@ -18,9 +18,12 @@ module.exports = {
       backgroundImage: {
         hero: "linear-gradient(rgba(255, 252, 250, 0.4), #f9fafb), url('images/background.jpg')",
         herod:
-          "linear-gradient(rgba(73, 50, 34, 0.6), #1a1631), url('images/background.jpg')"
+          "linear-gradient(180deg,rgba(64,64,142,0.5) 40%,  #1a1631), url('images/background.jpg')"
       }
     }
+  },
+  variants: {
+    fill: ['hover', 'focus'],
   },
   plugins: [
     // require('@tailwindcss/forms'),
