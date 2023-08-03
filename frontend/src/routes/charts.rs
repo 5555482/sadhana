@@ -255,6 +255,7 @@ fn charts_base(props: &ChartBaseProps) -> Html {
 
     html! {
         <div class={ BODY_DIV_CSS }>
+        <div class="flex space-x-3 grid grid-flow-col justify-stretch py-2">
             <div class="relative">
                 <select  class={ INPUT_CSS } id="practices" onchange={ practice_onchange.clone() }>
                     { for props.practices.iter().map(|p| html!{
@@ -265,8 +266,7 @@ fn charts_base(props: &ChartBaseProps) -> Html {
                     })}
                 </select>
                 <label for="practices" class={ INPUT_LABEL_CSS }>
-                    <i class="fa"></i>
-                    { format!(" {}: ", Locale::current().practice()) }
+                  { format!(" {}: ", Locale::current().practice()) }
                 </label>
             </div>
             <div class="relative">
@@ -277,9 +277,9 @@ fn charts_base(props: &ChartBaseProps) -> Html {
                     <option class={ "text-black" } value={ ReportDuration::Last365Days.to_string() }>{ Locale::current().last_year() }</option>
                 </select>
                 <label for="duration" class={ INPUT_LABEL_CSS }>
-                    <i class="fa"></i>
-                    { format!(" {}: ", Locale::current().duration()) }
+                  { format!(" {}: ", Locale::current().duration()) }
                 </label>
+            </div>
             </div>
             <div class="relative">
                 <Chart
