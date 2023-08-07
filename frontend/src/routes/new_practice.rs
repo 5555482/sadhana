@@ -144,6 +144,7 @@ pub fn new_practice(props: &Props) -> Html {
             >
             <ListErrors error={save.error.clone()} {error_formatter} />
             <form {onsubmit}>
+            <div class="justify-center mx-auto max-w-md">
                 <div class={ BODY_DIV_CSS }>
                     <div class="relative">
                         <input
@@ -183,6 +184,7 @@ pub fn new_practice(props: &Props) -> Html {
                     <div class="relative">
                         <button type="submit" class={ SUBMIT_BTN_CSS }>{ Locale::current().save() }</button>
                     </div>
+                </div>
                 </div>
             </form>
         </BlankPage>

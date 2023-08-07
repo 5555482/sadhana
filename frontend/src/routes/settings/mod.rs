@@ -84,7 +84,8 @@ pub fn settings() -> Html {
                 </div>
             </div>
             <div class={ BODY_SETTINGS_CSS }>
-                <ul onclick={ edit_user_onclick } class="pt-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
+            <div class="justify-center mx-auto max-w-md">
+                <ul onclick={ edit_user_onclick } class="pt-4 pb-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
                     <li>
                         <div class="relative flex justify-between items-center sm:text-base align-baseline">
                             <label>
@@ -95,7 +96,7 @@ pub fn settings() -> Html {
                         </div>
                     </li>
                 </ul>
-                <ul onclick={ edit_password_onclick } class="pt-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
+                <ul onclick={ edit_password_onclick } class="pt-4 pb-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
                     <li>
                         <div class="relative flex justify-between items-center sm:text-base align-baseline">
                             <label>
@@ -106,7 +107,7 @@ pub fn settings() -> Html {
                         </div>
                     </li>
                 </ul>
-                <ul onclick={ language_onclick } class="pt-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
+                <ul onclick={ language_onclick } class="pt-4 pb-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
                     <li>
                         <div class="relative flex justify-between items-center sm:text-base align-baseline">
                             <label for="language">
@@ -117,7 +118,7 @@ pub fn settings() -> Html {
                         </div>
                     </li>
                 </ul>
-                <ul class="pt-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
+                <ul class="pt-4 pb-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
                     <li>
                         <div class="relative flex justify-between items-center sm:text-base align-baseline">
                             <label for="toggle"><i class="icon-moon flex-shrink-0 w-5"></i>{ Locale::current().dark_mode() }</label>
@@ -138,7 +139,7 @@ pub fn settings() -> Html {
                         </div>
                     </li>
                 </ul>
-                <ul class="pt-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
+                <ul class="pt-4 pb-4 mt-1 space-y-4 font-medium border-t border-gray-200 dark:border-zinc-500">
                     <li onclick={ help_onclick }>
                         <div class="relative flex justify-between items-center sm:text-base align-baseline">
                             <label><i class="icon-help flex-shrink-0 w-5"></i>{"Help and support"}</label>
@@ -156,6 +157,7 @@ pub fn settings() -> Html {
                         </div>
                     </li>
                 </ul>
+                </div>
             </div>
         </BlankPage>
     }

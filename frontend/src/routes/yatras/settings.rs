@@ -266,6 +266,7 @@ pub fn yatra_settings(props: &Props) -> Html {
             <ListErrors error={ leave.error.clone() } error_formatter = {leave_error_formatter}/>
             <ListErrors error={ yatra.error.clone() } />
             <form {onsubmit}>
+            <div class="justify-center mx-auto max-w-md">
                 <div class={ BODY_DIV_CSS }>
                     <div class="relative pb-3">
                         <label>{ Locale::current().yatra_mapping_info() }</label>
@@ -291,6 +292,7 @@ pub fn yatra_settings(props: &Props) -> Html {
                     html! {}
                 }}
             </div>
+                </div>
                 </div>
             </form>
         </BlankPage>
