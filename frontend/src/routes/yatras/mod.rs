@@ -243,32 +243,38 @@ pub fn yatras() -> Html {
         <ListErrors error={yatras.error.clone()} />
         <ListErrors error={data.error.clone()} />
         <ListErrors error={new_yatra.error.clone()} />
-        <div class={BODY_DIV_CSS}>
-            <div class="relative pb-5">
-                <select
-                    class={ INPUT_CSS }
-                    id="yatra"
-                    onchange={ yatra_onchange }
-                    required=true
-                    >
-                    {
-                        yatras.data
-                            .iter()
-                            .flat_map(|inner| inner.iter())
-                            .map(|y| {
-                                let selected = selected_yatra.iter().any(|y2| y2 == y);
-                                html! { <option class="text-black" { selected } >{ y.name.clone() }</option> }
-                            })
-                            .collect::<Html>()
-                    }
-                </select>
-                <label for="yatra" class={ INPUT_LABEL_CSS }>
-                    <i class="icon-user-group"></i>
-                    { format!(" {}: ", Locale::current().yatra()) }
-                </label>
-            </div>
+        <div class={BODY_DIV_SPACE_10_CSS}>
+            <div class={TWO_COLS_CSS}>
+                <div class="relative pb-5">
+                    <select
+                        class={ INPUT_CSS }
+                        id="yatra"
+                        onchange={ yatra_onchange }
+                        required=true
+                        >
+                        {
+                            yatras.data
+                                .iter()
+                                .flat_map(|inner| inner.iter())
+                                .map(|y| {
+                                    let selected = selected_yatra.iter().any(|y2| y2 == y);
+                                    html! { <option class="text-black" { selected } >{ y.name.clone() }</option> }
+                                })
+                                .collect::<Html>()
+                        }
+                    </select>
+                    <label for="yatra" class={ INPUT_LABEL_CSS }>
+                        <i class="icon-user-group"></i>
+                        { format!(" {}: ", Locale::current().yatra()) }
+                    </label>
+                </div>
+                <div class="relative">
+                    <button onclick={edit_onclick} class={BTN_CSS}>
+                    <i class="icon-edit"></i>{Locale::current().settings()}</button>
+                </div>
         </div>
         { grid }
+        </div>
         </>
     };
 
@@ -277,13 +283,13 @@ pub fn yatras() -> Html {
             show_footer=true
             loading={ yatras.loading || data.loading }
             left_button={ HeaderButtonProps::blank() }
-            right_button={
-                if selected_yatra.is_some() {
-                    HeaderButtonProps::new(Locale::current().settings(), edit_onclick, None, ButtonType::Button)
-                } else {
-                    HeaderButtonProps::blank()
-                }
-            }
+            // right_button={
+            //     if selected_yatra.is_some() {
+            //         HeaderButtonProps::new(Locale::current().settings(), edit_onclick, None, ButtonType::Button)
+            //     } else {
+            //         HeaderButtonProps::blank()
+            //     }
+            // }
             >
             {
                 if !yatras.loading
