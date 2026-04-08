@@ -1,7 +1,92 @@
 @import 'tailwindcss';
 
-/* Ensure the page scroll container has a non-static position so
-	 Framer Motion's useScroll can calculate offsets correctly. */
+/* Design System Variables */
+:root {
+  /* Colors inspired by Insight Timer and Headspace */
+  --color-primary: 142 69 133; /* Soft purple */
+  --color-secondary: 56 178 172; /* Soft teal */
+  --color-accent: 255 193 7; /* Warm yellow */
+
+  --color-background: 255 255 255; /* Pure white */
+  --color-surface: 249 250 251; /* Light gray */
+  --color-surface-hover: 243 244 246; /* Slightly darker gray */
+
+  --color-text: 17 24 39; /* Dark gray */
+  --color-text-secondary: 107 114 128; /* Medium gray */
+
+  --color-border: 229 231 235; /* Light border */
+
+  --color-destructive: 239 68 68; /* Soft red */
+  --color-success: 34 197 94; /* Soft green */
+  --color-warning: 251 191 36; /* Soft yellow */
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: 17 24 39;
+    --color-surface: 31 41 55;
+    --color-surface-hover: 55 65 81;
+    --color-text: 243 244 246;
+    --color-text-secondary: 156 163 175;
+    --color-border: 55 65 81;
+  }
+}
+
+/* Utility classes for our design system */
+.text-primary { color: rgb(var(--color-primary)); }
+.bg-primary { background-color: rgb(var(--color-primary)); }
+.text-secondary { color: rgb(var(--color-secondary)); }
+.bg-secondary { background-color: rgb(var(--color-secondary)); }
+.text-accent { color: rgb(var(--color-accent)); }
+.bg-accent { background-color: rgb(var(--color-accent)); }
+
+.bg-background { background-color: rgb(var(--color-background)); }
+.bg-surface { background-color: rgb(var(--color-surface)); }
+.bg-surface-hover { background-color: rgb(var(--color-surface-hover)); }
+
+.text-text { color: rgb(var(--color-text)); }
+.text-text-secondary { color: rgb(var(--color-text-secondary)); }
+
+.border-border { border-color: rgb(var(--color-border)); }
+
+.text-destructive { color: rgb(var(--color-destructive)); }
+.bg-destructive { background-color: rgb(var(--color-destructive)); }
+.text-success { color: rgb(var(--color-success)); }
+.bg-success { background-color: rgb(var(--color-success)); }
+.text-warning { color: rgb(var(--color-warning)); }
+.bg-warning { background-color: rgb(var(--color-warning)); }
+
+/* Ensure the page scroll container has a non-static position */
 html, body, #root {
 	position: relative;
+	font-family: var(--font-family);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid rgb(var(--color-primary));
+  outline-offset: 2px;
 }
