@@ -12,6 +12,10 @@ import { SharedChartsPage } from "../features/charts/SharedChartsPage";
 import { TodayPage } from "../features/diary/TodayPage";
 import { PracticeFormPage } from "../features/practices/PracticeFormPage";
 import { PracticeListPage } from "../features/practices/PracticeListPage";
+import { JoinYatraPage } from "../features/yatras/JoinYatraPage";
+import { YatraAdminPage } from "../features/yatras/YatraAdminPage";
+import { YatraSettingsPage } from "../features/yatras/YatraSettingsPage";
+import { YatrasPage } from "../features/yatras/YatrasPage";
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -29,7 +33,9 @@ export const router = createBrowserRouter([
       { index: true, element: <TodayPage /> },
       { path: "charts", element: <ChartsPage /> },
       { path: "charts/new", element: <CreateReportPage /> },
-      { path: "yatras", element: <Placeholder title="Yatras" /> },
+      { path: "yatras", element: <YatrasPage /> },
+      { path: "yatra/:id/settings", element: <YatraSettingsPage /> },
+      { path: "yatra/:id/admin/settings", element: <YatraAdminPage /> },
       { path: "settings", element: <Placeholder title="Settings" /> },
       { path: "user/practices", element: <PracticeListPage /> },
       { path: "user/practice/new", element: <PracticeFormPage mode="create" /> },
@@ -60,5 +66,9 @@ export const router = createBrowserRouter([
   {
     path: "/shared/:id",
     element: <SharedChartsPage />
+  },
+  {
+    path: "/yatra/:id/join",
+    element: <JoinYatraPage />
   }
 ]);
