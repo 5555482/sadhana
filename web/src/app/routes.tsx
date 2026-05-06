@@ -6,6 +6,9 @@ import { PasswordResetPage } from "../features/auth/PasswordResetPage";
 import { PasswordResetRequestPage } from "../features/auth/PasswordResetRequestPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
 import { RegisterRequestPage } from "../features/auth/RegisterRequestPage";
+import { ChartsPage } from "../features/charts/ChartsPage";
+import { CreateReportPage } from "../features/charts/CreateReportPage";
+import { SharedChartsPage } from "../features/charts/SharedChartsPage";
 import { TodayPage } from "../features/diary/TodayPage";
 import { PracticeFormPage } from "../features/practices/PracticeFormPage";
 import { PracticeListPage } from "../features/practices/PracticeListPage";
@@ -24,7 +27,8 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <TodayPage /> },
-      { path: "charts", element: <Placeholder title="Charts" /> },
+      { path: "charts", element: <ChartsPage /> },
+      { path: "charts/new", element: <CreateReportPage /> },
       { path: "yatras", element: <Placeholder title="Yatras" /> },
       { path: "settings", element: <Placeholder title="Settings" /> },
       { path: "user/practices", element: <PracticeListPage /> },
@@ -52,5 +56,9 @@ export const router = createBrowserRouter([
   {
     path: "/reset/:id",
     element: <PasswordResetPage />
+  },
+  {
+    path: "/shared/:id",
+    element: <SharedChartsPage />
   }
 ]);
