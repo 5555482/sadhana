@@ -13,5 +13,9 @@ describe("AppShell", () => {
     );
     expect(screen.getByRole("navigation", { name: "Primary" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Today" })).toHaveAttribute("href", "/");
+    expect(
+      screen.getByRole("link", { name: "Today" }).querySelector(".icon-home-solid")
+    ).toBeTruthy();
+    expect(screen.getByAltText("Sadhana Pro")).toHaveAttribute("src", "/images/logo.png");
   });
 });

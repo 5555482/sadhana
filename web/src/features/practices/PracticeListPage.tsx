@@ -62,6 +62,7 @@ export function PracticeListPage({ initialPractices = samplePractices }: Practic
           <h1 id="practices-heading">Practices</h1>
         </div>
         <Link className="primary-action as-link" to="/user/practice/new">
+          <i className="icon-plus" aria-hidden="true" />
           Add practice
         </Link>
       </header>

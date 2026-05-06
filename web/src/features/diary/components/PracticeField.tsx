@@ -33,11 +33,24 @@ function inputToValue(entry: DiaryEntry, raw: string | boolean): PracticeValue |
 export function PracticeField({ entry, onChange }: PracticeFieldProps) {
   const id = `practice-${entry.practice.replaceAll(/\s+/g, "-").toLowerCase()}`;
   const value = valueToInput(entry.value);
+  const icon =
+    entry.data_type === "Bool"
+      ? "icon-tick"
+      : entry.data_type === "Duration"
+        ? "icon-timer"
+        : entry.data_type === "Time"
+          ? "icon-clock"
+          : entry.data_type === "Text"
+            ? "icon-doc"
+            : "icon-rounds";
 
   if (entry.data_type === "Bool") {
     return (
       <label className="practice-row boolean-row" htmlFor={id}>
-        <span>{entry.practice}</span>
+        <span>
+          <i className={icon} aria-hidden="true" />
+          {entry.practice}
+        </span>
         <input
           id={id}
           type="checkbox"
@@ -52,7 +65,10 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
     const options = entry.dropdown_variants.split(",").map((option) => option.trim()).filter(Boolean);
     return (
       <label className="practice-row" htmlFor={id}>
-        <span>{entry.practice}</span>
+        <span>
+          <i className={icon} aria-hidden="true" />
+          {entry.practice}
+        </span>
         <select
           id={id}
           value={value}
@@ -73,7 +89,10 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
 
   return (
     <label className="practice-row" htmlFor={id}>
-      <span>{entry.practice}</span>
+      <span>
+        <i className={icon} aria-hidden="true" />
+        {entry.practice}
+      </span>
       <input
         id={id}
         type={inputType}

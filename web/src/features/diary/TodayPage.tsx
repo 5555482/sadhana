@@ -45,6 +45,7 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
         </div>
         <div className="today-header-actions">
           <Link className="quiet-link" to="/user/practices">
+            <i className="icon-bars" aria-hidden="true" />
             Manage practices
           </Link>
           <IncompleteDaysBadge count={0} />

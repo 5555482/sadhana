@@ -36,13 +36,17 @@ export function PracticeFormPage({ mode }: PracticeFormPageProps) {
           <h1 id="practice-form-heading">{title}</h1>
         </div>
         <Link className="quiet-link" to="/user/practices">
+          <i className="icon-chevron-left" aria-hidden="true" />
           Back
         </Link>
       </header>
 
       <form className="practice-form" onSubmit={handleSubmit}>
         <label>
-          <span>Name</span>
+          <span>
+            <i className="icon-doc" aria-hidden="true" />
+            Name
+          </span>
           <input
             value={name}
             maxLength={64}
@@ -52,7 +56,10 @@ export function PracticeFormPage({ mode }: PracticeFormPageProps) {
         </label>
 
         <label>
-          <span>Data type</span>
+          <span>
+            <i className="icon-adjust" aria-hidden="true" />
+            Data type
+          </span>
           <select value={dataType} onChange={(event) => setDataType(event.target.value as PracticeDataType)}>
             {dataTypes.map((type) => (
               <option key={type.value} value={type.value}>
@@ -94,6 +101,7 @@ export function PracticeFormPage({ mode }: PracticeFormPageProps) {
         )}
 
         <button className="primary-action" type="submit">
+          <i className="icon-tick" aria-hidden="true" />
           Save practice
         </button>
       </form>

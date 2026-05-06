@@ -51,6 +51,7 @@ export function PracticeSortList({
               aria-label={`Move ${practice.practice} up`}
               onClick={() => onMovePractice(practice.id, -1)}
             >
+              <i className="icon-chevron-left rotate-up" aria-hidden="true" />
               Up
             </button>
             <button
@@ -58,6 +59,7 @@ export function PracticeSortList({
               aria-label={`Move ${practice.practice} down`}
               onClick={() => onMovePractice(practice.id, 1)}
             >
+              <i className="icon-chevron-left rotate-down" aria-hidden="true" />
               Down
             </button>
             <button
@@ -65,9 +67,13 @@ export function PracticeSortList({
               aria-label={practice.is_active ? `Hide ${practice.practice}` : `Show ${practice.practice}`}
               onClick={() => onToggleActive(practice.id)}
             >
+              <i className={practice.is_active ? "icon-eye" : "icon-eye-cross"} aria-hidden="true" />
               {practice.is_active ? "Hide" : "Show"}
             </button>
-            <Link to={`/user/practice/${practice.id}/edit`}>Edit</Link>
+            <Link to={`/user/practice/${practice.id}/edit`}>
+              <i className="icon-edit" aria-hidden="true" />
+              Edit
+            </Link>
           </div>
         </li>
       ))}

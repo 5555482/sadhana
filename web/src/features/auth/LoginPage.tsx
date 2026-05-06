@@ -48,7 +48,10 @@ export function LoginPage() {
 
         <form className="auth-form" aria-label="Login form" onSubmit={handleSubmit}>
           <label>
-            <span>Email</span>
+            <span>
+              <i className="icon-mail" aria-hidden="true" />
+              Email
+            </span>
             <input
               name="email"
               type="email"
@@ -60,7 +63,10 @@ export function LoginPage() {
           </label>
 
           <label>
-            <span>Password</span>
+            <span>
+              <i className="icon-key" aria-hidden="true" />
+              Password
+            </span>
             <input
               name="password"
               type="password"
@@ -72,6 +78,7 @@ export function LoginPage() {
           </label>
 
           <button className="primary-action" type="submit" disabled={isSubmitting}>
+            <i className="icon-login" aria-hidden="true" />
             {isSubmitting ? "Signing in" : "Sign in"}
           </button>
         </form>
