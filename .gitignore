@@ -20,3 +20,5 @@ dist/
 .env
 *.code-workspace
 .worktrees/
+web/node_modules/
+web/*.tsbuildinfo

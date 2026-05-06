@@ -1,9 +1,93 @@
 :root {
-  color: #1d140f;
-  background: #f6efe4;
+  --bg: #f6efe4;
+  --surface: rgba(255, 252, 248, 0.92);
+  --text: #1d140f;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --border: rgba(55, 32, 18, 0.14);
+  --danger: #b42318;
+  --success: #027a48;
+  color: var(--text);
+  background: var(--bg);
   font-family: Montserrat, sans-serif;
 }
 
 body {
   margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(219, 167, 92, 0.35), transparent 38%),
+    linear-gradient(180deg, #fbf6ee 0%, #f3eadf 100%);
+}
+
+a {
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding-bottom: 5.5rem;
+}
+
+.app-main {
+  width: min(100%, 64rem);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.page-header {
+  width: min(100%, 64rem);
+  margin: 0 auto;
+  padding: 1rem 1rem 0;
+  font-weight: 700;
+}
+
+.page-section h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.bottom-nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  backdrop-filter: blur(18px);
+}
+
+.bottom-nav ul {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.25rem;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+.bottom-nav a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.bottom-nav a.active {
+  background: var(--accent);
+  color: white;
 }
