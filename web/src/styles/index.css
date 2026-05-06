@@ -205,6 +205,12 @@ textarea:focus-visible {
   gap: 1rem;
 }
 
+.today-header-actions {
+  display: grid;
+  justify-items: end;
+  gap: 0.5rem;
+}
+
 .section-kicker {
   margin: 0 0 0.25rem;
   color: var(--accent-strong);
@@ -345,4 +351,130 @@ textarea:focus-visible {
   font: inherit;
   font-weight: 900;
   box-shadow: 0 14px 36px rgba(15, 118, 110, 0.28);
+}
+
+.practice-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.practice-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.practice-page-header h1 {
+  margin: 0;
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.practice-sort-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.practice-card {
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 0.85rem;
+}
+
+.practice-card.is-muted {
+  opacity: 0.58;
+}
+
+.practice-card-main {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.practice-rank {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(15, 118, 110, 0.12);
+  color: var(--accent-strong);
+  font-weight: 900;
+}
+
+.practice-card h2,
+.practice-card p {
+  margin: 0;
+}
+
+.practice-card p,
+.practice-note {
+  color: rgba(29, 20, 15, 0.66);
+}
+
+.practice-card-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.practice-card-actions button,
+.practice-card-actions a,
+.quiet-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.56);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.practice-form {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 1rem;
+}
+
+.practice-form label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 800;
+}
+
+.practice-form input,
+.practice-form select {
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text);
+  font: inherit;
+  padding: 0 0.85rem;
+}
+
+.practice-form .switch-row {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.practice-form .switch-row input {
+  width: 44px;
+  height: 44px;
 }

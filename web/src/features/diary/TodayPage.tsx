@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { DiaryEntry } from "../../api/diary";
 import { DateSwitcher } from "./components/DateSwitcher";
@@ -42,7 +43,12 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
           <p className="section-kicker">Daily entry</p>
           <h1 id="today-heading">Today</h1>
         </div>
-        <IncompleteDaysBadge count={0} />
+        <div className="today-header-actions">
+          <Link className="quiet-link" to="/user/practices">
+            Manage practices
+          </Link>
+          <IncompleteDaysBadge count={0} />
+        </div>
       </header>
 
       <DateSwitcher value={selectedDate} onChange={setSelectedDate} />
