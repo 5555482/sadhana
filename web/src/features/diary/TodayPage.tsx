@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { DiaryEntry } from "../../api/diary";
-import { DateSwitcher } from "./components/DateSwitcher";
 import { IncompleteDaysBadge } from "./components/IncompleteDaysBadge";
 import { PracticeField } from "./components/PracticeField";
 import { SaveStatus } from "./components/SaveStatus";
@@ -11,12 +10,7 @@ type TodayPageProps = {
   initialEntries?: DiaryEntry[];
 };
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 export function TodayPage({ initialEntries = [] }: TodayPageProps) {
-  const [selectedDate, setSelectedDate] = useState(todayIso);
   const [entries, setEntries] = useState(initialEntries);
   const [dirty, setDirty] = useState(false);
 
@@ -51,8 +45,6 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
           <IncompleteDaysBadge count={0} />
         </div>
       </header>
-
-      <DateSwitcher value={selectedDate} onChange={setSelectedDate} />
 
       <SaveStatus dirty={dirty} completed={completedCount} total={entries.length} />
 
