@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-const TOKEN_KEY = "yew.token";
+import { useAuth } from "../features/auth/AuthProvider";
 
 export function RequireAuth() {
-  const token = window.localStorage.getItem(TOKEN_KEY);
+  const { token } = useAuth();
 
   if (!token) {
     return <Navigate to="/login" replace />;

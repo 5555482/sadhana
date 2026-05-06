@@ -1,6 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { AppShell } from "./AppShell";
+import { LoginPage } from "../features/auth/LoginPage";
+import { PasswordResetPage } from "../features/auth/PasswordResetPage";
+import { PasswordResetRequestPage } from "../features/auth/PasswordResetRequestPage";
+import { RegisterPage } from "../features/auth/RegisterPage";
+import { RegisterRequestPage } from "../features/auth/RegisterRequestPage";
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -23,6 +28,22 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Placeholder title="Login" />
+    element: <LoginPage />
+  },
+  {
+    path: "/register",
+    element: <RegisterRequestPage />
+  },
+  {
+    path: "/register/:id",
+    element: <RegisterPage />
+  },
+  {
+    path: "/reset",
+    element: <PasswordResetRequestPage />
+  },
+  {
+    path: "/reset/:id",
+    element: <PasswordResetPage />
   }
 ]);
