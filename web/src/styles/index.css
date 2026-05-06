@@ -192,3 +192,157 @@ textarea:focus-visible {
   color: var(--danger);
   padding: 0.75rem;
 }
+
+.today-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.today-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.section-kicker {
+  margin: 0 0 0.25rem;
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.today-header h1 {
+  margin: 0;
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.incomplete-badge {
+  display: grid;
+  min-width: 4.25rem;
+  min-height: 4.25rem;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.incomplete-badge strong {
+  font-size: 1.4rem;
+}
+
+.incomplete-badge span {
+  color: rgba(29, 20, 15, 0.65);
+  font-size: 0.78rem;
+}
+
+.date-switcher {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.date-switcher button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.date-switcher button:first-child::before {
+  content: "<";
+  color: var(--text);
+}
+
+.date-switcher button:last-child::before {
+  content: ">";
+  color: var(--text);
+}
+
+.date-switcher label,
+.practice-row {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 800;
+}
+
+.date-switcher input,
+.practice-row input,
+.practice-row select {
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text);
+  font: inherit;
+  padding: 0 0.85rem;
+}
+
+.save-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 0.85rem 1rem;
+}
+
+.practice-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.practice-row {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 0.85rem;
+}
+
+.boolean-row {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.boolean-row input {
+  width: 44px;
+  height: 44px;
+}
+
+.empty-state {
+  border: 1px dashed rgba(55, 32, 18, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 252, 248, 0.58);
+  padding: 1rem;
+}
+
+.empty-state h2 {
+  margin: 0 0 0.35rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: rgba(29, 20, 15, 0.7);
+}
+
+.floating-save {
+  position: sticky;
+  bottom: 5.75rem;
+  min-height: 52px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 0 14px 36px rgba(15, 118, 110, 0.28);
+}

@@ -6,6 +6,7 @@ import { PasswordResetPage } from "../features/auth/PasswordResetPage";
 import { PasswordResetRequestPage } from "../features/auth/PasswordResetRequestPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
 import { RegisterRequestPage } from "../features/auth/RegisterRequestPage";
+import { TodayPage } from "../features/diary/TodayPage";
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <AppShell />,
     children: [
-      { index: true, element: <Placeholder title="Today" /> },
+      { index: true, element: <TodayPage /> },
       { path: "charts", element: <Placeholder title="Charts" /> },
       { path: "yatras", element: <Placeholder title="Yatras" /> },
       { path: "settings", element: <Placeholder title="Settings" /> }
