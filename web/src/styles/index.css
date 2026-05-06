@@ -1,15 +1,17 @@
 :root {
-  --bg: #f6efe4;
-  --surface: rgba(255, 252, 248, 0.92);
-  --text: #1d140f;
-  --accent: #0f766e;
-  --accent-strong: #115e59;
-  --border: rgba(55, 32, 18, 0.14);
+  --bg: #f9fafb;
+  --surface: rgba(255, 255, 255, 0.58);
+  --surface-strong: rgba(255, 255, 255, 0.78);
+  --text: #52525b;
+  --text-strong: #27272a;
+  --accent: #f59e0b;
+  --accent-strong: #d97706;
+  --border: rgba(113, 113, 122, 0.72);
   --danger: #b42318;
-  --success: #027a48;
+  --success: #15803d;
   color: var(--text);
   background: var(--bg);
-  font-family: Montserrat, sans-serif;
+  font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
@@ -17,8 +19,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(219, 167, 92, 0.35), transparent 38%),
-    linear-gradient(180deg, #fbf6ee 0%, #f3eadf 100%);
+    linear-gradient(rgba(255, 252, 250, 0.4), #f9fafb),
+    url("/images/background.jpg") center / cover fixed no-repeat;
 }
 
 a {
@@ -40,15 +42,17 @@ textarea:focus-visible {
 }
 
 .app-main {
-  width: min(100%, 64rem);
+  width: min(100%, 58rem);
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 1rem 2rem;
 }
 
 .page-header {
-  width: min(100%, 64rem);
+  width: min(100%, 58rem);
   margin: 0 auto;
-  padding: 1rem 1rem 0;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem 0;
+  color: var(--text-strong);
+  font-size: 0.96rem;
   font-weight: 700;
 }
 
@@ -63,9 +67,9 @@ textarea:focus-visible {
   right: 0;
   bottom: 0;
   left: 0;
-  border-top: 1px solid var(--border);
-  background: var(--surface);
-  backdrop-filter: blur(18px);
+  border-top: 1px solid rgba(212, 212, 216, 0.9);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
 }
 
 .bottom-nav ul {
@@ -83,13 +87,17 @@ textarea:focus-visible {
   min-height: 44px;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 600;
   text-decoration: none;
 }
 
 .bottom-nav a.active {
-  background: var(--accent);
+  background: rgba(245, 158, 11, 0.18);
   color: white;
+  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.45);
 }
 
 .auth-page {
@@ -103,9 +111,10 @@ textarea:focus-visible {
   width: min(100%, 28rem);
   margin: 0 auto;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
-  box-shadow: 0 22px 70px rgba(55, 32, 18, 0.16);
+  box-shadow: 0 22px 70px rgba(82, 82, 91, 0.18);
+  backdrop-filter: blur(12px);
   padding: 1.25rem;
 }
 
@@ -120,6 +129,7 @@ textarea:focus-visible {
   margin: 0.35rem 0 0;
   font-size: 2.25rem;
   line-height: 1;
+  color: var(--text-strong);
 }
 
 .auth-copy {
@@ -139,24 +149,31 @@ textarea:focus-visible {
 }
 
 .auth-form input {
-  min-height: 48px;
+  min-height: 42px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.72);
+  border-radius: 6px;
+  background: transparent;
   color: var(--text);
   font: inherit;
   padding: 0 0.85rem;
 }
 
 .primary-action {
-  min-height: 48px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--accent);
+  min-height: 44px;
+  border: 1px solid rgba(217, 119, 6, 0.48);
+  border-radius: 6px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
   color: white;
   cursor: pointer;
   font: inherit;
-  font-weight: 800;
+  font-weight: 500;
+  transition:
+    transform 120ms ease,
+    background-color 120ms ease;
+}
+
+.primary-action:active {
+  transform: translateY(1px);
 }
 
 .primary-action:disabled {
@@ -223,6 +240,7 @@ textarea:focus-visible {
   margin: 0;
   font-size: 2.6rem;
   line-height: 1;
+  color: var(--text-strong);
 }
 
 .incomplete-badge {
@@ -231,8 +249,9 @@ textarea:focus-visible {
   min-height: 4.25rem;
   place-items: center;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
+  backdrop-filter: blur(12px);
 }
 
 .incomplete-badge strong {
@@ -255,7 +274,7 @@ textarea:focus-visible {
   min-width: 44px;
   min-height: 44px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
   color: transparent;
   cursor: pointer;
@@ -282,10 +301,10 @@ textarea:focus-visible {
 .date-switcher input,
 .practice-row input,
 .practice-row select {
-  min-height: 48px;
+  min-height: 42px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.78);
+  border-radius: 6px;
+  background: transparent;
   color: var(--text);
   font: inherit;
   padding: 0 0.85rem;
@@ -296,8 +315,9 @@ textarea:focus-visible {
   align-items: center;
   justify-content: space-between;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
+  backdrop-filter: blur(12px);
   padding: 0.85rem 1rem;
 }
 
@@ -308,8 +328,9 @@ textarea:focus-visible {
 
 .practice-row {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
+  backdrop-filter: blur(12px);
   padding: 0.85rem;
 }
 
@@ -325,7 +346,7 @@ textarea:focus-visible {
 
 .empty-state {
   border: 1px dashed rgba(55, 32, 18, 0.25);
-  border-radius: 8px;
+  border-radius: 6px;
   background: rgba(255, 252, 248, 0.58);
   padding: 1rem;
 }
@@ -344,13 +365,13 @@ textarea:focus-visible {
   bottom: 5.75rem;
   min-height: 52px;
   border: 0;
-  border-radius: 8px;
-  background: var(--accent);
+  border-radius: 6px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
   color: white;
   cursor: pointer;
   font: inherit;
-  font-weight: 900;
-  box-shadow: 0 14px 36px rgba(15, 118, 110, 0.28);
+  font-weight: 500;
+  box-shadow: 0 14px 36px rgba(245, 158, 11, 0.28);
 }
 
 .practice-page {
@@ -369,6 +390,7 @@ textarea:focus-visible {
   margin: 0;
   font-size: 2.25rem;
   line-height: 1;
+  color: var(--text-strong);
 }
 
 .practice-sort-list {
@@ -383,8 +405,9 @@ textarea:focus-visible {
   display: grid;
   gap: 0.8rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
+  backdrop-filter: blur(12px);
   padding: 0.85rem;
 }
 
@@ -404,8 +427,8 @@ textarea:focus-visible {
   min-width: 44px;
   min-height: 44px;
   place-items: center;
-  border-radius: 8px;
-  background: rgba(15, 118, 110, 0.12);
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.16);
   color: var(--accent-strong);
   font-weight: 900;
 }
@@ -434,8 +457,8 @@ textarea:focus-visible {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.56);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.36);
   color: var(--text);
   cursor: pointer;
   font: inherit;
@@ -447,8 +470,9 @@ textarea:focus-visible {
   display: grid;
   gap: 1rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
+  backdrop-filter: blur(12px);
   padding: 1rem;
 }
 
@@ -460,10 +484,10 @@ textarea:focus-visible {
 
 .practice-form input,
 .practice-form select {
-  min-height: 48px;
+  min-height: 42px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.78);
+  border-radius: 6px;
+  background: transparent;
   color: var(--text);
   font: inherit;
   padding: 0 0.85rem;
