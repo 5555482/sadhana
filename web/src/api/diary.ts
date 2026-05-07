@@ -13,6 +13,7 @@ export type DiaryEntry = {
   practice: string;
   data_type: PracticeDataType;
   dropdown_variants: string | null;
+  is_required?: boolean | null;
   value: PracticeValue | null;
 };
 

@@ -15,6 +15,23 @@ const entries = [
   { practice: "Reading", data_type: "Text" as const, dropdown_variants: null, value: null }
 ];
 
+const requiredEntries = [
+  {
+    practice: "Rounds",
+    data_type: "Int" as const,
+    dropdown_variants: null,
+    is_required: true,
+    value: null
+  },
+  {
+    practice: "Reading",
+    data_type: "Text" as const,
+    dropdown_variants: null,
+    is_required: false,
+    value: null
+  }
+];
+
 describe("TodayPage", () => {
   it("uses the original Rust diary structure", () => {
     const { container } = render(
@@ -44,5 +61,31 @@ describe("TodayPage", () => {
 
     expect(screen.getByText("No practices yet")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Manage practices" })).not.toBeInTheDocument();
+  });
+
+  it("marks required missing practices as incomplete for past diary dates", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <TodayPage initialEntries={requiredEntries} initialSelectedDate="2026-05-06" />
+      </MemoryRouter>
+    );
+
+    const rounds = screen.getByLabelText("Rounds");
+    expect(rounds).toHaveAttribute("aria-invalid", "true");
+    expect(rounds.closest(".practice-field")).toHaveClass("is-incomplete");
+    expect(screen.getByLabelText("Reading").closest(".practice-field")).not.toHaveClass(
+      "is-incomplete"
+    );
+    expect(container.querySelector(".date-pill.is-selected .incomplete-dot")).toBeInTheDocument();
+  });
+
+  it("does not mark required missing practices incomplete for today", () => {
+    render(
+      <MemoryRouter>
+        <TodayPage initialEntries={requiredEntries} initialSelectedDate="2026-05-07" />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByLabelText("Rounds")).not.toHaveAttribute("aria-invalid", "true");
   });
 });

@@ -683,6 +683,19 @@ textarea:focus-visible {
   outline: none;
 }
 
+.practice-field.is-incomplete .practice-control {
+  border-color: var(--danger);
+}
+
+.practice-field.is-incomplete .practice-floating-label,
+.bool-practice-field.is-incomplete {
+  color: var(--danger);
+}
+
+.bool-practice-field.is-incomplete input {
+  accent-color: var(--danger);
+}
+
 .practice-textarea {
   min-height: 6rem;
   resize: vertical;

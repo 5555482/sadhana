@@ -17,6 +17,8 @@ pub struct DiaryDayEntry {
     pub data_type: PracticeDataType,
     #[diesel(sql_type = Nullable<Text>)]
     pub dropdown_variants: Option<String>,
+    #[diesel(sql_type = Nullable<Bool>)]
+    pub is_required: Option<bool>,
     #[diesel(sql_type = Nullable<Jsonb>)]
     pub value: Option<JsonValue>,
 }
@@ -29,7 +31,7 @@ impl DiaryDayEntry {
     ) -> Result<Vec<Self>, AppError> {
         let res = sql_query(
             r#"
-        select up.practice, up.data_type, up.dropdown_variants, d.value
+        select up.practice, up.data_type, up.dropdown_variants, up.is_required, d.value
         from   user_practices up
         left   join diary d
         on     up.user_id = d.user_id 

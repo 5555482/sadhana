@@ -2,6 +2,7 @@ import { DiaryEntry, PracticeValue } from "../../../api/diary";
 
 type PracticeFieldProps = {
   entry: DiaryEntry;
+  isIncomplete?: boolean;
   onChange: (entry: DiaryEntry) => void;
 };
 
@@ -32,7 +33,17 @@ function inputToValue(entry: DiaryEntry, raw: string | boolean): PracticeValue |
   return null;
 }
 
-export function PracticeField({ entry, onChange }: PracticeFieldProps) {
+function fieldClassName(value: string, isIncomplete: boolean) {
+  return [
+    "practice-field",
+    value ? "has-value" : "",
+    isIncomplete ? "is-incomplete" : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
+export function PracticeField({ entry, isIncomplete = false, onChange }: PracticeFieldProps) {
   const id = `practice-${entry.practice.replaceAll(/\s+/g, "-").toLowerCase()}`;
   const value = valueToInput(entry.value);
   const icon =
@@ -48,12 +59,13 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
 
   if (entry.data_type === "Bool") {
     return (
-      <label className="practice-field bool-practice-field" htmlFor={id}>
+      <label className={fieldClassName(value, isIncomplete) + " bool-practice-field"} htmlFor={id}>
         <span>
           <i className={icon} aria-hidden="true" />
           {entry.practice}:
         </span>
         <input
+          aria-invalid={isIncomplete || undefined}
           id={id}
           type="checkbox"
           checked={value === "true"}
@@ -72,8 +84,9 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
       .filter(Boolean);
 
     return (
-      <div className={value ? "practice-field has-value" : "practice-field"}>
+      <div className={fieldClassName(value, isIncomplete)}>
         <select
+          aria-invalid={isIncomplete || undefined}
           aria-label={entry.practice}
           className="practice-control"
           id={id}
@@ -99,8 +112,9 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
 
   if (entry.data_type === "Text") {
     return (
-      <div className={value ? "practice-field has-value" : "practice-field"}>
+      <div className={fieldClassName(value, isIncomplete)}>
         <textarea
+          aria-invalid={isIncomplete || undefined}
           aria-label={entry.practice}
           className="practice-control practice-textarea"
           id={id}
@@ -123,8 +137,9 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
   const inputType = entry.data_type === "Time" ? "time" : "number";
 
   return (
-    <div className={value ? "practice-field has-value" : "practice-field"}>
+    <div className={fieldClassName(value, isIncomplete)}>
       <input
+        aria-invalid={isIncomplete || undefined}
         aria-label={entry.practice}
         className="practice-control"
         id={id}

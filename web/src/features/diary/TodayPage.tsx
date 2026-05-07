@@ -8,6 +8,7 @@ import { SaveStatus } from "./components/SaveStatus";
 
 type TodayPageProps = {
   initialEntries?: DiaryEntry[];
+  initialSelectedDate?: string;
 };
 
 type TodayOutletContext = {
@@ -23,12 +24,21 @@ function todayIso() {
   return `${year}-${month}-${day}`;
 }
 
-export function TodayPage({ initialEntries = [] }: TodayPageProps) {
+function isPastDate(value: string) {
+  return value < todayIso();
+}
+
+function isMissingRequired(entry: DiaryEntry, selectedDate: string) {
+  return Boolean(entry.is_required && entry.value === null && isPastDate(selectedDate));
+}
+
+export function TodayPage({ initialEntries = [], initialSelectedDate }: TodayPageProps) {
   const outletContext = useOutletContext<TodayOutletContext | null>();
-  const [localSelectedDate, setLocalSelectedDate] = useState(todayIso);
+  const [localSelectedDate, setLocalSelectedDate] = useState(initialSelectedDate ?? todayIso);
   const selectedDate = outletContext?.selectedDate ?? localSelectedDate;
   const setSelectedDate = outletContext?.setSelectedDate ?? setLocalSelectedDate;
   const [entries, setEntries] = useState(initialEntries);
+  const selectedDateIncomplete = entries.some((entry) => isMissingRequired(entry, selectedDate));
 
   const completedCount = useMemo(
     () => entries.filter((entry) => entry.value !== null).length,
@@ -47,14 +57,23 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
         Today
       </h1>
 
-      <DateSwitcher value={selectedDate} onChange={setSelectedDate} />
+      <DateSwitcher
+        value={selectedDate}
+        onChange={setSelectedDate}
+        incompleteDates={selectedDateIncomplete ? [selectedDate] : []}
+      />
 
       <SaveStatus dirty={false} completed={completedCount} total={entries.length} />
 
       {entries.length > 0 ? (
         <div className="today-entry-grid">
           {entries.map((entry) => (
-            <PracticeField key={entry.practice} entry={entry} onChange={updateEntry} />
+            <PracticeField
+              key={entry.practice}
+              entry={entry}
+              isIncomplete={isMissingRequired(entry, selectedDate)}
+              onChange={updateEntry}
+            />
           ))}
         </div>
       ) : (
