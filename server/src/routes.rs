@@ -207,11 +207,10 @@ fn api_scope() -> impl HttpServiceFactory {
 }
 
 fn dist_files() -> actix_files::Files {
-    Files::new("/", "./dist/")
+    Files::new("/", "./dist")
         .index_file("index.html")
-        .use_etag(true) // caching
-        .use_last_modified(true) // caching
-        // Redirect back to index.html for paths not found on disk. See https://github.com/actix/actix-web/issues/2115
+        .use_etag(true)
+        .use_last_modified(true)
         .default_handler(|req: ServiceRequest| {
             let (http_req, _payload) = req.into_parts();
             async move {

@@ -7,26 +7,15 @@ RUN apt update && apt install -y libpq5
 RUN apt-get update && apt-get -y install --no-install-recommends \
         libpq5 \
         brotli \
+        nodejs \
+        npm \
     && rm -rf /var/lib/apt/lists/*
-
-RUN rustup target add wasm32-unknown-unknown
 
 # Installing cargo-chef that helps to cache rust dependencies
 # RUN cargo install cargo-chef
 RUN wget -qO- https://github.com/LukeMathWalker/cargo-chef/releases/download/v0.1.77/cargo-chef-x86_64-unknown-linux-gnu.tar.xz | tar -xJf-
 RUN chmod +x cargo-chef-x86_64-unknown-linux-gnu/cargo-chef
 RUN cp cargo-chef-x86_64-unknown-linux-gnu/cargo-chef /usr/local/cargo/bin/
-
-# RUN cargo install trunk wasm-bindgen-cli
-RUN wget -qO- https://github.com/thedodd/trunk/releases/download/v0.21.14/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
-RUN chmod +x trunk
-RUN cp trunk /usr/local/cargo/bin/
-
-RUN wget -qO- https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.117/wasm-bindgen-0.2.117-x86_64-unknown-linux-musl.tar.gz | tar -xzf-
-RUN chmod +x wasm-bindgen-0.2.117-x86_64-unknown-linux-musl/wasm-bindgen
-RUN chmod +x wasm-bindgen-0.2.117-x86_64-unknown-linux-musl/wasm2es6js
-RUN cp wasm-bindgen-0.2.117-x86_64-unknown-linux-musl/wasm-bindgen /usr/local/cargo/bin/
-RUN cp wasm-bindgen-0.2.117-x86_64-unknown-linux-musl/wasm2es6js /usr/local/cargo/bin/
 
 WORKDIR /usr/src/sadhana-pro
 
@@ -45,14 +34,17 @@ RUN cargo chef cook --release --recipe-path recipe.json
 
 WORKDIR /usr/src/sadhana-pro
 
+COPY web/package.json web/package-lock.json ./web/
+RUN npm --prefix web install
+
 COPY . .
 
 RUN touch .env
-RUN cd frontend && trunk build --release
-RUN cargo build --release
+RUN npm --prefix web run build
+RUN cargo build --release --bin server
 
 RUN SHORT_SHA=$(echo "$GIT_SHA" | cut -c1-8) && \
-    sed -i "s/__GIT_SHA__/$SHORT_SHA/g" dist/service_worker.js
+    if [ -f dist/service_worker.js ]; then sed -i "s/__GIT_SHA__/$SHORT_SHA/g" dist/service_worker.js; fi
 
 RUN cd dist && \
     find . -type f \( -name "*.wasm" -o -name "*.js" -o -name "*.css" \) -exec gzip -k -9 {} \; && \

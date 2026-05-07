@@ -3,7 +3,8 @@ SHELL := /bin/bash
 db_url := postgres://postgres:postgres@192.168.68.102:5432/sadhana_pro
 
 frontend-build:
-	cd frontend && trunk build
+	npm --prefix web install
+	npm --prefix web run build
 
 run_server:
 	DATABASE_URL=$(db_url) \

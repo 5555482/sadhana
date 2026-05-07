@@ -6,10 +6,10 @@
 - [JWT Auth](https://gill.net.in/posts/auth-microservice-rust-actix-web1.0-diesel-complete-tutorial/#lets-do-auth)
 - [Session Based Auth](https://www.lpalmieri.com/posts/session-based-authentication-in-rust/)
 
-### Yew
+### React
 
-- Frontend [app](https://github.com/jetli/rust-yew-realworld-example-app) that uses Yew (using hooks!), css and styling. Also has _Tauri_ impl. See the backend [here](https://github.com/snamiki1212/realworld-v1-rust-actix-web-diesel)
-- [Awesome Yew](https://project-awesome.org/jetli/awesome-yew)
+- React and TypeScript power the frontend in `web/`.
+- Vite builds the frontend into `dist/`, which the Rust server serves as the SPA shell.
 
 ### Styling (CSS)
 
@@ -41,8 +41,8 @@
 
 ### Running the code
 
-1. Install trunk `cargo install -f trunk`
-2. Do `rustup target add wasm32-unknown-unknown`
+1. Install Node.js and Rust.
+2. Install frontend dependencies: `npm --prefix web install`
 3. Install diesel_cli:
 
 ```
@@ -52,8 +52,18 @@ echo 'export PATH="/usr/local/opt/libpq/bin:$PATH"' >> ~/.zshrc
 cargo install diesel_cli --no-default-features --features postgres
 ```
 
-4. Run: `make run`
-5. Open in chrome localhost:8080
+4. Run the full app: `make run`
+5. For frontend-only development, run: `npm --prefix web run dev`
+6. Open in Chrome: `http://localhost:8080` for the Rust-served app, or `http://localhost:5173` for Vite.
+
+### Verification
+
+- `npm --prefix web run test`
+- `npm --prefix web run build`
+- `npm --prefix web run e2e`
+- `cargo build --bin server`
+- `cargo test`
+- `docker build -t sadhana-pro-react .`
 
 ### Docker
 
