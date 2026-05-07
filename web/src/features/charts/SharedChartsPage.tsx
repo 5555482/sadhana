@@ -44,19 +44,19 @@ export function SharedChartsPage() {
         </header>
 
         <div className="report-controls">
-          <label>
-            <span>Report</span>
-            <select defaultValue={sharedReport.id}>
+          <div className="control-field">
+            <label htmlFor="shared-report-select">Report</label>
+            <select id="shared-report-select" defaultValue={sharedReport.id}>
               <option value={sharedReport.id}>{sharedReport.name}</option>
             </select>
-          </label>
-          <label>
-            <span>Duration</span>
-            <select defaultValue="Month">
+          </div>
+          <div className="control-field">
+            <label htmlFor="shared-duration-select">Duration</label>
+            <select id="shared-duration-select" defaultValue="Month">
               <option value="Month">Month</option>
               <option value="Year">Year</option>
             </select>
-          </label>
+          </div>
         </div>
 
         <ReportChart report={sharedReport} data={sharedData} />

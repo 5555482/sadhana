@@ -73,18 +73,22 @@ export function YatrasPage({
       </header>
 
       <div className="report-controls">
-        <label>
-          <span>
+        <div className="control-field">
+          <label htmlFor="yatra-select">
             <i className="icon-user-group" aria-hidden="true" /> Yatra
-          </span>
-          <select value={selectedId} onChange={(event) => setSelectedId(event.target.value)}>
+          </label>
+          <select
+            id="yatra-select"
+            value={selectedId}
+            onChange={(event) => setSelectedId(event.target.value)}
+          >
             {initialYatras.map((yatra) => (
               <option key={yatra.id} value={yatra.id}>
                 {yatra.name}
               </option>
             ))}
           </select>
-        </label>
+        </div>
       </div>
 
       <div className="yatra-table-wrap">

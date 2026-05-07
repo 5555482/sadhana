@@ -92,9 +92,10 @@ export function ChartsPage({
       </header>
 
       <div className="report-controls">
-        <label>
-          <span>Report</span>
+        <div className="control-field">
+          <label htmlFor="report-select">Report</label>
           <select
+            id="report-select"
             value={selectedReport?.id ?? ""}
             onChange={(event) => setSelectedReportId(event.target.value)}
           >
@@ -104,11 +105,12 @@ export function ChartsPage({
               </option>
             ))}
           </select>
-        </label>
+        </div>
 
-        <label>
-          <span>Duration</span>
+        <div className="control-field">
+          <label htmlFor="duration-select">Duration</label>
           <select
+            id="duration-select"
             value={duration}
             onChange={(event) => setDuration(event.target.value as ReportDuration)}
           >
@@ -118,7 +120,7 @@ export function ChartsPage({
               </option>
             ))}
           </select>
-        </label>
+        </div>
       </div>
 
       {selectedReport ? (
