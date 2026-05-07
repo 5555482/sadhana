@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 const mainNavItems = [
-  { to: "/", label: "Today", icon: "icon-calendar", activeIcon: "icon-calendar-solid" },
+  { to: "/", label: "Today", icon: "icon-home", activeIcon: "icon-home-solid" },
   { to: "/charts", label: "Charts", icon: "icon-graph", activeIcon: "icon-graph-solid" },
   { to: "/yatras", label: "Yatras", icon: "icon-user-group", activeIcon: "icon-user-group-solid" }
 ];
@@ -23,14 +23,17 @@ const settingsMenuItems = [
   { to: "https://sadhanapro.com", icon: "icon-info", label: "About", external: true }
 ];
 
+type SidebarNavProps = {
+  onCalendarOpen: () => void;
+};
+
 function SidebarLink({ item }: { item: typeof settingsItem }) {
   return (
-    <NavLink className="sidebar-link" to={item.to} aria-label={item.label}>
+    <NavLink className="sidebar-link" to={item.to} aria-label={item.label} title={item.label}>
       {({ isActive }) => (
-        <>
+        <span className="sidebar-icon-frame">
           <i aria-hidden="true" className={isActive ? item.activeIcon : item.icon} />
-          <span>{item.label}</span>
-        </>
+        </span>
       )}
     </NavLink>
   );
@@ -70,14 +73,17 @@ function SettingsMenu() {
   return (
     <div className="settings-menu-wrap" ref={menuRef}>
       <button
+        aria-label={settingsItem.label}
         aria-expanded={isOpen}
         aria-haspopup="menu"
         className={isOpen ? "sidebar-link active" : "sidebar-link"}
         onClick={() => setIsOpen((current) => !current)}
+        title={settingsItem.label}
         type="button"
       >
-        <i aria-hidden="true" className={isOpen ? settingsItem.activeIcon : settingsItem.icon} />
-        <span>{settingsItem.label}</span>
+        <span className="sidebar-icon-frame">
+          <i aria-hidden="true" className={isOpen ? settingsItem.activeIcon : settingsItem.icon} />
+        </span>
       </button>
 
       {isOpen ? (
@@ -127,7 +133,7 @@ function SettingsMenu() {
   );
 }
 
-export function SidebarNav() {
+export function SidebarNav({ onCalendarOpen }: SidebarNavProps) {
   return (
     <aside className="app-sidebar">
       <div className="sidebar-brand">
@@ -138,6 +144,17 @@ export function SidebarNav() {
         {mainNavItems.map((item) => (
           <SidebarLink item={item} key={item.to} />
         ))}
+        <button
+          aria-label="Calendar"
+          className="sidebar-link"
+          onClick={onCalendarOpen}
+          title="Calendar"
+          type="button"
+        >
+          <span className="sidebar-icon-frame">
+            <i aria-hidden="true" className="icon-calendar" />
+          </span>
+        </button>
       </nav>
 
       <div className="sidebar-footer" aria-label="Sidebar footer">

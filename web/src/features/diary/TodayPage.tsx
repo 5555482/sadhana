@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 
 import { DiaryEntry } from "../../api/diary";
 import { DateSwitcher } from "./components/DateSwitcher";
@@ -11,6 +11,11 @@ type TodayPageProps = {
   initialEntries?: DiaryEntry[];
 };
 
+type TodayOutletContext = {
+  selectedDate: string;
+  setSelectedDate: (value: string) => void;
+};
+
 function todayIso() {
   const date = new Date();
   const year = date.getFullYear();
@@ -20,7 +25,10 @@ function todayIso() {
 }
 
 export function TodayPage({ initialEntries = [] }: TodayPageProps) {
-  const [selectedDate, setSelectedDate] = useState(todayIso);
+  const outletContext = useOutletContext<TodayOutletContext | null>();
+  const [localSelectedDate, setLocalSelectedDate] = useState(todayIso);
+  const selectedDate = outletContext?.selectedDate ?? localSelectedDate;
+  const setSelectedDate = outletContext?.setSelectedDate ?? setLocalSelectedDate;
   const [entries, setEntries] = useState(initialEntries);
   const [dirty, setDirty] = useState(false);
 

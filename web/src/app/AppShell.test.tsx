@@ -14,9 +14,12 @@ describe("AppShell", () => {
     expect(screen.getByRole("navigation", { name: "Primary" })).toBeInTheDocument();
     expect(screen.queryByLabelText("Diary date strip")).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Today" })).toHaveAttribute("href", "/");
-    expect(
-      screen.getByRole("link", { name: "Today" }).querySelector(".icon-calendar-solid")
-    ).toBeTruthy();
+    expect(screen.queryByText("Today")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Today" }).querySelector(".icon-home-solid")).toBeTruthy();
+    const calendarButton = screen.getByRole("button", { name: "Calendar" });
+    expect(calendarButton.querySelector(".icon-calendar")).toBeTruthy();
+    fireEvent.click(calendarButton);
+    expect(screen.getByRole("dialog", { name: "Calendar" })).toBeInTheDocument();
     const settingsButton = within(screen.getByLabelText("Sidebar footer")).getByRole("button", {
       name: "Settings"
     });
