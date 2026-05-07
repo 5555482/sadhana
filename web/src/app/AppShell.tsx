@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import { MonthCalendarOverlay } from "../components/ui/MonthCalendarOverlay";
 import { SidebarNav } from "../components/ui/SidebarNav";
+import { DateSwitcher } from "../features/diary/components/DateSwitcher";
 
 function todayIso() {
   const date = new Date();
@@ -20,6 +21,7 @@ export function AppShell() {
     <div className="app-shell">
       <SidebarNav onCalendarOpen={() => setCalendarOpen(true)} />
       <main className="app-main">
+        <DateSwitcher value={selectedDate} onChange={setSelectedDate} />
         <Outlet context={{ selectedDate, setSelectedDate }} />
       </main>
       {calendarOpen ? (

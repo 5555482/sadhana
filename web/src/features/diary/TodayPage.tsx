@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 import { DiaryEntry } from "../../api/diary";
-import { DateSwitcher } from "./components/DateSwitcher";
 import { PracticeField } from "./components/PracticeField";
 import { SaveStatus } from "./components/SaveStatus";
 
@@ -13,8 +12,38 @@ type TodayPageProps = {
 
 type TodayOutletContext = {
   selectedDate: string;
-  setSelectedDate: (value: string) => void;
 };
+
+const defaultTodayEntries: DiaryEntry[] = [
+  {
+    practice: "Total Rounds",
+    data_type: "Int",
+    dropdown_variants: null,
+    is_required: true,
+    value: null
+  },
+  {
+    practice: "Rounds by 7am",
+    data_type: "Int",
+    dropdown_variants: null,
+    is_required: true,
+    value: null
+  },
+  {
+    practice: "Wake up time",
+    data_type: "Time",
+    dropdown_variants: null,
+    is_required: true,
+    value: null
+  },
+  {
+    practice: "Go to sleep time",
+    data_type: "Time",
+    dropdown_variants: null,
+    is_required: true,
+    value: null
+  }
+];
 
 function todayIso() {
   const date = new Date();
@@ -34,11 +63,11 @@ function isMissingRequired(entry: DiaryEntry, selectedDate: string) {
 
 export function TodayPage({ initialEntries = [], initialSelectedDate }: TodayPageProps) {
   const outletContext = useOutletContext<TodayOutletContext | null>();
-  const [localSelectedDate, setLocalSelectedDate] = useState(initialSelectedDate ?? todayIso);
+  const [localSelectedDate] = useState(initialSelectedDate ?? todayIso);
   const selectedDate = outletContext?.selectedDate ?? localSelectedDate;
-  const setSelectedDate = outletContext?.setSelectedDate ?? setLocalSelectedDate;
-  const [entries, setEntries] = useState(initialEntries);
-  const selectedDateIncomplete = entries.some((entry) => isMissingRequired(entry, selectedDate));
+  const [entries, setEntries] = useState(
+    initialEntries.length > 0 ? initialEntries : defaultTodayEntries
+  );
 
   const completedCount = useMemo(
     () => entries.filter((entry) => entry.value !== null).length,
@@ -57,31 +86,18 @@ export function TodayPage({ initialEntries = [], initialSelectedDate }: TodayPag
         Today
       </h1>
 
-      <DateSwitcher
-        value={selectedDate}
-        onChange={setSelectedDate}
-        incompleteDates={selectedDateIncomplete ? [selectedDate] : []}
-      />
-
       <SaveStatus dirty={false} completed={completedCount} total={entries.length} />
 
-      {entries.length > 0 ? (
-        <div className="today-entry-grid">
-          {entries.map((entry) => (
-            <PracticeField
-              key={entry.practice}
-              entry={entry}
-              isIncomplete={isMissingRequired(entry, selectedDate)}
-              onChange={updateEntry}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="empty-state">
-          <h2>No practices yet</h2>
-          <p>Add practices to make today's entry useful.</p>
-        </div>
-      )}
+      <div className="today-entry-grid">
+        {entries.map((entry) => (
+          <PracticeField
+            key={entry.practice}
+            entry={entry}
+            isIncomplete={isMissingRequired(entry, selectedDate)}
+            onChange={updateEntry}
+          />
+        ))}
+      </div>
     </section>
   );
 }

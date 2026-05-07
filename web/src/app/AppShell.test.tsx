@@ -12,7 +12,7 @@ describe("AppShell", () => {
       </MemoryRouter>
     );
     expect(screen.getByRole("navigation", { name: "Primary" })).toBeInTheDocument();
-    expect(screen.queryByLabelText("Diary date strip")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Diary date strip")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Sadhana Pro" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: "Today" })).toHaveAttribute("href", "/");
     expect(screen.queryByText("Today")).not.toBeInTheDocument();

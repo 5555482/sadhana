@@ -41,7 +41,6 @@ describe("TodayPage", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Today" })).toHaveClass("sr-only");
-    expect(screen.getByLabelText("Diary date strip")).toBeInTheDocument();
     expect(screen.queryByText("Daily entry")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Save changes" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Manage practices" })).not.toBeInTheDocument();
@@ -52,19 +51,22 @@ describe("TodayPage", () => {
     expect(container.querySelector(".icon-doc")).toBeTruthy();
   });
 
-  it("keeps a useful empty state when no practices exist", () => {
+  it("shows core default practice fields when no entries are provided", () => {
     render(
       <MemoryRouter>
         <TodayPage />
       </MemoryRouter>
     );
 
-    expect(screen.getByText("No practices yet")).toBeInTheDocument();
+    expect(screen.getByLabelText("Total Rounds")).toBeInTheDocument();
+    expect(screen.getByLabelText("Rounds by 7am")).toBeInTheDocument();
+    expect(screen.getByLabelText("Wake up time")).toBeInTheDocument();
+    expect(screen.getByLabelText("Go to sleep time")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Manage practices" })).not.toBeInTheDocument();
   });
 
   it("marks required missing practices as incomplete for past diary dates", () => {
-    const { container } = render(
+    render(
       <MemoryRouter>
         <TodayPage initialEntries={requiredEntries} initialSelectedDate="2026-05-06" />
       </MemoryRouter>
@@ -76,7 +78,6 @@ describe("TodayPage", () => {
     expect(screen.getByLabelText("Reading").closest(".practice-field")).not.toHaveClass(
       "is-incomplete"
     );
-    expect(container.querySelector(".date-pill.is-selected .incomplete-dot")).toBeInTheDocument();
   });
 
   it("does not mark required missing practices incomplete for today", () => {
