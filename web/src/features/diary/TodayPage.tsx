@@ -3,7 +3,6 @@ import { Link, useOutletContext } from "react-router-dom";
 
 import { DiaryEntry } from "../../api/diary";
 import { DateSwitcher } from "./components/DateSwitcher";
-import { IncompleteDaysBadge } from "./components/IncompleteDaysBadge";
 import { PracticeField } from "./components/PracticeField";
 import { SaveStatus } from "./components/SaveStatus";
 
@@ -30,7 +29,6 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
   const selectedDate = outletContext?.selectedDate ?? localSelectedDate;
   const setSelectedDate = outletContext?.setSelectedDate ?? setLocalSelectedDate;
   const [entries, setEntries] = useState(initialEntries);
-  const [dirty, setDirty] = useState(false);
 
   const completedCount = useMemo(
     () => entries.filter((entry) => entry.value !== null).length,
@@ -41,35 +39,32 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
     setEntries((current) =>
       current.map((entry) => (entry.practice === nextEntry.practice ? nextEntry : entry))
     );
-    setDirty(true);
-  }
-
-  function saveChanges() {
-    setDirty(false);
   }
 
   return (
-    <section className="today-page" aria-labelledby="today-heading">
+    <section className="today-page rust-today-page" aria-labelledby="today-heading">
+      <h1 className="sr-only" id="today-heading">
+        Today
+      </h1>
+
+      <div className="today-top-actions">
+        <span aria-hidden="true" />
+        <Link
+          aria-label="Manage practices"
+          className="today-icon-action"
+          title="Manage practices"
+          to="/user/practices"
+        >
+          <i className="icon-bars" aria-hidden="true" />
+        </Link>
+      </div>
+
       <DateSwitcher value={selectedDate} onChange={setSelectedDate} />
 
-      <header className="today-header">
-        <div>
-          <p className="section-kicker">Daily entry</p>
-          <h1 id="today-heading">Today</h1>
-        </div>
-        <div className="today-header-actions">
-          <Link className="quiet-link" to="/user/practices">
-            <i className="icon-bars" aria-hidden="true" />
-            Manage practices
-          </Link>
-          <IncompleteDaysBadge count={0} />
-        </div>
-      </header>
-
-      <SaveStatus dirty={dirty} completed={completedCount} total={entries.length} />
+      <SaveStatus dirty={false} completed={completedCount} total={entries.length} />
 
       {entries.length > 0 ? (
-        <div className="practice-list">
+        <div className="today-entry-grid">
           {entries.map((entry) => (
             <PracticeField key={entry.practice} entry={entry} onChange={updateEntry} />
           ))}
@@ -80,10 +75,6 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
           <p>Add practices to make today's entry useful.</p>
         </div>
       )}
-
-      <button className="floating-save" type="button" onClick={saveChanges}>
-        Save changes
-      </button>
     </section>
   );
 }

@@ -11,7 +11,9 @@ function valueToInput(value: PracticeValue | null) {
   if ("Bool" in value) return value.Bool ? "true" : "";
   if ("Text" in value) return value.Text;
   if ("Duration" in value) return String(value.Duration);
-  if ("Time" in value) return `${String(value.Time.h).padStart(2, "0")}:${String(value.Time.m).padStart(2, "0")}`;
+  if ("Time" in value) {
+    return `${String(value.Time.h).padStart(2, "0")}:${String(value.Time.m).padStart(2, "0")}`;
+  }
   return "";
 }
 
@@ -46,33 +48,39 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
 
   if (entry.data_type === "Bool") {
     return (
-      <label className="practice-row boolean-row" htmlFor={id}>
+      <label className="practice-field bool-practice-field" htmlFor={id}>
         <span>
           <i className={icon} aria-hidden="true" />
-          {entry.practice}
+          {entry.practice}:
         </span>
         <input
           id={id}
           type="checkbox"
           checked={value === "true"}
-          onChange={(event) => onChange({ ...entry, value: inputToValue(entry, event.target.checked) })}
+          onChange={(event) =>
+            onChange({ ...entry, value: inputToValue(entry, event.target.checked) })
+          }
         />
       </label>
     );
   }
 
   if (entry.dropdown_variants) {
-    const options = entry.dropdown_variants.split(",").map((option) => option.trim()).filter(Boolean);
+    const options = entry.dropdown_variants
+      .split(",")
+      .map((option) => option.trim())
+      .filter(Boolean);
+
     return (
-      <label className="practice-row" htmlFor={id}>
-        <span>
-          <i className={icon} aria-hidden="true" />
-          {entry.practice}
-        </span>
+      <div className={value ? "practice-field has-value" : "practice-field"}>
         <select
+          aria-label={entry.practice}
+          className="practice-control"
           id={id}
           value={value}
-          onChange={(event) => onChange({ ...entry, value: inputToValue(entry, event.target.value) })}
+          onChange={(event) =>
+            onChange({ ...entry, value: inputToValue(entry, event.target.value) })
+          }
         >
           <option value="" />
           {options.map((option) => (
@@ -81,25 +89,57 @@ export function PracticeField({ entry, onChange }: PracticeFieldProps) {
             </option>
           ))}
         </select>
-      </label>
+        <label className="practice-floating-label" htmlFor={id}>
+          <i className={icon} aria-hidden="true" />
+          {entry.practice}:
+        </label>
+      </div>
     );
   }
 
-  const inputType = entry.data_type === "Text" ? "text" : entry.data_type === "Time" ? "time" : "number";
+  if (entry.data_type === "Text") {
+    return (
+      <div className={value ? "practice-field has-value" : "practice-field"}>
+        <textarea
+          aria-label={entry.practice}
+          className="practice-control practice-textarea"
+          id={id}
+          maxLength={1024}
+          rows={4}
+          placeholder=" "
+          value={value}
+          onChange={(event) =>
+            onChange({ ...entry, value: inputToValue(entry, event.target.value) })
+          }
+        />
+        <label className="practice-floating-label" htmlFor={id}>
+          <i className={icon} aria-hidden="true" />
+          {entry.practice}:
+        </label>
+      </div>
+    );
+  }
+
+  const inputType = entry.data_type === "Time" ? "time" : "number";
 
   return (
-    <label className="practice-row" htmlFor={id}>
-      <span>
-        <i className={icon} aria-hidden="true" />
-        {entry.practice}
-      </span>
+    <div className={value ? "practice-field has-value" : "practice-field"}>
       <input
+        aria-label={entry.practice}
+        className="practice-control"
         id={id}
         type={inputType}
-        inputMode={entry.data_type === "Text" ? "text" : "numeric"}
+        inputMode="numeric"
+        placeholder=" "
         value={value}
-        onChange={(event) => onChange({ ...entry, value: inputToValue(entry, event.target.value) })}
+        onChange={(event) =>
+          onChange({ ...entry, value: inputToValue(entry, event.target.value) })
+        }
       />
-    </label>
+      <label className="practice-floating-label" htmlFor={id}>
+        <i className={icon} aria-hidden="true" />
+        {entry.practice}:
+      </label>
+    </div>
   );
 }

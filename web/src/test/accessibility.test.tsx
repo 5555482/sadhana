@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { TodayPage } from "../features/diary/TodayPage";
 
 describe("TodayPage accessibility", () => {
-  it("renders a single h1 and a save button", () => {
+  it("renders a single accessible h1 and keyboard actions", () => {
     const { container } = render(
       <MemoryRouter>
         <TodayPage />
@@ -13,6 +13,6 @@ describe("TodayPage accessibility", () => {
     );
 
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(container.querySelector('button[type="button"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/user/practices"]')).not.toBeNull();
   });
 });

@@ -36,6 +36,15 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 4.5rem minmax(0, 1fr);
@@ -451,6 +460,44 @@ textarea:focus-visible {
   gap: 1rem;
 }
 
+.rust-today-page {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding-top: 0.25rem;
+}
+
+.today-top-actions {
+  display: flex;
+  width: min(100%, 24rem);
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0 auto -0.35rem;
+}
+
+.today-icon-action {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 1.35rem;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.today-icon-action:hover,
+.today-icon-action:focus-visible {
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.today-icon-action:active {
+  transform: translateY(1px);
+}
+
 .today-header {
   display: flex;
   align-items: flex-start;
@@ -603,19 +650,107 @@ textarea:focus-visible {
 }
 
 .save-status {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--surface);
-  backdrop-filter: blur(12px);
-  padding: 0.85rem 1rem;
+  justify-content: center;
+  gap: 0.45rem;
+  width: fit-content;
+  margin: -0.2rem auto 0;
+  color: rgba(82, 82, 91, 0.78);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0;
 }
 
 .practice-list {
   display: grid;
   gap: 0.75rem;
+}
+
+.today-entry-grid {
+  display: grid;
+  gap: 2.25rem;
+  width: min(100%, 56rem);
+  margin: 0 auto;
+  padding-top: 1.75rem;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.practice-field {
+  position: relative;
+  min-width: 0;
+  color: var(--text);
+}
+
+.practice-control {
+  width: 100%;
+  min-height: 2.55rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  padding: 0.4rem 0.7rem;
+  box-sizing: border-box;
+}
+
+.practice-control:focus {
+  border-width: 2px;
+  outline: none;
+}
+
+.practice-textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.practice-floating-label {
+  position: absolute;
+  top: -1.65rem;
+  left: 0;
+  color: var(--text);
+  font-weight: 500;
+  transition:
+    left 160ms ease,
+    top 160ms ease;
+  pointer-events: none;
+}
+
+.practice-floating-label [class^="icon-"],
+.practice-floating-label [class*=" icon-"],
+.bool-practice-field [class^="icon-"],
+.bool-practice-field [class*=" icon-"] {
+  margin-right: 0.35rem;
+}
+
+.practice-control:placeholder-shown + .practice-floating-label {
+  top: 0.55rem;
+  left: 0.55rem;
+}
+
+.practice-control:focus + .practice-floating-label,
+.practice-field.has-value .practice-floating-label {
+  top: -1.65rem;
+  left: 0;
+}
+
+.bool-practice-field {
+  display: flex;
+  min-height: 2.55rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 0.35rem 0 0.15rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.bool-practice-field input {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--accent);
 }
 
 .practice-row {
@@ -664,6 +799,12 @@ textarea:focus-visible {
   font: inherit;
   font-weight: 500;
   box-shadow: 0 14px 36px rgba(245, 158, 11, 0.28);
+}
+
+@media (min-width: 760px) {
+  .today-entry-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .practice-page {

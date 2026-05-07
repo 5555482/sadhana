@@ -5,7 +5,7 @@ type SaveStatusProps = {
 };
 
 export function SaveStatus({ dirty, completed, total }: SaveStatusProps) {
-  const label = dirty ? "Unsaved changes" : "All changes saved";
+  const label = dirty ? "Saving changes" : "All changes saved";
 
   return (
     <div className="save-status" aria-live="polite">
