@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 import { DiaryEntry } from "../../api/diary";
 import { DateSwitcher } from "./components/DateSwitcher";
@@ -46,18 +46,6 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
       <h1 className="sr-only" id="today-heading">
         Today
       </h1>
-
-      <div className="today-top-actions">
-        <span aria-hidden="true" />
-        <Link
-          aria-label="Manage practices"
-          className="today-icon-action"
-          title="Manage practices"
-          to="/user/practices"
-        >
-          <i className="icon-bars" aria-hidden="true" />
-        </Link>
-      </div>
 
       <DateSwitcher value={selectedDate} onChange={setSelectedDate} />
 

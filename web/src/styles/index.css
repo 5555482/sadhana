@@ -77,9 +77,23 @@ textarea:focus-visible {
   justify-items: center;
 }
 
+.sidebar-logo-link {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.sidebar-logo-link:hover,
+.sidebar-logo-link:focus-visible {
+  background: rgba(245, 158, 11, 0.1);
+}
+
 .sidebar-logo {
-  width: 3.4rem;
-  height: 3.4rem;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
 }
 
@@ -464,38 +478,6 @@ textarea:focus-visible {
   max-width: 64rem;
   margin: 0 auto;
   padding-top: 0.25rem;
-}
-
-.today-top-actions {
-  display: flex;
-  width: min(100%, 24rem);
-  min-height: 2.25rem;
-  align-items: center;
-  justify-content: flex-end;
-  margin: 0 auto -0.35rem;
-}
-
-.today-icon-action {
-  display: grid;
-  width: 2.25rem;
-  height: 2.25rem;
-  place-items: center;
-  border-radius: 999px;
-  color: var(--accent);
-  font-size: 1.35rem;
-  text-decoration: none;
-  transition:
-    background-color 160ms ease,
-    transform 160ms ease;
-}
-
-.today-icon-action:hover,
-.today-icon-action:focus-visible {
-  background: rgba(245, 158, 11, 0.12);
-}
-
-.today-icon-action:active {
-  transform: translateY(1px);
 }
 
 .today-header {
@@ -1229,8 +1211,8 @@ textarea:focus-visible {
   }
 
   .sidebar-logo {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   .settings-popover {

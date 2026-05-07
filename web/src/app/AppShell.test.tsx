@@ -13,9 +13,15 @@ describe("AppShell", () => {
     );
     expect(screen.getByRole("navigation", { name: "Primary" })).toBeInTheDocument();
     expect(screen.queryByLabelText("Diary date strip")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Sadhana Pro" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: "Today" })).toHaveAttribute("href", "/");
     expect(screen.queryByText("Today")).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Today" }).querySelector(".icon-home-solid")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Manage practices" })).toHaveAttribute(
+      "href",
+      "/user/practices"
+    );
+    expect(screen.getByRole("link", { name: "Manage practices" }).querySelector(".icon-bars")).toBeTruthy();
     const calendarButton = screen.getByRole("button", { name: "Calendar" });
     expect(calendarButton.querySelector(".icon-calendar")).toBeTruthy();
     fireEvent.click(calendarButton);
@@ -30,6 +36,9 @@ describe("AppShell", () => {
       "/settings/edit-user"
     );
     expect(screen.getByRole("menuitemcheckbox", { name: "Dark mode" })).toBeInTheDocument();
-    expect(screen.getByAltText("Sadhana Pro")).toHaveAttribute("src", "/images/logo.png");
+    expect(screen.getByRole("link", { name: "Sadhana Pro" }).querySelector(".sidebar-logo")).toHaveAttribute(
+      "src",
+      "/images/logo.png"
+    );
   });
 });

@@ -13,6 +13,6 @@ describe("TodayPage accessibility", () => {
     );
 
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(container.querySelector('a[href="/user/practices"]')).not.toBeNull();
+    expect(container.querySelector('[aria-label="Diary date strip"]')).not.toBeNull();
   });
 });

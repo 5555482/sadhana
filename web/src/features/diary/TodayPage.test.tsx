@@ -27,11 +27,7 @@ describe("TodayPage", () => {
     expect(screen.getByLabelText("Diary date strip")).toBeInTheDocument();
     expect(screen.queryByText("Daily entry")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Save changes" })).not.toBeInTheDocument();
-
-    const managePractices = screen.getByRole("link", { name: "Manage practices" });
-    expect(managePractices).toHaveAttribute("href", "/user/practices");
-    expect(managePractices).toHaveClass("today-icon-action");
-    expect(managePractices.querySelector(".icon-bars")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Manage practices" })).not.toBeInTheDocument();
 
     expect(container.querySelector(".today-entry-grid")).toBeInTheDocument();
     expect(container.querySelector(".icon-rounds")).toBeTruthy();
@@ -47,9 +43,6 @@ describe("TodayPage", () => {
     );
 
     expect(screen.getByText("No practices yet")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Manage practices" })).toHaveAttribute(
-      "href",
-      "/user/practices"
-    );
+    expect(screen.queryByRole("link", { name: "Manage practices" })).not.toBeInTheDocument();
   });
 });
