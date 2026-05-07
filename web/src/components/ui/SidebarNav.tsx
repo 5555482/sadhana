@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
-import { DateSwitcher } from "../../features/diary/components/DateSwitcher";
-
 const mainNavItems = [
-  { to: "/", label: "Today", icon: "icon-home", activeIcon: "icon-home-solid" },
+  { to: "/", label: "Today", icon: "icon-calendar", activeIcon: "icon-calendar-solid" },
   { to: "/charts", label: "Charts", icon: "icon-graph", activeIcon: "icon-graph-solid" },
   { to: "/yatras", label: "Yatras", icon: "icon-user-group", activeIcon: "icon-user-group-solid" }
 ];
@@ -24,11 +22,6 @@ const settingsMenuItems = [
   { to: "/help/support-form", icon: "icon-help", label: "Help and support" },
   { to: "https://sadhanapro.com", icon: "icon-info", label: "About", external: true }
 ];
-
-type SidebarNavProps = {
-  selectedDate: string;
-  onDateChange: (value: string) => void;
-};
 
 function SidebarLink({ item }: { item: typeof settingsItem }) {
   return (
@@ -134,15 +127,11 @@ function SettingsMenu() {
   );
 }
 
-export function SidebarNav({ selectedDate, onDateChange }: SidebarNavProps) {
+export function SidebarNav() {
   return (
     <aside className="app-sidebar">
       <div className="sidebar-brand">
         <img className="sidebar-logo" src="/images/logo.png" alt="Sadhana Pro" />
-      </div>
-
-      <div className="sidebar-calendar">
-        <DateSwitcher value={selectedDate} onChange={onDateChange} />
       </div>
 
       <nav aria-label="Primary" className="sidebar-nav">

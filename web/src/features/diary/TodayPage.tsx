@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { DiaryEntry } from "../../api/diary";
+import { DateSwitcher } from "./components/DateSwitcher";
 import { IncompleteDaysBadge } from "./components/IncompleteDaysBadge";
 import { PracticeField } from "./components/PracticeField";
 import { SaveStatus } from "./components/SaveStatus";
@@ -10,7 +11,16 @@ type TodayPageProps = {
   initialEntries?: DiaryEntry[];
 };
 
+function todayIso() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function TodayPage({ initialEntries = [] }: TodayPageProps) {
+  const [selectedDate, setSelectedDate] = useState(todayIso);
   const [entries, setEntries] = useState(initialEntries);
   const [dirty, setDirty] = useState(false);
 
@@ -32,6 +42,8 @@ export function TodayPage({ initialEntries = [] }: TodayPageProps) {
 
   return (
     <section className="today-page" aria-labelledby="today-heading">
+      <DateSwitcher value={selectedDate} onChange={setSelectedDate} />
+
       <header className="today-header">
         <div>
           <p className="section-kicker">Daily entry</p>

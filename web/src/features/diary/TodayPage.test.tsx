@@ -13,6 +13,7 @@ describe("TodayPage", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Today" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Diary date strip")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Manage practices" })).toHaveAttribute(
       "href",
