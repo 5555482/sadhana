@@ -1,0 +1,16 @@
+{
+  "nav": { "home": "Головна", "charts": "Графіки", "yatras": "Ятри", "settings": "Налаштування" },
+  "auth": {
+    "login": "Увійти", "register": "Створити акаунт", "email": "Email",
+    "password": "Пароль", "name": "Ваше ім'я", "forgotPassword": "Забули пароль?",
+    "noAccount": "Немає акаунту?", "hasAccount": "Вже є акаунт?",
+    "signUp": "Зареєструватися", "signIn": "Увійти",
+    "sendLink": "Надіслати посилання", "newPassword": "Новий пароль",
+    "confirmPassword": "Підтвердити пароль", "setPassword": "Встановити пароль",
+    "checkEmail": "Перевірте пошту — ми надіслали вам посилання.",
+    "passwordMismatch": "Паролі не збігаються",
+    "resetSent": "Посилання надіслано — перевірте пошту.",
+    "confirmationExpired": "Посилання застаріло."
+  },
+  "common": { "loading": "Завантаження…", "error": "Щось пішло не так", "save": "Зберегти", "cancel": "Скасувати", "back": "Назад" }
+}
