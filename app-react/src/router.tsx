@@ -1,17 +1,19 @@
+import { lazy } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
 import { ProtectedRoute } from './components/layout/ProtectedRoute'
 import { GuestRoute } from './components/layout/GuestRoute'
-import { HomePage } from './pages/home/HomePage'
-import { ChartsPage } from './pages/charts/ChartsPage'
-import { YatrasPage } from './pages/yatras/YatrasPage'
-import { SettingsPage } from './pages/settings/SettingsPage'
-import { LoginPage } from './pages/auth/LoginPage'
-import { RegisterPage } from './pages/auth/RegisterPage'
-import { ConfirmationPage } from './pages/auth/ConfirmationPage'
-import { PwdResetRequestPage } from './pages/auth/PwdResetRequestPage'
-import { PwdResetPage } from './pages/auth/PwdResetPage'
-import { NotFoundPage } from './pages/NotFoundPage'
+
+const HomePage = lazy(() => import('./pages/home/HomePage').then(m => ({ default: m.HomePage })))
+const ChartsPage = lazy(() => import('./pages/charts/ChartsPage').then(m => ({ default: m.ChartsPage })))
+const YatrasPage = lazy(() => import('./pages/yatras/YatrasPage').then(m => ({ default: m.YatrasPage })))
+const SettingsPage = lazy(() => import('./pages/settings/SettingsPage').then(m => ({ default: m.SettingsPage })))
+const LoginPage = lazy(() => import('./pages/auth/LoginPage').then(m => ({ default: m.LoginPage })))
+const RegisterPage = lazy(() => import('./pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })))
+const ConfirmationPage = lazy(() => import('./pages/auth/ConfirmationPage').then(m => ({ default: m.ConfirmationPage })))
+const PwdResetRequestPage = lazy(() => import('./pages/auth/PwdResetRequestPage').then(m => ({ default: m.PwdResetRequestPage })))
+const PwdResetPage = lazy(() => import('./pages/auth/PwdResetPage').then(m => ({ default: m.PwdResetPage })))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
 
 export const router = createBrowserRouter([
   {

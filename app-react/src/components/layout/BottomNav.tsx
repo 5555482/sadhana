@@ -11,7 +11,7 @@ const tabs = [
 
 export const BottomNav = React.memo(function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-16 bg-surface-1 border-t border-white/10 flex items-center justify-around z-40 pb-safe">
+    <nav className="fixed bottom-0 left-0 right-0 h-16 bg-surface-1 border-t border-white/10 flex items-center justify-around z-40 pb-[env(safe-area-inset-bottom)]">
       {tabs.map(({ to, label, icon: Icon, exact }) => (
         <NavLink
           key={to}

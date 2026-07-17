@@ -7,6 +7,7 @@ interface InputProps {
   type?: string
   placeholder?: string
   autoComplete?: string
+  readOnly?: boolean
 }
 
 export function Input({
@@ -18,6 +19,7 @@ export function Input({
   type = 'text',
   placeholder,
   autoComplete,
+  readOnly,
 }: InputProps) {
   return (
     <div className="flex flex-col gap-1 w-full">
@@ -32,6 +34,7 @@ export function Input({
         onChange={onChange}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        readOnly={readOnly}
         className={`
           w-full rounded-xl bg-surface-2 border px-4 py-3 text-text-primary
           placeholder:text-text-muted outline-none transition-colors

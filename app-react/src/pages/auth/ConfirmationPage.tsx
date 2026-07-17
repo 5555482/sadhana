@@ -26,7 +26,7 @@ export function ConfirmationPage() {
   const [expired, setExpired] = useState(false)
 
   useEffect(() => {
-    if (!id) return
+    if (!id) { setExpired(true); setLoadingDetails(false); return }
     authApi.getConfirmationDetails(id)
       .then((c) => setEmail(c.email))
       .catch(() => setExpired(true))
@@ -67,7 +67,7 @@ export function ConfirmationPage() {
         <h1 className="font-serif text-2xl text-gold text-center">Sadhana Pro</h1>
         <h2 className="font-semibold text-text-primary text-center text-lg">{t('auth.register')}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input label={t('auth.email')} name="email" type="email" value={email} onChange={() => {}} />
+          <Input label={t('auth.email')} name="email" type="email" value={email} onChange={() => {}} readOnly />
           <Input label={t('auth.name')} name="name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
           <Input label={t('auth.password')} name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
           <Input label={t('auth.confirmPassword')} name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} autoComplete="new-password" />
