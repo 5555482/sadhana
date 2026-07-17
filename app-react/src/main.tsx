@@ -10,7 +10,13 @@ import { authApi } from './api/auth'
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { staleTime: 60_000, retry: 1, refetchOnWindowFocus: true },
+    queries: {
+      staleTime: 60_000,
+      gcTime: 5 * 60_000,
+      retry: 1,
+      refetchOnWindowFocus: true,
+      networkMode: 'offlineFirst',
+    },
   },
 })
 
