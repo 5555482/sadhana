@@ -12,6 +12,7 @@
 
 - Tailwind v4 — no `tailwind.config.js`; all configuration in CSS via `@theme` in `index.css`
 - Token localStorage key: `yew.token` (must match existing Yew app for seamless migration)
+- **Do NOT touch `static-react/`** — that is the separate marketing/landing site, leave it entirely alone
 - API base URL from `VITE_API_BASE_URL` env var, default `/api`
 - API response envelopes: login/register return `{ user: UserInfo }`, writable requests send matching envelope
 - Rust serde default enum serialization — `PracticeDataType` variants are PascalCase strings (`"Int"`, `"Bool"`, etc.); `Value` variants serialize as `{ "Int": 5 }`, `{ "Bool": true }`, `{ "Time": { h, m } }`, etc.
@@ -19,6 +20,9 @@
 - Mobile-first — design for 375px viewport up; desktop is an enhancement
 - Never touch `/static-react/` (the lander)
 - Directory for this app: `/Users/antonona/Web_Dev/sadhana/app-react/`
+- **Performance — React.memo:** Wrap `BottomNav`, `TopBar`, `Card`, `ErrorBanner`, `Spinner` with `memo()`. Do NOT memo `Button` or `Input` (they re-render with form state anyway).
+- **Performance — Code splitting:** All page components in `router.tsx` use `React.lazy()` + named-export `.then(m => ({ default: m.PageName }))`. Wrap `<RouterProvider>` in `main.tsx` with `<Suspense fallback={<Spinner />}>`.
+- **Performance — QueryClient:** Include `gcTime: 5 * 60_000` and `networkMode: 'offlineFirst'` in `defaultOptions.queries`.
 
 ---
 
