@@ -1,0 +1,33 @@
+import { useParams, useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { practicesApi } from '../../api/practices'
+import { PracticeForm } from '../../components/PracticeForm'
+import { Spinner } from '../../components/ui/Spinner'
+
+export function PracticeEditPage() {
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['practices'],
+    queryFn: practicesApi.getUserPractices,
+  })
+
+  const practice = data?.find((p) => p.id === id)
+
+  if (isLoading) return <Spinner />
+  if (!practice) return <p className="p-4 text-error">Not found</p>
+
+  return (
+    <PracticeForm
+      mode={{ type: 'user' }}
+      initialValues={{
+        name: practice.practice,
+        dataType: practice.data_type,
+        dropdownVariants: practice.dropdown_variants,
+        id: practice.id,
+      }}
+      onSuccess={() => navigate('/user/practices')}
+    />
+  )
+}

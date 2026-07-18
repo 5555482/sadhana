@@ -7,7 +7,6 @@ import { useAuthStore } from '../../store/authStore'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { ErrorBanner } from '../../components/ui/ErrorBanner'
-import { Card } from '../../components/ui/Card'
 import { Spinner } from '../../components/ui/Spinner'
 
 export function ConfirmationPage() {
@@ -53,28 +52,32 @@ export function ConfirmationPage() {
   if (loadingDetails) return <Spinner />
   if (expired) {
     return (
-      <div className="min-h-screen bg-surface-0 flex items-center justify-center px-4">
-        <Card className="w-full max-w-sm p-6 text-center">
-          <p className="text-danger">{t('auth.confirmationExpired')}</p>
-        </Card>
+      <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
+        <div className="card bg-base-100 shadow-sm w-full max-w-sm">
+          <div className="card-body text-center">
+            <p className="text-error">{t('auth.confirmationExpired')}</p>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-surface-0 flex items-center justify-center px-4">
-      <Card className="w-full max-w-sm p-6 flex flex-col gap-5">
-        <h1 className="font-serif text-2xl text-gold text-center">Sadhana Pro</h1>
-        <h2 className="font-semibold text-text-primary text-center text-lg">{t('auth.register')}</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input label={t('auth.email')} name="email" type="email" value={email} onChange={() => {}} readOnly />
-          <Input label={t('auth.name')} name="name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
-          <Input label={t('auth.password')} name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
-          <Input label={t('auth.confirmPassword')} name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} autoComplete="new-password" />
-          <ErrorBanner message={error} />
-          <Button variant="primary" type="submit" loading={loading} className="w-full">{t('auth.register')}</Button>
-        </form>
-      </Card>
+    <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
+      <div className="card bg-base-100 shadow-sm w-full max-w-sm">
+        <div className="card-body flex flex-col gap-5">
+          <h1 className="font-serif text-2xl text-primary text-center font-bold">Sadhana Pro</h1>
+          <h2 className="font-semibold text-center text-lg">{t('auth.register')}</h2>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <Input label={t('auth.email')} name="email" type="email" value={email} onChange={() => {}} readOnly />
+            <Input label={t('auth.name')} name="name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+            <Input label={t('auth.password')} name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
+            <Input label={t('auth.confirmPassword')} name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} autoComplete="new-password" />
+            <ErrorBanner message={error} />
+            <Button variant="primary" type="submit" loading={loading} className="w-full">{t('auth.register')}</Button>
+          </form>
+        </div>
+      </div>
     </div>
   )
 }

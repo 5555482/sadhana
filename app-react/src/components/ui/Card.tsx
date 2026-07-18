@@ -7,7 +7,7 @@ interface CardProps {
 
 export const Card = memo(function Card({ children, className = '' }: CardProps) {
   return (
-    <div className={`rounded-2xl bg-surface-1 border border-white/10 ${className}`}>
+    <div className={`card bg-base-100 shadow-sm ${className}`}>
       {children}
     </div>
   )

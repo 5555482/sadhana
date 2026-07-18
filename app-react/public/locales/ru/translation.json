@@ -10,7 +10,50 @@
     "checkEmail": "Проверьте почту — мы отправили вам ссылку.",
     "passwordMismatch": "Пароли не совпадают",
     "resetSent": "Ссылка отправлена — проверьте почту.",
-    "confirmationExpired": "Ссылка устарела."
+    "confirmationExpired": "Ссылка устарела.",
+    "logout": "Выйти"
   },
-  "common": { "loading": "Загрузка…", "error": "Что-то пошло не так", "save": "Сохранить", "cancel": "Отмена", "back": "Назад" }
+  "common": {
+    "loading": "Загрузка…", "error": "Что-то пошло не так",
+    "save": "Сохранить", "cancel": "Отмена", "back": "Назад",
+    "delete": "Удалить", "offline": "Вы не в сети"
+  },
+  "home": {
+    "noPractices": "Практик пока нет",
+    "addFirst": "Добавить первую практику",
+    "offline": "Нет сети — изменения синхронизируются при подключении"
+  },
+  "practice": {
+    "name": "Название практики",
+    "type": "Тип данных",
+    "dropdownVariants": "Варианты",
+    "dropdownVariantsHint": "По одному варианту на строку",
+    "delete": "Удалить практику",
+    "deleteConfirm": "Удалить",
+    "empty": "Практик пока нет"
+  },
+  "charts": {
+    "empty": "Отчётов пока нет",
+    "create": "Создать отчёт",
+    "pickMetrics": "Метрики",
+    "dateRange": "Период",
+    "chartType": "Тип графика"
+  },
+  "yatras": {
+    "empty": "Ятры не найдены"
+  },
+  "settings": {
+    "account": "Аккаунт",
+    "editProfile": "Редактировать профиль",
+    "changePassword": "Изменить пароль",
+    "practices": "Практики",
+    "myPractices": "Мои практики",
+    "data": "Данные",
+    "import": "Импорт данных",
+    "app": "Приложение",
+    "language": "Язык",
+    "help": "Помощь и FAQ",
+    "saved": "Изменения сохранены",
+    "currentPassword": "Текущий пароль"
+  }
 }

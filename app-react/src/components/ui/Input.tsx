@@ -23,7 +23,7 @@ export function Input({
 }: InputProps) {
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label htmlFor={name} className="text-sm font-medium text-text-secondary">
+      <label htmlFor={name} className="label text-sm font-medium">
         {label}
       </label>
       <input
@@ -35,13 +35,9 @@ export function Input({
         placeholder={placeholder}
         autoComplete={autoComplete}
         readOnly={readOnly}
-        className={`
-          w-full rounded-xl bg-surface-2 border px-4 py-3 text-text-primary
-          placeholder:text-text-muted outline-none transition-colors
-          ${error ? 'border-danger' : 'border-white/8 focus:border-teal'}
-        `}
+        className={`input input-bordered w-full ${error ? 'input-error' : ''}`}
       />
-      {error && <p className="text-xs text-danger">{error}</p>}
+      {error && <span className="text-error text-xs">{error}</span>}
     </div>
   )
 }

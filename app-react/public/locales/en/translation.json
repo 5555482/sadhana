@@ -16,20 +16,61 @@
     "hasAccount": "Already have an account?",
     "signUp": "Sign up",
     "signIn": "Sign in",
-    "sendLink": "Send reset link",
+    "sendLink": "Send link",
     "newPassword": "New password",
     "confirmPassword": "Confirm password",
     "setPassword": "Set new password",
     "checkEmail": "Check your email for a confirmation link.",
     "passwordMismatch": "Passwords do not match",
     "resetSent": "Reset link sent — check your email.",
-    "confirmationExpired": "This link has expired."
+    "confirmationExpired": "This link has expired.",
+    "logout": "Log out"
   },
   "common": {
     "loading": "Loading…",
     "error": "Something went wrong",
     "save": "Save",
     "cancel": "Cancel",
-    "back": "Back"
+    "back": "Back",
+    "delete": "Delete",
+    "offline": "You are offline"
+  },
+  "home": {
+    "noPractices": "No practices yet",
+    "addFirst": "Add your first practice",
+    "offline": "You're offline — changes will sync when reconnected"
+  },
+  "practice": {
+    "name": "Practice name",
+    "type": "Data type",
+    "dropdownVariants": "Options",
+    "dropdownVariantsHint": "One option per line",
+    "delete": "Delete practice",
+    "deleteConfirm": "Delete",
+    "empty": "No practices yet"
+  },
+  "charts": {
+    "empty": "No reports yet",
+    "create": "Create report",
+    "pickMetrics": "Metrics",
+    "dateRange": "Date range",
+    "chartType": "Chart type"
+  },
+  "yatras": {
+    "empty": "No yatras found"
+  },
+  "settings": {
+    "account": "Account",
+    "editProfile": "Edit profile",
+    "changePassword": "Change password",
+    "practices": "Practices",
+    "myPractices": "My practices",
+    "data": "Data",
+    "import": "Import data",
+    "app": "App",
+    "language": "Language",
+    "help": "Help & FAQ",
+    "saved": "Changes saved",
+    "currentPassword": "Current password"
   }
 }

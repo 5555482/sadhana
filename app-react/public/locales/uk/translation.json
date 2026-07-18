@@ -10,7 +10,50 @@
     "checkEmail": "Перевірте пошту — ми надіслали вам посилання.",
     "passwordMismatch": "Паролі не збігаються",
     "resetSent": "Посилання надіслано — перевірте пошту.",
-    "confirmationExpired": "Посилання застаріло."
+    "confirmationExpired": "Посилання застаріло.",
+    "logout": "Вийти"
   },
-  "common": { "loading": "Завантаження…", "error": "Щось пішло не так", "save": "Зберегти", "cancel": "Скасувати", "back": "Назад" }
+  "common": {
+    "loading": "Завантаження…", "error": "Щось пішло не так",
+    "save": "Зберегти", "cancel": "Скасувати", "back": "Назад",
+    "delete": "Видалити", "offline": "Немає мережі"
+  },
+  "home": {
+    "noPractices": "Практик поки немає",
+    "addFirst": "Додати першу практику",
+    "offline": "Немає мережі — зміни синхронізуються при підключенні"
+  },
+  "practice": {
+    "name": "Назва практики",
+    "type": "Тип даних",
+    "dropdownVariants": "Варіанти",
+    "dropdownVariantsHint": "По одному варіанту на рядок",
+    "delete": "Видалити практику",
+    "deleteConfirm": "Видалити",
+    "empty": "Практик поки немає"
+  },
+  "charts": {
+    "empty": "Звітів поки немає",
+    "create": "Створити звіт",
+    "pickMetrics": "Метрики",
+    "dateRange": "Період",
+    "chartType": "Тип графіку"
+  },
+  "yatras": {
+    "empty": "Ятри не знайдено"
+  },
+  "settings": {
+    "account": "Акаунт",
+    "editProfile": "Редагувати профіль",
+    "changePassword": "Змінити пароль",
+    "practices": "Практики",
+    "myPractices": "Мої практики",
+    "data": "Дані",
+    "import": "Імпорт даних",
+    "app": "Додаток",
+    "language": "Мова",
+    "help": "Допомога та FAQ",
+    "saved": "Зміни збережено",
+    "currentPassword": "Поточний пароль"
+  }
 }

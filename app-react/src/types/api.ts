@@ -42,3 +42,42 @@ export interface Confirmation {
 // API response envelopes
 export interface UserInfoWrapper { user: UserInfo }
 export interface SignupLinkDetailsWrapper { confirmation: Confirmation }
+
+export interface ChartReport {
+  id: string
+  name: string
+  practices: string[]
+  date_from: string
+  date_to: string
+  chart_type: 'Line' | 'Bar' | 'Grid'
+  share_id?: string
+}
+
+export interface SharedChart extends ChartReport {
+  entries: DiaryEntry[]
+}
+
+export interface YatraMember {
+  id: string
+  name: string
+}
+
+export interface Yatra {
+  id: string
+  name: string
+  description?: string
+  member_count: number
+  is_member: boolean
+  is_admin: boolean
+  practices: UserPractice[]
+  members: YatraMember[]
+}
+
+export interface ImportPreview {
+  columns: string[]
+  sample_rows: string[][]
+}
+
+export interface ImportResult {
+  imported_count: number
+}
