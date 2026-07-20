@@ -180,14 +180,15 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
 
         <button
           type="submit"
-          disabled={mutation.isPending || !name.trim()}
+          disabled={mutation.isPending}
           className="h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
             background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
             color: '#134e4a',
             boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-            opacity: !name.trim() ? 0.45 : 1,
+            opacity: name.trim() ? 1 : 0.5,
             transition: 'opacity 0.2s',
+            cursor: name.trim() ? 'pointer' : 'default',
           }}
         >
           {mutation.isPending && <span className="loading loading-spinner loading-sm" />}
