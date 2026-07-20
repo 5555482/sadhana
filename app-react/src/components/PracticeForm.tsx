@@ -156,22 +156,38 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         {/* Is required — user practices only */}
         {mode.type === 'user' && (
           <div className="rounded-2xl p-5 flex flex-col gap-3" style={cardStyle}>
-            <button
-              type="button"
+            <div
+              className="flex items-center justify-between cursor-pointer select-none"
               onClick={() => setIsRequired((v) => !v)}
-              className="flex items-center justify-between"
             >
               <span className="text-sm font-medium text-gray-700">{t('practice.isRequired')}</span>
               <div
-                className="relative w-12 h-7 rounded-full transition-colors duration-200 flex-shrink-0"
-                style={{ backgroundColor: isRequired ? '#01a386' : 'rgba(0,0,0,0.15)' }}
+                className="relative flex-shrink-0"
+                style={{
+                  width: '3rem',
+                  height: '1.75rem',
+                  borderRadius: '999px',
+                  backgroundColor: isRequired ? '#01a386' : 'rgba(0,0,0,0.15)',
+                  transition: 'background-color 0.2s',
+                }}
               >
                 <span
-                  className="absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200"
-                  style={{ transform: isRequired ? 'translateX(1.375rem)' : 'translateX(0.25rem)' }}
+                  style={{
+                    position: 'absolute',
+                    top: '0.25rem',
+                    left: '0.25rem',
+                    width: '1.25rem',
+                    height: '1.25rem',
+                    borderRadius: '50%',
+                    backgroundColor: 'white',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    transform: isRequired ? 'translateX(1.25rem)' : 'translateX(0)',
+                    transition: 'transform 0.2s',
+                    display: 'block',
+                  }}
                 />
               </div>
-            </button>
+            </div>
             <p className="text-xs text-gray-400 leading-relaxed">{t('practice.isRequiredHint')}</p>
           </div>
         )}
@@ -181,12 +197,14 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         <button
           type="submit"
           disabled={mutation.isPending}
-          className="h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+          className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
             background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            color: '#134e4a',
+            color: 'white',
+            border: 'none',
+            appearance: 'none' as React.CSSProperties['appearance'],
             boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-            opacity: name.trim() ? 1 : 0.5,
+            opacity: name.trim() ? 1 : 0.55,
             transition: 'opacity 0.2s',
             cursor: name.trim() ? 'pointer' : 'default',
           }}

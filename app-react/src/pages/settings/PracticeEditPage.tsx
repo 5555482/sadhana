@@ -26,6 +26,7 @@ export function PracticeEditPage() {
         initialValues={{
           name: practice.practice,
           dataType: practice.data_type,
+          isRequired: practice.is_required,
           dropdownVariants: practice.dropdown_variants,
           id: practice.id,
         }}
