@@ -83,8 +83,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
   })
 
   return (
-    <div className="px-4 py-4 max-w-lg mx-auto">
-      <form
+    <form
         onSubmit={(e) => { e.preventDefault(); mutation.mutate() }}
         className="flex flex-col gap-4"
       >
@@ -212,7 +211,6 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
           {mutation.isPending && <span className="loading loading-spinner loading-sm" />}
           {t('common.save')}
         </button>
-      </form>
-    </div>
+    </form>
   )
 }
