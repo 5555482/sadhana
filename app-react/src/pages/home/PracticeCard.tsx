@@ -55,11 +55,11 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
     <div
       className="rounded-2xl p-4 flex flex-col gap-3"
       style={{
-        background: 'rgba(255, 255, 255, 0.55)',
-        backdropFilter: 'blur(32px)',
-        WebkitBackdropFilter: 'blur(32px)',
-        border: '1px solid rgba(255, 255, 255, 0.75)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9)',
+        background: 'rgba(255, 255, 255, 0.90)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255, 255, 255, 0.80)',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
       }}
     >
       {/* Header */}
