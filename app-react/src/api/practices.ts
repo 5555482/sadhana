@@ -3,18 +3,21 @@ import type { UserPractice, DiaryEntry, PracticeDataType, PracticeValue } from '
 
 export const practicesApi = {
   async getUserPractices(): Promise<UserPractice[]> {
-    const res = await apiClient.get<{ practices: UserPractice[] }>('/user/practices')
-    return res.data.practices
+    const res = await apiClient.get<{ user_practices: UserPractice[] }>('/user/practices')
+    return res.data.user_practices
   },
-  async createUserPractice(data: { practice: string; data_type: PracticeDataType; is_required?: boolean; dropdown_variants?: string }): Promise<UserPractice> {
-    const res = await apiClient.post<{ practice: UserPractice }>('/user/practices', { practice: data })
-    return res.data.practice
+  async createUserPractice(data: { practice: string; data_type: PracticeDataType; is_required?: boolean; dropdown_variants?: string }): Promise<void> {
+    await apiClient.post('/user/practices', {
+      user_practice: { ...data, is_active: true },
+    })
   },
   async updateUserPractice(id: string, data: { practice?: string; data_type?: PracticeDataType; is_active?: boolean; is_required?: boolean; dropdown_variants?: string }): Promise<void> {
-    await apiClient.put(`/user/practices/${id}`, { practice: data })
+    await apiClient.put(`/user/practice/${id}`, {
+      user_practice: { id, ...data },
+    })
   },
   async deleteUserPractice(id: string): Promise<void> {
-    await apiClient.delete(`/user/practices/${id}`)
+    await apiClient.delete(`/user/practice/${id}`)
   },
   async reorderUserPractices(ids: string[]): Promise<void> {
     await apiClient.put('/user/practices/reorder', { ids })
