@@ -27,7 +27,8 @@ describe('LoginPage', () => {
     renderLogin()
     await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com')
     await userEvent.type(screen.getByLabelText(/password/i), 'password')
-    await userEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    const submitButton = screen.getAllByRole('button', { name: /sign in/i })[0]
+    await userEvent.click(submitButton)
     await waitFor(() => {
       expect(screen.getByText('Home page')).toBeInTheDocument()
     })
@@ -45,7 +46,8 @@ describe('LoginPage', () => {
     renderLogin()
     await userEvent.type(screen.getByLabelText(/email/i), 'bad@example.com')
     await userEvent.type(screen.getByLabelText(/password/i), 'wrong')
-    await userEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    const submitButton = screen.getAllByRole('button', { name: /sign in/i })[0]
+    await userEvent.click(submitButton)
     await waitFor(() => {
       expect(screen.getByRole('alert')).toBeInTheDocument()
     })

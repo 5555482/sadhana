@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FaApple, FaFacebook } from 'react-icons/fa'
+import { FaApple, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa'
 import { authApi } from '../../api/auth'
 import { useAuthStore } from '../../store/authStore'
 
@@ -46,42 +46,34 @@ export function LoginPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #dbeafe 0%, #fce7f3 50%, #ccfbf1 100%)' }}
+      style={{
+        backgroundImage: 'url(/login-bg.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
-      {/* Pastel blobs */}
-      <div
-        className="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)' }}
-      />
-      <div
-        className="absolute -bottom-32 -left-32 w-[400px] h-[400px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(20,184,166,0.25) 0%, transparent 70%)' }}
-      />
-      <div
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[260px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(236,72,153,0.15) 0%, transparent 70%)' }}
-      />
+      {/* Dark overlay to improve readability */}
+      <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 
       {/* Glass card */}
       <div
         className="relative w-full max-w-sm rounded-3xl px-8 py-10 flex flex-col gap-5"
         style={{
-          background: 'rgba(255, 255, 255, 0.55)',
-          backdropFilter: 'blur(32px)',
-          WebkitBackdropFilter: 'blur(32px)',
-          border: '1px solid rgba(255, 255, 255, 0.75)',
-          boxShadow: '0 8px 40px rgba(99,102,241,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
+          background: 'rgba(255, 255, 255, 0.60)',
+          backdropFilter: 'blur(36px)',
+          WebkitBackdropFilter: 'blur(36px)',
+          border: '1px solid rgba(255, 255, 255, 0.80)',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.9)',
         }}
       >
         {/* Headline */}
         <div className="mb-1 text-center">
-          <img src="/logo.png" alt="Sadhana Pro" className="w-16 h-16 mx-auto mb-3" />
-          <h1 className="text-3xl font-serif font-light text-base-content leading-tight">
+          <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
             Welcome to your<br />daily practice.
           </h1>
-          <p className="text-sm text-base-content/50 mt-3">
+          <p className="text-xs text-base-content/50 mt-2">
             {t('auth.noAccount')}{' '}
-            <Link to="/register" className="text-primary font-semibold hover:underline">
+            <Link to="/register" className="font-medium hover:underline" style={{ color: '#01a386' }}>
               {t('auth.signUp')}
             </Link>
           </p>
@@ -90,8 +82,9 @@ export function LoginPage() {
         {/* Email + password form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{t('auth.email')}</label>
+            <label htmlFor="email" className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{t('auth.email')}</label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -108,9 +101,10 @@ export function LoginPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{t('auth.password')}</label>
+            <label htmlFor="password" className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{t('auth.password')}</label>
             <div className="relative">
               <input
+                id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -126,15 +120,16 @@ export function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-primary font-medium hover:text-primary/70 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+                style={{ color: '#01a386' }}
               >
-                {showPassword ? 'Hide' : 'Show'}
+                {showPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
               </button>
             </div>
           </div>
 
           {error && (
-            <p className="text-sm text-error text-center">{error}</p>
+            <p role="alert" className="text-sm text-error text-center">{error}</p>
           )}
 
           <div className="text-center -mt-1">
@@ -149,7 +144,7 @@ export function LoginPage() {
             disabled={loading}
             className="w-full h-12 rounded-full text-sm font-semibold transition-all flex items-center justify-center gap-2"
             style={{
-              background: 'linear-gradient(135deg, #5eead4 0%, #2dd4bf 100%)',
+              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
               color: '#134e4a',
               boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
             }}

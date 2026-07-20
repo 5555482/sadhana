@@ -12,7 +12,8 @@ describe('Button', () => {
   it('shows loading spinner and disables when loading', () => {
     render(<Button variant="primary" loading>Save</Button>)
     expect(screen.getByRole('button')).toBeDisabled()
-    expect(screen.getByRole('button').querySelector('svg')).toBeInTheDocument()
+    // DaisyUI loading spinner is a <span>, not an <svg>
+    expect(screen.getByRole('button').querySelector('span.loading')).toBeInTheDocument()
   })
 
   it('calls onClick when clicked', async () => {

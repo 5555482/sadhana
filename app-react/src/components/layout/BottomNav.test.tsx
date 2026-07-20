@@ -20,9 +20,9 @@ describe('BottomNav', () => {
     expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument()
   })
 
-  it('highlights the active tab based on current path', () => {
+  it('marks the active tab with aria-current', () => {
     renderWithRouter('/charts')
-    const chartsLink = screen.getByRole('link', { name: /charts/i })
-    expect(chartsLink).toHaveClass('text-gold')
+    expect(screen.getByRole('link', { name: /charts/i })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: /home/i })).not.toHaveAttribute('aria-current', 'page')
   })
 })
