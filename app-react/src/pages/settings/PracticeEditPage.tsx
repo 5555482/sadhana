@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { practicesApi } from '../../api/practices'
 import { PracticeForm } from '../../components/PracticeForm'
@@ -9,8 +8,6 @@ import { TopBar } from '../../components/layout/TopBar'
 export function PracticeEditPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { t } = useTranslation()
-
   const { data, isLoading } = useQuery({
     queryKey: ['practices'],
     queryFn: practicesApi.getUserPractices,

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { FaHashtag, FaCheckCircle, FaStopwatch, FaClock, FaList } from 'react-icons/fa'
 import { practicesApi } from '../api/practices'
 import { yatrasApi } from '../api/yatras'
 import { ErrorBanner } from './ui/ErrorBanner'
@@ -14,25 +15,39 @@ interface PracticeFormProps {
   onSuccess: () => void
 }
 
-const DATA_TYPES: PracticeDataType[] = ['Int', 'Bool', 'Text', 'Time', 'Duration']
+const TYPE_OPTIONS: { value: PracticeDataType; icon: React.ElementType; label: string; hint: string }[] = [
+  { value: 'Bool',     icon: FaCheckCircle, label: 'Yes / No',  hint: 'Did you do it?' },
+  { value: 'Int',      icon: FaHashtag,     label: 'Count',     hint: 'Number of reps' },
+  { value: 'Duration', icon: FaStopwatch,   label: 'Duration',  hint: 'Minutes spent' },
+  { value: 'Time',     icon: FaClock,       label: 'Time',      hint: 'Clock time' },
+  { value: 'Text',     icon: FaList,        label: 'Dropdown',  hint: 'Choose option' },
+]
 
-const fieldStyle = {
+const inputBase: React.CSSProperties = {
   background: 'rgba(255,255,255,0.80)',
   border: '1px solid rgba(0,0,0,0.10)',
   borderRadius: '0.75rem',
   outline: 'none',
   width: '100%',
-  padding: '0 0.75rem',
-  height: '2.75rem',
-  fontSize: '0.9rem',
+  fontSize: '0.95rem',
   color: '#1f2937',
+  transition: 'border-color 0.15s, box-shadow 0.15s',
+}
+
+function onFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  e.target.style.borderColor = '#01a386'
+  e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)'
+}
+function onBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  e.target.style.borderColor = 'rgba(0,0,0,0.10)'
+  e.target.style.boxShadow = 'none'
 }
 
 export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormProps) {
   const { t } = useTranslation()
   const qc = useQueryClient()
   const [name, setName] = useState(initialValues?.name ?? '')
-  const [dataType, setDataType] = useState<PracticeDataType>(initialValues?.dataType ?? 'Int')
+  const [dataType, setDataType] = useState<PracticeDataType>(initialValues?.dataType ?? 'Bool')
   const [dropdownVariants, setDropdownVariants] = useState(initialValues?.dropdownVariants ?? '')
   const [error, setError] = useState<string | null>(null)
 
@@ -54,101 +69,138 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
   })
 
   return (
-    <div className="px-4 py-4">
-      <div
-        className="rounded-2xl p-6 flex flex-col gap-5"
-        style={{
-          background: 'rgba(255,255,255,0.90)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255,255,255,0.80)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-        }}
+    <div className="px-4 py-4 max-w-lg mx-auto">
+      <form
+        onSubmit={(e) => { e.preventDefault(); mutation.mutate() }}
+        className="flex flex-col gap-4"
       >
-        <form
-          onSubmit={(e) => { e.preventDefault(); mutation.mutate() }}
-          className="flex flex-col gap-5"
+        {/* Name */}
+        <div
+          className="rounded-2xl p-5 flex flex-col gap-2"
+          style={{
+            background: 'rgba(255,255,255,0.90)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.80)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+          }}
         >
-          {/* Name */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              {t('practice.name')}
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t('practice.name')}
-              style={fieldStyle}
-              onFocus={(e) => { e.target.style.borderColor = '#01a386'; e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)' }}
-              onBlur={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
-            />
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+            {t('practice.name')}
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Morning run"
+            style={{ ...inputBase, padding: '0.625rem 0.875rem' }}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            autoFocus
+          />
+        </div>
+
+        {/* Data type */}
+        <div
+          className="rounded-2xl p-5 flex flex-col gap-3"
+          style={{
+            background: 'rgba(255,255,255,0.90)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.80)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+          }}
+        >
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+            {t('practice.type')}
+          </label>
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+            {TYPE_OPTIONS.map(({ value, icon: Icon, label, hint }) => {
+              const active = dataType === value
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setDataType(value)}
+                  className="flex flex-col items-center gap-1.5 rounded-xl py-3 px-2 transition-all"
+                  style={
+                    active
+                      ? {
+                          background: 'rgba(1,163,134,0.10)',
+                          border: '1.5px solid #01a386',
+                          boxShadow: '0 0 0 3px rgba(1,163,134,0.08)',
+                        }
+                      : {
+                          background: 'rgba(0,0,0,0.03)',
+                          border: '1.5px solid rgba(0,0,0,0.07)',
+                        }
+                  }
+                >
+                  <Icon
+                    className="w-5 h-5"
+                    style={{ color: active ? '#01a386' : '#9ca3af' }}
+                  />
+                  <span
+                    className="text-xs font-semibold leading-tight text-center"
+                    style={{ color: active ? '#01a386' : '#6b7280' }}
+                  >
+                    {label}
+                  </span>
+                  <span className="text-[10px] text-gray-400 text-center leading-tight hidden sm:block">
+                    {hint}
+                  </span>
+                </button>
+              )
+            })}
           </div>
+        </div>
 
-          {/* Type */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              {t('practice.type')}
-            </label>
-            <select
-              value={dataType}
-              onChange={(e) => setDataType(e.target.value as PracticeDataType)}
-              style={{ ...fieldStyle, appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer' }}
-              onFocus={(e) => { e.target.style.borderColor = '#01a386'; e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)' }}
-              onBlur={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
-            >
-              {DATA_TYPES.map((dt) => (
-                <option key={dt} value={dt}>{dt}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Dropdown variants — only for Text */}
-          {dataType === 'Text' && (
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                {t('practice.dropdownVariants')}
-              </label>
-              <textarea
-                rows={3}
-                placeholder={t('practice.dropdownVariantsHint')}
-                value={dropdownVariants}
-                onChange={(e) => setDropdownVariants(e.target.value)}
-                style={{
-                  background: 'rgba(255,255,255,0.80)',
-                  border: '1px solid rgba(0,0,0,0.10)',
-                  borderRadius: '0.75rem',
-                  outline: 'none',
-                  width: '100%',
-                  padding: '0.625rem 0.75rem',
-                  fontSize: '0.9rem',
-                  color: '#1f2937',
-                  resize: 'vertical',
-                }}
-                onFocus={(e) => { e.target.style.borderColor = '#01a386'; e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)' }}
-                onBlur={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
-              />
-            </div>
-          )}
-
-          <ErrorBanner message={error} />
-
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="h-11 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
+        {/* Dropdown variants — only for Text */}
+        {dataType === 'Text' && (
+          <div
+            className="rounded-2xl p-5 flex flex-col gap-2"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              color: '#134e4a',
-              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-              opacity: mutation.isPending ? 0.7 : 1,
+              background: 'rgba(255,255,255,0.90)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.80)',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
             }}
           >
-            {mutation.isPending && <span className="loading loading-spinner loading-sm" />}
-            {t('common.save')}
-          </button>
-        </form>
-      </div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+              {t('practice.dropdownVariants')}
+            </label>
+            <textarea
+              rows={4}
+              placeholder={t('practice.dropdownVariantsHint')}
+              value={dropdownVariants}
+              onChange={(e) => setDropdownVariants(e.target.value)}
+              style={{ ...inputBase, padding: '0.625rem 0.875rem', resize: 'vertical' }}
+              onFocus={onFocus}
+              onBlur={onBlur}
+            />
+          </div>
+        )}
+
+        <ErrorBanner message={error} />
+
+        <button
+          type="submit"
+          disabled={mutation.isPending || !name.trim()}
+          className="h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+          style={{
+            background: name.trim()
+              ? 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)'
+              : 'rgba(0,0,0,0.10)',
+            color: name.trim() ? '#134e4a' : '#9ca3af',
+            boxShadow: name.trim() ? '0 4px 20px rgba(45,212,191,0.35)' : 'none',
+            transition: 'all 0.2s',
+          }}
+        >
+          {mutation.isPending && <span className="loading loading-spinner loading-sm" />}
+          {t('common.save')}
+        </button>
+      </form>
     </div>
   )
 }
