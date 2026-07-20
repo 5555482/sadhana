@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FaSeedling } from 'react-icons/fa'
+import { FaSeedling, FaTimes } from 'react-icons/fa'
 import { PracticeForm } from '../../components/PracticeForm'
 import { TopBar } from '../../components/layout/TopBar'
 
@@ -9,9 +9,19 @@ export function PracticeNewPage() {
   const { t } = useTranslation()
   return (
     <>
-      <TopBar />
-      <div className="px-4 py-6 flex flex-col gap-4">
-        {/* Page header — matches the visual weight of the week calendar on home */}
+      <TopBar
+        right={
+          <button
+            onClick={() => navigate('/')}
+            aria-label="Close"
+            className="btn btn-ghost btn-sm btn-circle text-gray-500"
+          >
+            <FaTimes className="w-4 h-4" />
+          </button>
+        }
+      />
+      <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4">
+        {/* Page header */}
         <div
           className="rounded-2xl px-5 py-5 flex items-center gap-4"
           style={{
@@ -39,7 +49,7 @@ export function PracticeNewPage() {
 
         <PracticeForm
           mode={{ type: 'user' }}
-          onSuccess={() => navigate('/user/practices')}
+          onSuccess={() => navigate('/')}
         />
       </div>
     </>

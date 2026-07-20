@@ -37,6 +37,8 @@
   },
   "home": {
     "noPractices": "No practices yet",
+    "addStarters": "Add starter practices",
+    "addCustom": "or create a custom one",
     "addFirst": "Add your first practice",
     "offline": "You're offline — changes will sync when reconnected"
   },

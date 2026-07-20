@@ -85,7 +85,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
   return (
     <form
         onSubmit={(e) => { e.preventDefault(); mutation.mutate() }}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 w-full"
       >
         {/* Name */}
         <div className="rounded-2xl p-5 flex flex-col gap-2" style={cardStyle}>
