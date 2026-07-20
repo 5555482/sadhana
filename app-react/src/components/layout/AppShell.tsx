@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom'
 import { TopBar } from './TopBar'
-import { BottomNav } from './BottomNav'
 
 export function AppShell() {
   return (
@@ -14,13 +13,15 @@ export function AppShell() {
           backgroundPosition: 'center',
         }}
       />
-      <div className="fixed inset-0 bg-black/30 -z-10 pointer-events-none" />
-
+      {/* Light white overlay — airy watercolor wash over the photo */}
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none"
+        style={{ background: 'rgba(255,255,255,0.55)' }}
+      />
       <TopBar />
-      <main className="pt-14 pb-16">
+      <main className="pt-14">
         <Outlet />
       </main>
-      <BottomNav />
     </div>
   )
 }
