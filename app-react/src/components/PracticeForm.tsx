@@ -20,7 +20,7 @@ const TYPE_OPTIONS: { value: PracticeDataType; icon: React.ElementType; label: s
   { value: 'Int',      icon: FaHashtag,     label: 'Count',     hint: 'Number of reps' },
   { value: 'Duration', icon: FaStopwatch,   label: 'Duration',  hint: 'Minutes spent' },
   { value: 'Time',     icon: FaClock,       label: 'Time',      hint: 'Clock time' },
-  { value: 'Text',     icon: FaList,        label: 'Dropdown',  hint: 'Choose option' },
+  { value: 'Text',     icon: FaList,        label: 'Text',      hint: 'Choose option' },
 ]
 
 const inputBase: React.CSSProperties = {
