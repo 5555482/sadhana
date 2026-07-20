@@ -25,7 +25,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, right }: Top
         background: 'rgba(255, 255, 255, 0.70)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.50)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
       }}
     >
       {showBack ? (
@@ -40,7 +40,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, right }: Top
         <span className="font-serif text-lg text-gray-800 font-bold">Sadhana Pro</span>
       )}
 
-      {title && (
+      {showBack && title && (
         <h1 className="font-semibold text-base text-gray-800 flex-1">{title}</h1>
       )}
 

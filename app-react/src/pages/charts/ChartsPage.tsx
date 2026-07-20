@@ -62,7 +62,7 @@ export function ChartsPage() {
 
       <Link
         to="/charts/new"
-        className="btn btn-primary btn-circle btn-lg fixed bottom-20 right-4 shadow-lg z-30"
+        className="btn btn-primary btn-circle btn-lg fixed bottom-6 right-4 shadow-lg z-30"
       >
         <FaPlus className="w-6 h-6" />
       </Link>
