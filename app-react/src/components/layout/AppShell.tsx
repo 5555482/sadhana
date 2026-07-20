@@ -4,7 +4,7 @@ import { BottomNav } from './BottomNav'
 
 export function AppShell() {
   return (
-    <div className="min-h-screen relative">
+    <div className="relative">
       {/* Fixed photo background — avoids iOS background-attachment:fixed bug */}
       <div
         className="fixed inset-0 -z-10"
