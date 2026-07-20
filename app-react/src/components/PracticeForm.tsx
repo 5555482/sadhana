@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { FaHashtag, FaCheckCircle, FaStopwatch, FaClock, FaList } from 'react-icons/fa'
@@ -11,16 +11,16 @@ type PracticeFormMode = { type: 'user' } | { type: 'yatra'; yatraId: string }
 
 interface PracticeFormProps {
   mode: PracticeFormMode
-  initialValues?: { name: string; dataType: PracticeDataType; dropdownVariants?: string; id?: string }
+  initialValues?: { name: string; dataType: PracticeDataType; isRequired?: boolean; dropdownVariants?: string; id?: string }
   onSuccess: () => void
 }
 
-const TYPE_OPTIONS: { value: PracticeDataType; icon: React.ElementType; label: string; hint: string }[] = [
-  { value: 'Bool',     icon: FaCheckCircle, label: 'Yes / No',  hint: 'Did you do it?' },
-  { value: 'Int',      icon: FaHashtag,     label: 'Count',     hint: 'Number of reps' },
-  { value: 'Duration', icon: FaStopwatch,   label: 'Duration',  hint: 'Minutes spent' },
-  { value: 'Time',     icon: FaClock,       label: 'Time',      hint: 'Clock time' },
-  { value: 'Text',     icon: FaList,        label: 'Text',      hint: 'Choose option' },
+const TYPE_OPTIONS: { value: PracticeDataType; icon: React.ElementType; label: string }[] = [
+  { value: 'Bool',     icon: FaCheckCircle, label: 'Yes / No'  },
+  { value: 'Int',      icon: FaHashtag,     label: 'Count'     },
+  { value: 'Duration', icon: FaStopwatch,   label: 'Duration'  },
+  { value: 'Time',     icon: FaClock,       label: 'Time'      },
+  { value: 'Text',     icon: FaList,        label: 'Text'      },
 ]
 
 const inputBase: React.CSSProperties = {
@@ -28,6 +28,7 @@ const inputBase: React.CSSProperties = {
   border: '1px solid rgba(0,0,0,0.10)',
   borderRadius: '0.75rem',
   outline: 'none',
+  width: '100%',
   fontSize: '0.95rem',
   color: '#1f2937',
   transition: 'border-color 0.15s, box-shadow 0.15s',
@@ -42,107 +43,12 @@ function onBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
   e.target.style.boxShadow = 'none'
 }
 
-function TypePreview({ dataType, dropdownVariants, onVariantsChange, t }: {
-  dataType: PracticeDataType
-  dropdownVariants: string
-  onVariantsChange: (v: string) => void
-  t: (k: string) => string
-}) {
-  const variantsRef = useRef<HTMLTextAreaElement>(null)
-
-  useEffect(() => {
-    if (dataType === 'Text') {
-      setTimeout(() => variantsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50)
-    }
-  }, [dataType])
-
-  return (
-    <div
-      className="rounded-2xl p-5 flex flex-col gap-3"
-      style={{
-        background: 'rgba(255,255,255,0.90)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,255,255,0.80)',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-      }}
-    >
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Preview</p>
-
-      {dataType === 'Bool' && (
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700">Done today?</span>
-          <div
-            className="relative w-12 h-7 rounded-full"
-            style={{ backgroundColor: '#01a386' }}
-          >
-            <span
-              className="absolute top-1 right-1 w-5 h-5 rounded-full bg-white shadow"
-            />
-          </div>
-        </div>
-      )}
-
-      {dataType === 'Int' && (
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-medium"
-            style={{ background: 'rgba(1,163,134,0.10)', color: '#01a386', border: '1px solid rgba(0,0,0,0.07)' }}
-          >−</button>
-          <span
-            className="w-16 h-9 rounded-xl flex items-center justify-center text-sm font-medium"
-            style={{ background: 'rgba(255,255,255,0.80)', border: '1px solid rgba(0,0,0,0.10)', color: '#374151' }}
-          >0</span>
-          <button
-            type="button"
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-medium"
-            style={{ background: 'rgba(1,163,134,0.10)', color: '#01a386', border: '1px solid rgba(0,0,0,0.07)' }}
-          >+</button>
-        </div>
-      )}
-
-      {dataType === 'Duration' && (
-        <div className="flex items-center gap-2">
-          <span
-            className="w-20 h-9 rounded-xl flex items-center justify-center text-sm font-medium"
-            style={{ background: 'rgba(255,255,255,0.80)', border: '1px solid rgba(0,0,0,0.10)', color: '#374151' }}
-          >0</span>
-          <span className="text-sm text-gray-400">min</span>
-        </div>
-      )}
-
-      {dataType === 'Time' && (
-        <div className="flex items-center gap-1">
-          <span
-            className="w-14 h-9 rounded-xl flex items-center justify-center text-sm font-medium"
-            style={{ background: 'rgba(255,255,255,0.80)', border: '1px solid rgba(0,0,0,0.10)', color: '#374151' }}
-          >06</span>
-          <span className="font-bold text-gray-400">:</span>
-          <span
-            className="w-14 h-9 rounded-xl flex items-center justify-center text-sm font-medium"
-            style={{ background: 'rgba(255,255,255,0.80)', border: '1px solid rgba(0,0,0,0.10)', color: '#374151' }}
-          >00</span>
-        </div>
-      )}
-
-      {dataType === 'Text' && (
-        <div className="flex flex-col gap-3">
-          <textarea
-            ref={variantsRef}
-            rows={4}
-            placeholder={t('practice.dropdownVariantsHint')}
-            value={dropdownVariants}
-            onChange={(e) => onVariantsChange(e.target.value)}
-            style={{ ...inputBase, width: '100%', padding: '0.625rem 0.875rem', resize: 'vertical' }}
-            onFocus={onFocus}
-            onBlur={onBlur}
-          />
-          <p className="text-xs text-gray-400">{t('practice.dropdownVariants')}</p>
-        </div>
-      )}
-    </div>
-  )
+const cardStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.90)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(255,255,255,0.80)',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
 }
 
 export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormProps) {
@@ -150,12 +56,18 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
   const qc = useQueryClient()
   const [name, setName] = useState(initialValues?.name ?? '')
   const [dataType, setDataType] = useState<PracticeDataType>(initialValues?.dataType ?? 'Bool')
+  const [isRequired, setIsRequired] = useState(initialValues?.isRequired ?? false)
   const [dropdownVariants, setDropdownVariants] = useState(initialValues?.dropdownVariants ?? '')
   const [error, setError] = useState<string | null>(null)
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const data = { practice: name, data_type: dataType, dropdown_variants: dropdownVariants || undefined }
+      const data = {
+        practice: name,
+        data_type: dataType,
+        is_required: isRequired || undefined,
+        dropdown_variants: dataType === 'Text' ? dropdownVariants || undefined : undefined,
+      }
       if (mode.type === 'user') {
         if (initialValues?.id) await practicesApi.updateUserPractice(initialValues.id, data)
         else await practicesApi.createUserPractice(data)
@@ -177,16 +89,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         className="flex flex-col gap-4"
       >
         {/* Name */}
-        <div
-          className="rounded-2xl p-5 flex flex-col gap-2"
-          style={{
-            background: 'rgba(255,255,255,0.90)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.80)',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-          }}
-        >
+        <div className="rounded-2xl p-5 flex flex-col gap-2" style={cardStyle}>
           <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
             {t('practice.name')}
           </label>
@@ -195,7 +98,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Morning run"
-            style={{ ...inputBase, width: '100%', padding: '0.625rem 0.875rem' }}
+            style={{ ...inputBase, padding: '0.625rem 0.875rem' }}
             onFocus={onFocus}
             onBlur={onBlur}
             autoFocus
@@ -203,21 +106,12 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         </div>
 
         {/* Data type */}
-        <div
-          className="rounded-2xl p-5 flex flex-col gap-3"
-          style={{
-            background: 'rgba(255,255,255,0.90)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.80)',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-          }}
-        >
+        <div className="rounded-2xl p-5 flex flex-col gap-3" style={cardStyle}>
           <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
             {t('practice.type')}
           </label>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-            {TYPE_OPTIONS.map(({ value, icon: Icon, label, hint }) => {
+            {TYPE_OPTIONS.map(({ value, icon: Icon, label }) => {
               const active = dataType === value
               return (
                 <button
@@ -235,22 +129,52 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
                   <span className="text-xs font-semibold leading-tight text-center" style={{ color: active ? '#01a386' : '#6b7280' }}>
                     {label}
                   </span>
-                  <span className="text-[10px] text-gray-400 text-center leading-tight hidden sm:block">
-                    {hint}
-                  </span>
                 </button>
               )
             })}
           </div>
         </div>
 
-        {/* Preview */}
-        <TypePreview
-          dataType={dataType}
-          dropdownVariants={dropdownVariants}
-          onVariantsChange={setDropdownVariants}
-          t={t}
-        />
+        {/* Dropdown variants — Text type only */}
+        {dataType === 'Text' && (
+          <div className="rounded-2xl p-5 flex flex-col gap-2" style={cardStyle}>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+              {t('practice.dropdownVariants')}
+            </label>
+            <textarea
+              rows={4}
+              placeholder={t('practice.dropdownVariantsHint')}
+              value={dropdownVariants}
+              onChange={(e) => setDropdownVariants(e.target.value)}
+              style={{ ...inputBase, padding: '0.625rem 0.875rem', resize: 'vertical' }}
+              onFocus={onFocus}
+              onBlur={onBlur}
+            />
+          </div>
+        )}
+
+        {/* Is required — user practices only */}
+        {mode.type === 'user' && (
+          <div className="rounded-2xl p-5 flex flex-col gap-3" style={cardStyle}>
+            <button
+              type="button"
+              onClick={() => setIsRequired((v) => !v)}
+              className="flex items-center justify-between"
+            >
+              <span className="text-sm font-medium text-gray-700">{t('practice.isRequired')}</span>
+              <div
+                className="relative w-12 h-7 rounded-full transition-colors duration-200 flex-shrink-0"
+                style={{ backgroundColor: isRequired ? '#01a386' : 'rgba(0,0,0,0.15)' }}
+              >
+                <span
+                  className="absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200"
+                  style={{ transform: isRequired ? 'translateX(1.375rem)' : 'translateX(0.25rem)' }}
+                />
+              </div>
+            </button>
+            <p className="text-xs text-gray-400 leading-relaxed">{t('practice.isRequiredHint')}</p>
+          </div>
+        )}
 
         <ErrorBanner message={error} />
 

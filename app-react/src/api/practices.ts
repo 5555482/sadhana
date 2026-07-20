@@ -6,11 +6,11 @@ export const practicesApi = {
     const res = await apiClient.get<{ practices: UserPractice[] }>('/user/practices')
     return res.data.practices
   },
-  async createUserPractice(data: { practice: string; data_type: PracticeDataType; dropdown_variants?: string }): Promise<UserPractice> {
+  async createUserPractice(data: { practice: string; data_type: PracticeDataType; is_required?: boolean; dropdown_variants?: string }): Promise<UserPractice> {
     const res = await apiClient.post<{ practice: UserPractice }>('/user/practices', { practice: data })
     return res.data.practice
   },
-  async updateUserPractice(id: string, data: { practice?: string; data_type?: PracticeDataType; is_active?: boolean; dropdown_variants?: string }): Promise<void> {
+  async updateUserPractice(id: string, data: { practice?: string; data_type?: PracticeDataType; is_active?: boolean; is_required?: boolean; dropdown_variants?: string }): Promise<void> {
     await apiClient.put(`/user/practices/${id}`, { practice: data })
   },
   async deleteUserPractice(id: string): Promise<void> {

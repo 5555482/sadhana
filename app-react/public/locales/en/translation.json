@@ -46,6 +46,8 @@
     "type": "Data type",
     "dropdownVariants": "Options",
     "dropdownVariantsHint": "One option per line",
+    "isRequired": "Required",
+    "isRequiredHint": "If a practice is required and hasn't been filled in for a past date, a red dot will appear next to that date in the calendar.",
     "delete": "Delete practice",
     "deleteConfirm": "Delete",
     "empty": "No practices yet"
