@@ -1,18 +1,22 @@
-import React from 'react'
 import { Outlet } from 'react-router-dom'
 import { TopBar } from './TopBar'
 import { BottomNav } from './BottomNav'
 
-interface AppShellProps {
-  title?: string
-  showBack?: boolean
-  right?: React.ReactNode
-}
-
-export function AppShell({ title, showBack, right }: AppShellProps) {
+export function AppShell() {
   return (
-    <div className="min-h-screen bg-base-200">
-      <TopBar title={title} showBack={showBack} right={right} />
+    <div className="min-h-screen relative">
+      {/* Fixed photo background — avoids iOS background-attachment:fixed bug */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          backgroundImage: 'url(/login-bg.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      <div className="fixed inset-0 bg-black/30 -z-10 pointer-events-none" />
+
+      <TopBar />
       <main className="pt-14 pb-16">
         <Outlet />
       </main>
