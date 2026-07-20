@@ -42,6 +42,7 @@
   },
   "practice": {
     "new": "New Practice",
+    "newSubtitle": "Track something meaningful every day",
     "name": "Practice name",
     "type": "Data type",
     "dropdownVariants": "Options",
