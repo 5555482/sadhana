@@ -81,17 +81,17 @@ export function HomePage() {
         {/* Date navigator */}
         <div className="flex items-center justify-center gap-4 py-1">
           <button
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white/80 hover:text-white transition-colors text-lg"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors text-lg"
             onClick={prev}
             aria-label="Previous day"
           >
             ←
           </button>
-          <span className="font-serif font-extralight text-white text-base tracking-wide min-w-[80px] text-center">
+          <span className="font-serif font-extralight text-gray-700 text-base tracking-wide min-w-[80px] text-center">
             {displayDate(date)}
           </span>
           <button
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white/80 hover:text-white transition-colors text-lg"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors text-lg"
             onClick={next}
             aria-label="Next day"
           >
@@ -120,7 +120,7 @@ export function HomePage() {
           {/* Empty state */}
           {!practicesQuery.isLoading && activePractices.length === 0 && (
             <div className="text-center py-16 flex flex-col gap-5">
-              <p className="text-white/70 text-sm">{t('home.noPractices')}</p>
+              <p className="text-gray-500 text-sm">{t('home.noPractices')}</p>
               <Link
                 to="/user/practice/new"
                 className="mx-auto px-6 h-11 rounded-full text-sm font-semibold flex items-center justify-center transition-all"
@@ -141,7 +141,7 @@ export function HomePage() {
       <Link
         to="/user/practice/new"
         aria-label="Add practice"
-        className="fixed bottom-20 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
+        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
         style={{
           background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
           boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
