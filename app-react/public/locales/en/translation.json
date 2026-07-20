@@ -41,6 +41,7 @@
     "offline": "You're offline — changes will sync when reconnected"
   },
   "practice": {
+    "new": "New Practice",
     "name": "Practice name",
     "type": "Data type",
     "dropdownVariants": "Options",
