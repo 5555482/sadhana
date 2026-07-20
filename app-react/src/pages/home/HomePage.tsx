@@ -5,15 +5,12 @@ import { FaSync, FaPlus } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
 import { PracticeCard } from './PracticeCard'
+import { WeekCalendar } from './WeekCalendar'
 import { TopBar } from '../../components/layout/TopBar'
 import useNetworkStatus from '../../hooks/useNetworkStatus'
 
 function toDateStr(d: Date) {
   return d.toISOString().split('T')[0]
-}
-
-function displayDate(d: Date) {
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 export function HomePage() {
@@ -36,17 +33,6 @@ export function HomePage() {
   const valueMap = Object.fromEntries(
     (diaryQuery.data ?? []).map((e) => [e.practice, e.value]),
   )
-
-  const prev = () => {
-    const d = new Date(date)
-    d.setDate(d.getDate() - 1)
-    setDate(d)
-  }
-  const next = () => {
-    const d = new Date(date)
-    d.setDate(d.getDate() + 1)
-    setDate(d)
-  }
 
   return (
     <>
@@ -78,26 +64,8 @@ export function HomePage() {
           </div>
         )}
 
-        {/* Date navigator */}
-        <div className="flex items-center justify-center gap-4 py-1">
-          <button
-            className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors text-lg"
-            onClick={prev}
-            aria-label="Previous day"
-          >
-            ←
-          </button>
-          <span className="font-serif font-extralight text-gray-700 text-base tracking-wide min-w-[80px] text-center">
-            {displayDate(date)}
-          </span>
-          <button
-            className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors text-lg"
-            onClick={next}
-            aria-label="Next day"
-          >
-            →
-          </button>
-        </div>
+        {/* Week calendar */}
+        <WeekCalendar date={date} onDateChange={setDate} />
 
         {/* Loading */}
         {(practicesQuery.isLoading || diaryQuery.isLoading) && (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, NavLink } from 'react-router-dom'
+import { useNavigate, NavLink, Link } from 'react-router-dom'
 import { FaChevronLeft, FaHome, FaChartBar, FaUsers, FaCog } from 'react-icons/fa'
 
 interface TopBarProps {
@@ -37,7 +37,10 @@ export const TopBar = React.memo(function TopBar({ title, showBack, right }: Top
           <FaChevronLeft className="w-4 h-4" />
         </button>
       ) : (
-        <span className="font-serif text-lg text-gray-800 font-bold">Sadhana Pro</span>
+        <Link to="/" className="flex items-center gap-2 no-underline">
+          <img src="/logo.png" className="h-8 w-8 object-contain" alt="Sadhana logo" />
+          <span className="font-serif text-xl font-bold" style={{ color: '#01a386' }}>Sadhana</span>
+        </Link>
       )}
 
       {showBack && title && (
