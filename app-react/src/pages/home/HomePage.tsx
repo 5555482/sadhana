@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { FaSync, FaPlus } from 'react-icons/fa'
+import { FaPlus, FaSlidersH } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
 import { PracticeCard } from './PracticeCard'
@@ -55,19 +55,9 @@ export function HomePage() {
 
   return (
     <>
-      <TopBar
-        right={
-          <button
-            className="btn btn-ghost btn-sm btn-circle text-base-content/70"
-            onClick={() => diaryQuery.refetch()}
-            aria-label="Refresh"
-          >
-            <FaSync className="w-4 h-4" />
-          </button>
-        }
-      />
+      <TopBar />
 
-      <div className="px-4 py-4 flex flex-col gap-4">
+      <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
         {/* Offline banner */}
         {!isOnline && (
           <div
@@ -86,23 +76,36 @@ export function HomePage() {
         {/* Week calendar */}
         <WeekCalendar date={date} onDateChange={setDate} />
 
-        {/* Loading */}
-        {(practicesQuery.isLoading || diaryQuery.isLoading) && (
-          <div className="flex justify-center py-8">
-            <span className="loading loading-spinner loading-md" style={{ color: '#01a386' }} />
-          </div>
-        )}
-
-        {/* Practice cards */}
+        {/* Practice cards — skeletons hold layout while loading to prevent jump */}
         <div className="flex flex-col gap-3">
-          {activePractices.map((p) => (
-            <PracticeCard
-              key={p.id}
-              practice={p}
-              date={dateStr}
-              currentValue={valueMap[p.practice]}
-            />
-          ))}
+          {practicesQuery.isLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-2xl px-4 min-h-[60px] flex items-center gap-3 animate-pulse"
+                style={{
+                  background: 'rgba(255,255,255,0.70)',
+                  border: '1px solid rgba(255,255,255,0.85)',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+                }}
+              >
+                <div className="w-8 h-8 rounded-xl flex-shrink-0" style={{ background: 'rgba(0,0,0,0.07)' }} />
+                <div className="h-3.5 rounded-full flex-1" style={{ background: 'rgba(0,0,0,0.07)', maxWidth: '55%' }} />
+                <div className="w-12 h-6 rounded-full flex-shrink-0" style={{ background: 'rgba(0,0,0,0.07)' }} />
+              </div>
+            ))
+          ) : (
+            <>
+              {activePractices.map((p) => (
+                <PracticeCard
+                  key={p.id + '-' + dateStr}
+                  practice={p}
+                  date={dateStr}
+                  currentValue={valueMap[p.practice]}
+                />
+              ))}
+            </>
+          )}
 
           {/* Empty state */}
           {!practicesQuery.isLoading && activePractices.length === 0 && (
@@ -137,18 +140,35 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* FAB */}
-      <Link
-        to="/user/practice/new"
-        aria-label="Add practice"
-        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
-        style={{
-          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-          boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
-        }}
-      >
-        <FaPlus className="w-5 h-5 text-white" />
-      </Link>
+      {/* FABs */}
+      <div className="fixed bottom-6 right-4 z-30 flex flex-col gap-3 items-center">
+        <Link
+          to="/user/practices"
+          aria-label="Edit practices"
+          className="w-14 h-14 rounded-full flex items-center justify-center"
+          style={{
+            background: 'rgba(255,255,255,0.90)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.80)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+            color: '#01a386',
+          }}
+        >
+          <FaSlidersH className="w-5 h-5" />
+        </Link>
+        <Link
+          to="/user/practice/new"
+          aria-label="Add practice"
+          className="w-14 h-14 rounded-full flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
+          }}
+        >
+          <FaPlus className="w-5 h-5 text-white" />
+        </Link>
+      </div>
     </>
   )
 }

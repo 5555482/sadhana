@@ -1,10 +1,12 @@
 import React from 'react'
 import { useNavigate, NavLink, Link } from 'react-router-dom'
 import { FaChevronLeft, FaHome, FaChartBar, FaUsers, FaCog } from 'react-icons/fa'
+import { LuX } from 'react-icons/lu'
 
 interface TopBarProps {
   title?: string
   showBack?: boolean
+  showClose?: boolean
   right?: React.ReactNode
 }
 
@@ -15,7 +17,7 @@ const navItems = [
   { to: '/settings', label: 'Settings', icon: FaCog, exact: false },
 ]
 
-export const TopBar = React.memo(function TopBar({ title, showBack, right }: TopBarProps) {
+export const TopBar = React.memo(function TopBar({ title, showBack, showClose, right }: TopBarProps) {
   const navigate = useNavigate()
 
   return (
@@ -28,7 +30,15 @@ export const TopBar = React.memo(function TopBar({ title, showBack, right }: Top
         borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
       }}
     >
-      {showBack ? (
+      {showClose ? (
+        <button
+          onClick={() => navigate(-1)}
+          aria-label="Close"
+          className="btn btn-ghost btn-sm btn-circle text-gray-500"
+        >
+          <LuX className="w-5 h-5" />
+        </button>
+      ) : showBack ? (
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
@@ -50,11 +60,11 @@ export const TopBar = React.memo(function TopBar({ title, showBack, right }: Top
         </Link>
       )}
 
-      {showBack && title && (
+      {(showBack || showClose) && title && (
         <h1 className="font-semibold text-base text-gray-800 flex-1">{title}</h1>
       )}
 
-      {!showBack && (
+      {!showBack && !showClose && (
         <nav className="ml-auto flex items-center gap-1" aria-label="Main navigation">
           {navItems.map(({ to, label, icon: Icon, exact }) => (
             <NavLink
@@ -79,7 +89,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, right }: Top
       )}
 
       {right && (
-        <div className={showBack ? 'ml-auto' : 'ml-2'}>
+        <div className={(showBack || showClose) ? 'ml-auto' : 'ml-2'}>
           {right}
         </div>
       )}

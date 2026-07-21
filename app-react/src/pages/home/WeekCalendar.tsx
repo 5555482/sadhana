@@ -8,9 +8,11 @@ interface WeekCalendarProps {
 const WEEKDAY_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
 function isSameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() &&
+  return (
+    a.getFullYear() === b.getFullYear() &&
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate()
+  )
 }
 
 function addDays(d: Date, n: number): Date {
@@ -20,7 +22,7 @@ function addDays(d: Date, n: number): Date {
 }
 
 function getWeekDays(date: Date): Date[] {
-  const day = date.getDay() // 0=Sun
+  const day = date.getDay()
   const monday = new Date(date)
   monday.setDate(date.getDate() - ((day + 6) % 7))
   return Array.from({ length: 7 }, (_, i) => addDays(monday, i))
@@ -38,34 +40,24 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
   const [animating, setAnimating] = useState(false)
 
   const goToPrevWeek = () => {
-    const newDate = date.getDay() === 1
-      ? addDays(date, -1)
-      : addDays(date, -7)
-    onDateChange(newDate)
+    onDateChange(date.getDay() === 1 ? addDays(date, -1) : addDays(date, -7))
   }
-
   const goToNextWeek = () => {
-    const newDate = date.getDay() === 0
-      ? addDays(date, 1)
-      : addDays(date, 7)
-    onDateChange(newDate)
+    onDateChange(date.getDay() === 0 ? addDays(date, 1) : addDays(date, 7))
   }
 
   const onTouchStart = (e: React.TouchEvent) => {
-    const t = e.touches[0]
-    touchStartX.current = t.clientX
-    touchStartY.current = t.clientY
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
     setAnimating(false)
   }
-
   const onTouchMove = (e: React.TouchEvent) => {
     if (touchStartX.current === null || touchStartY.current === null) return
     const dx = e.touches[0].clientX - touchStartX.current
     const dy = e.touches[0].clientY - touchStartY.current
     if (Math.abs(dx) < Math.abs(dy)) return
-    setTranslateX(Math.max(-120, Math.min(120, dx)))
+    setTranslateX(Math.max(-100, Math.min(100, dx)))
   }
-
   const onTouchEnd = () => {
     setAnimating(true)
     if (translateX > 60) goToPrevWeek()
@@ -75,67 +67,97 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
     touchStartY.current = null
   }
 
-  const fullDateLabel = date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-
   const renderDay = (d: Date, isOutside: boolean, onClick: () => void) => {
     const selected = isSameDay(d, date)
     const isToday = isSameDay(d, today)
-    const weekdayIdx = (d.getDay() + 6) % 7 // Mon=0
+    const weekdayIdx = (d.getDay() + 6) % 7
 
     return (
-      <div
+      <button
         key={d.toISOString()}
-        className={`flex flex-col items-center gap-1 cursor-pointer ${isOutside ? 'opacity-30' : ''}`}
-        onClick={() => onClick()}
+        type="button"
+        onClick={onClick}
+        className="flex flex-col items-center gap-1 py-1 w-full focus:outline-none"
+        style={{ opacity: isOutside ? 0.28 : 1 }}
       >
-        <span className={`text-xs ${selected ? 'font-semibold text-gray-600' : 'text-gray-400'}`}>
+        <span
+          className="text-xs leading-none"
+          style={{
+            fontWeight: selected ? 700 : 400,
+            color: selected ? '#01a386' : '#9ca3af',
+          }}
+        >
           {WEEKDAY_LETTERS[weekdayIdx]}
         </span>
         <div
-          className="h-8 w-8 rounded-full flex items-center justify-center text-sm transition-colors"
+          className="h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-150"
           style={
             selected
-              ? { background: '#01a386', color: '#fff' }
+              ? {
+                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                  color: '#fff',
+                  boxShadow: '0 2px 8px rgba(1,163,134,0.35)',
+                }
               : isToday
-              ? { color: '#01a386' }
-              : undefined
+              ? { color: '#01a386', fontWeight: 600 }
+              : { color: '#4b5563' }
           }
         >
           {d.getDate()}
         </div>
-      </div>
+      </button>
     )
   }
 
+  const monthYear = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  const shortDate = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+
   return (
     <div
-      className="select-none touch-pan-y"
+      className="rounded-2xl select-none overflow-hidden"
+      style={{
+        background: 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.85)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+      }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      <div
-        className={`grid grid-cols-9 items-end max-w-sm mx-auto ${animating ? 'transition-transform duration-300 ease-out' : ''}`}
-        style={{ transform: `translateX(${translateX}px)` }}
-      >
-        <div className="flex justify-center">
-          {renderDay(prevWeekDay, true, goToPrevWeek)}
-        </div>
-        {week.map((d) => (
-          <div key={d.toISOString()} className="flex justify-center">
-            {renderDay(d, false, () => onDateChange(d))}
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+        <span className="text-xs font-semibold tracking-wide uppercase" style={{ color: '#9ca3af' }}>
+          {monthYear}
+        </span>
+        <span className="text-xs font-semibold" style={{ color: '#374151' }}>
+          {shortDate}
+        </span>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '0 16px' }} />
+
+      {/* Week grid */}
+      <div className="px-1 pb-3 pt-1 touch-pan-y">
+        <div
+          className={`grid grid-cols-9 items-end ${animating ? 'transition-transform duration-250 ease-out' : ''}`}
+          style={{ transform: `translateX(${translateX}px)` }}
+        >
+          <div className="flex justify-center">
+            {renderDay(prevWeekDay, true, goToPrevWeek)}
           </div>
-        ))}
-        <div className="flex justify-center">
-          {renderDay(nextWeekDay, true, goToNextWeek)}
+          {week.map((d) => (
+            <div key={d.toISOString()} className="flex justify-center">
+              {renderDay(d, false, () => onDateChange(d))}
+            </div>
+          ))}
+          <div className="flex justify-center">
+            {renderDay(nextWeekDay, true, goToNextWeek)}
+          </div>
         </div>
       </div>
-      <p className="text-sm text-gray-600 text-center mt-2">{fullDateLabel}</p>
     </div>
   )
 }

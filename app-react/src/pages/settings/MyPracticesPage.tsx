@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { FaGripVertical, FaEdit, FaTrash, FaPlus } from 'react-icons/fa'
+import { FaGripVertical, FaEdit, FaTrash, FaPlus, FaLayerGroup } from 'react-icons/fa'
+import { LuToggleRight, LuHash, LuTimer, LuClock, LuType, LuX } from 'react-icons/lu'
 import {
   DndContext,
   closestCenter,
@@ -20,47 +21,92 @@ import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import type { UserPractice } from '../../types/api'
 import { useTranslation } from 'react-i18next'
 
+const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string }>, color: string, bg: string, label: string }> = {
+  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   label: 'Yes/No'   },
+  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  label: 'Count'    },
+  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  label: 'Duration' },
+  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  label: 'Time'     },
+  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', label: 'Text'     },
+}
+
 function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete: (id: string) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: practice.id })
   const { t } = useTranslation()
   const style = { transform: CSS.Transform.toString(transform), transition }
   const modalId = `delete-practice-${practice.id}`
+  const meta = TYPE_META[practice.data_type] ?? TYPE_META.Text
+  const TypeIcon = meta.icon
 
   return (
-    <div ref={setNodeRef} style={style} className="card bg-base-100 shadow-sm">
-      <div className="card-body p-3 flex-row items-center gap-3">
+    <div
+      ref={setNodeRef}
+      style={{
+        ...style,
+        background: 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255,255,255,0.85)',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
+        borderRadius: '1rem',
+      }}
+    >
+      <div className="px-3 py-3 flex items-center gap-2.5">
+        {/* Drag handle */}
         <button
           {...attributes}
           {...listeners}
-          className="btn btn-ghost btn-xs btn-circle cursor-grab touch-none"
+          className="flex-shrink-0 touch-none w-8 h-8 flex items-center justify-center rounded-lg"
+          style={{ color: 'rgba(0,0,0,0.18)', cursor: 'grab' }}
           aria-label="Drag to reorder"
         >
-          <FaGripVertical className="w-4 h-4 text-base-content/40" />
+          <FaGripVertical className="w-3.5 h-3.5" />
         </button>
-        <div className="flex-1 min-w-0">
-          <span className="font-medium">{practice.practice}</span>
-          <span className="badge badge-ghost badge-sm ml-2">{practice.data_type}</span>
+
+        {/* Type icon pill */}
+        <div
+          className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: meta.bg }}
+        >
+          <TypeIcon className="w-3.5 h-3.5" style={{ color: meta.color }} />
         </div>
+
+        {/* Name */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-gray-800 text-sm truncate">{practice.practice}</span>
+            {practice.is_required && (
+              <span className="text-xs font-bold flex-shrink-0" style={{ color: '#e11d48' }}>*</span>
+            )}
+          </div>
+          <span className="text-xs font-medium" style={{ color: meta.color }}>{meta.label}</span>
+        </div>
+
+        {/* Edit */}
         <Link
           to={`/user/practice/${practice.id}/edit`}
-          className="btn btn-ghost btn-xs btn-circle"
+          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
+          style={{ color: 'rgba(0,0,0,0.30)' }}
         >
-          <FaEdit className="w-4 h-4" />
+          <FaEdit className="w-3.5 h-3.5" />
         </Link>
+
+        {/* Delete */}
         <button
-          className="btn btn-ghost btn-xs btn-circle text-error"
+          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
+          style={{ color: 'rgba(225,29,72,0.50)' }}
           onClick={() => (document.getElementById(modalId) as HTMLDialogElement)?.showModal()}
         >
-          <FaTrash className="w-4 h-4" />
+          <FaTrash className="w-3.5 h-3.5" />
         </button>
-        <ConfirmModal
-          id={modalId}
-          title={t('practice.delete')}
-          message={`${t('practice.deleteConfirm')} "${practice.practice}"?`}
-          confirmLabel={t('common.delete')}
-          onConfirm={() => onDelete(practice.id)}
-        />
       </div>
+
+      <ConfirmModal
+        id={modalId}
+        title={t('practice.delete')}
+        message={`${t('practice.deleteConfirm')} "${practice.practice}"?`}
+        confirmLabel={t('common.delete')}
+        onConfirm={() => onDelete(practice.id)}
+      />
     </div>
   )
 }
@@ -106,23 +152,74 @@ export function MyPracticesPage() {
   if (isLoading) return <Spinner />
 
   return (
-    <div className="px-4 py-4 flex flex-col gap-3 pb-24">
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-          {items.map((p) => (
-            <SortableRow key={p.id} practice={p} onDelete={(id) => deleteMutation.mutate(id)} />
-          ))}
-        </SortableContext>
-      </DndContext>
-      {items.length === 0 && (
-        <p className="text-center text-base-content/50 py-8">{t('practice.empty')}</p>
-      )}
+    <>
+      <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
+        {/* Page header with close button */}
+        <div
+          className="rounded-2xl px-5 py-5 flex items-center gap-4"
+          style={{
+            background: 'rgba(255,255,255,0.90)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.80)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+          }}
+        >
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            }}
+          >
+            <FaLayerGroup className="w-5 h-5 text-white" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-base font-bold text-gray-800 leading-tight">{t('settings.myPractices')}</h1>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {items.length > 0
+                ? `${items.length} practice${items.length === 1 ? '' : 's'} · drag to reorder`
+                : 'No practices yet'}
+            </p>
+          </div>
+          <Link
+            to="/"
+            aria-label="Close"
+            className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
+            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          >
+            <LuX className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* List */}
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+            <div className="flex flex-col gap-2">
+              {items.map((p) => (
+                <SortableRow key={p.id} practice={p} onDelete={(id) => deleteMutation.mutate(id)} />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+
+        {items.length === 0 && (
+          <p className="text-center text-gray-400 text-sm py-8">{t('practice.empty')}</p>
+        )}
+      </div>
+
+      {/* FAB */}
       <Link
         to="/user/practice/new"
-        className="btn btn-primary btn-circle btn-lg fixed bottom-6 right-4 shadow-lg z-30"
+        aria-label="Add practice"
+        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
+        style={{
+          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+          boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
+        }}
       >
-        <FaPlus className="w-6 h-6" />
+        <FaPlus className="w-5 h-5 text-white" />
       </Link>
-    </div>
+    </>
   )
 }
