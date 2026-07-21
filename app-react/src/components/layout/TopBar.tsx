@@ -57,7 +57,17 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
               mixBlendMode: 'multiply',
             }}
           />
-          <span className="font-serif text-xl font-bold" style={{ color: '#01a386' }}>Sadhana</span>
+          <span
+            className="font-serif text-xl font-bold tracking-wide"
+            style={{
+              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            Sadhana
+          </span>
         </Link>
       )}
 

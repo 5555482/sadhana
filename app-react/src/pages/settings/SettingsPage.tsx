@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaCog, FaChevronRight, FaSignOutAlt } from 'react-icons/fa'
-import { LuUser, LuLock, LuLayers, LuUpload, LuGlobe, LuHelpCircle } from 'react-icons/lu'
+import { LuUser, LuLock, LuLayers, LuUpload, LuGlobe, LuCircleHelp } from 'react-icons/lu'
 import { useAuthStore } from '../../store/authStore'
 
 const glass: React.CSSProperties = {
@@ -102,7 +102,7 @@ export function SettingsPage() {
       {/* App */}
       <SectionCard title={t('settings.app')}>
         <MenuItem label={t('settings.language')} to="/settings/language" icon={LuGlobe} last />
-        <MenuItem label={t('settings.help')}     to="/help"              icon={LuHelpCircle} />
+        <MenuItem label={t('settings.help')}     to="/help"              icon={LuCircleHelp} />
       </SectionCard>
 
       {/* Logout */}

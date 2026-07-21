@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaPlus, FaShare, FaChartLine } from 'react-icons/fa'
+import { FaPlus, FaChartLine } from 'react-icons/fa'
 import { LuCopy, LuCheck } from 'react-icons/lu'
 import { LineChart, Line, ResponsiveContainer } from 'recharts'
 import { chartsApi } from '../../api/charts'

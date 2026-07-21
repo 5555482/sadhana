@@ -21,7 +21,7 @@ import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import type { UserPractice } from '../../types/api'
 import { useTranslation } from 'react-i18next'
 
-const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string }>, color: string, bg: string, label: string }> = {
+const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, label: string }> = {
   Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   label: 'Yes/No'   },
   Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  label: 'Count'    },
   Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  label: 'Duration' },

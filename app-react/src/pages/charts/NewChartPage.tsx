@@ -4,10 +4,9 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { FaChartBar, FaChartLine, FaTh } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { practicesApi } from '../../api/practices'
-import { chartsApi } from '../../api/charts'
+import { apiClient } from '../../api/client'
 import { Spinner } from '../../components/ui/Spinner'
 import { useTranslation } from 'react-i18next'
-import type { ChartReport } from '../../types/api'
 
 type ChartType = 'Line' | 'Bar' | 'Grid'
 
@@ -75,13 +74,27 @@ export function NewChartPage() {
   })
 
   const mutation = useMutation({
-    mutationFn: () => chartsApi.createChart({
-      name,
-      practices: selected,
-      date_from: dateFrom,
-      date_to: dateTo,
-      chart_type: chartType,
-    } as Omit<ChartReport, 'id' | 'share_id'>),
+    mutationFn: () => {
+      const idMap = Object.fromEntries(practices.map(p => [p.practice, p.id]))
+      const ids = selected.map(n => idMap[n]).filter(Boolean)
+
+      const definition = chartType === 'Grid'
+        ? { Grid: { practices: ids } }
+        : {
+            Graph: {
+              bar_layout: null,
+              traces: ids.map(id => ({
+                label: null,
+                type_: chartType === 'Bar' ? 'Bar' : { Line: { style: 'Solid' } },
+                practice: id,
+                y_axis: null,
+                show_average: false,
+              })),
+            },
+          }
+
+      return apiClient.post('/reports', { report: { name, definition } })
+    },
     onSuccess: () => navigate('/charts'),
   })
 
@@ -251,7 +264,7 @@ export function NewChartPage() {
             <button
               onClick={() => setStep(0)}
               className="flex-1 h-12 rounded-full text-sm font-semibold"
-              style={{ background: 'rgba(0,0,0,0.05)', color: '#374151', border: 'none' }}
+              style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
             >
               ← Back
             </button>
@@ -319,7 +332,7 @@ export function NewChartPage() {
             <button
               onClick={() => setStep(1)}
               className="flex-1 h-12 rounded-full text-sm font-semibold"
-              style={{ background: 'rgba(0,0,0,0.05)', color: '#374151', border: 'none' }}
+              style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
             >
               ← Back
             </button>
