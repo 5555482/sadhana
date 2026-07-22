@@ -2,9 +2,31 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDropzone } from 'react-dropzone'
 import { useMutation } from '@tanstack/react-query'
+import { LuUpload, LuFileText, LuCheck } from 'react-icons/lu'
 import { importApi } from '../../api/import'
-import { Button } from '../../components/ui/Button'
-import type { ImportPreview } from '../../types/api'
+import type { ImportPreview, ImportResult } from '../../types/api'
+
+const glass: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.90)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(255,255,255,0.80)',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+}
+
+const inputStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.80)',
+  border: '1px solid rgba(0,0,0,0.10)',
+  borderRadius: '0.625rem',
+  outline: 'none',
+  fontSize: '0.85rem',
+  color: '#1f2937',
+  padding: '0.375rem 0.625rem',
+  width: '100%',
+  transition: 'border-color 0.15s',
+}
+
+const STEP_LABELS = ['Upload', 'Map columns', 'Done']
 
 export function ImportPage() {
   const navigate = useNavigate()
@@ -12,7 +34,7 @@ export function ImportPage() {
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<ImportPreview | null>(null)
   const [mapping, setMapping] = useState<Record<string, string>>({})
-  const [result, setResult] = useState<{ imported_count: number } | null>(null)
+  const [result, setResult] = useState<ImportResult | null>(null)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'text/csv': ['.csv'] },
@@ -31,92 +53,178 @@ export function ImportPage() {
   })
 
   return (
-    <div className="px-4 py-4 flex flex-col gap-6">
-      <ul className="steps steps-horizontal w-full">
-        {['Upload', 'Map columns', 'Done'].map((s, i) => (
-          <li key={s} className={`step ${i <= step ? 'step-primary' : ''}`}>{s}</li>
-        ))}
-      </ul>
+    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
+      {/* Header */}
+      <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style={{
+            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+          }}
+        >
+          <LuUpload className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <h1 className="text-base font-bold text-gray-800">Import data</h1>
+          <p className="text-xs text-gray-400 mt-0.5">Upload a CSV file to import practices</p>
+        </div>
+      </div>
 
+      {/* Step indicators */}
+      <div className="flex items-center gap-1 px-1">
+        {STEP_LABELS.map((label, i) => (
+          <div key={label} className="flex-1 flex flex-col gap-1.5">
+            <div
+              className="h-1 rounded-full"
+              style={{ background: i <= step ? '#01a386' : 'rgba(0,0,0,0.10)' }}
+            />
+            <span className="text-xs font-medium" style={{ color: i === step ? '#01a386' : '#9ca3af' }}>
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Step 0: Upload */}
       {step === 0 && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-box p-8 text-center cursor-pointer transition-colors ${
-              isDragActive ? 'border-primary bg-primary/10' : 'border-base-300 hover:border-primary/50'
-            }`}
+            className="rounded-2xl flex flex-col items-center justify-center gap-3 py-12 cursor-pointer transition-all"
+            style={{
+              ...glass,
+              border: isDragActive
+                ? '2px dashed rgba(1,163,134,0.60)'
+                : file ? '2px solid rgba(1,163,134,0.30)' : '2px dashed rgba(0,0,0,0.12)',
+              background: isDragActive ? 'rgba(1,163,134,0.05)' : glass.background,
+            }}
           >
             <input {...getInputProps()} />
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center"
+              style={{ background: file ? 'rgba(1,163,134,0.10)' : 'rgba(0,0,0,0.05)' }}
+            >
+              {file
+                ? <LuFileText className="w-5 h-5" style={{ color: '#01a386' }} />
+                : <LuUpload className="w-5 h-5" style={{ color: '#9ca3af' }} />
+              }
+            </div>
             {file ? (
-              <p className="font-medium">{file.name}</p>
+              <div className="text-center">
+                <p className="text-sm font-semibold" style={{ color: '#01a386' }}>{file.name}</p>
+                <p className="text-xs text-gray-400 mt-0.5">Click to change file</p>
+              </div>
             ) : (
-              <p className="text-base-content/50">Drop a CSV file here, or click to browse</p>
+              <div className="text-center">
+                <p className="text-sm font-semibold text-gray-700">
+                  {isDragActive ? 'Drop the file here' : 'Drop a CSV file or click to browse'}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">Only .csv files accepted</p>
+              </div>
             )}
           </div>
-          <Button
-            variant="primary"
-            disabled={!file}
-            loading={previewMutation.isPending}
+
+          <button
             onClick={() => previewMutation.mutate()}
-            className="w-full"
+            disabled={!file || previewMutation.isPending}
+            className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
+            style={{
+              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              color: 'white',
+              border: 'none',
+              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              opacity: !file || previewMutation.isPending ? 0.45 : 1,
+            }}
           >
+            {previewMutation.isPending && <span className="loading loading-spinner loading-xs" />}
             Next →
-          </Button>
+          </button>
         </div>
       )}
 
+      {/* Step 1: Map columns */}
       {step === 1 && preview && (
-        <div className="flex flex-col gap-4">
-          <div className="overflow-x-auto">
-            <table className="table table-sm">
-              <thead>
-                <tr>
-                  <th>CSV Column</th>
-                  <th>Map to practice</th>
-                  <th>Sample</th>
-                </tr>
-              </thead>
-              <tbody>
-                {preview.columns.map((col, i) => (
-                  <tr key={col}>
-                    <td className="font-medium">{col}</td>
-                    <td>
-                      <input
-                        className="input input-bordered input-sm w-32"
-                        value={mapping[col] ?? ''}
-                        onChange={(e) => setMapping({ ...mapping, [col]: e.target.value })}
-                        placeholder="practice name"
-                      />
-                    </td>
-                    <td className="text-xs text-base-content/50">
-                      {preview.sample_rows[0]?.[i] ?? ''}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="flex flex-col gap-3">
+          <div className="rounded-2xl overflow-hidden" style={glass}>
+            <div className="px-4 py-3 border-b" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Map CSV columns to practices</p>
+            </div>
+            {preview.columns.map((col, i) => (
+              <div
+                key={col}
+                className="px-4 py-3 flex items-center gap-3"
+                style={{ borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.04)' }}
+              >
+                <div className="w-1/3">
+                  <p className="text-sm font-semibold text-gray-800 truncate">{col}</p>
+                  <p className="text-xs text-gray-400 truncate">{preview.sample_rows[0]?.[i] ?? '—'}</p>
+                </div>
+                <span style={{ color: '#d1d5db' }}>→</span>
+                <input
+                  style={inputStyle}
+                  value={mapping[col] ?? ''}
+                  onChange={e => setMapping({ ...mapping, [col]: e.target.value })}
+                  placeholder="Practice name…"
+                  onFocus={e => { e.target.style.borderColor = '#01a386' }}
+                  onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.10)' }}
+                />
+              </div>
+            ))}
           </div>
+
           <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => setStep(0)} className="flex-1">← Back</Button>
-            <Button
-              variant="primary"
-              loading={confirmMutation.isPending}
-              onClick={() => confirmMutation.mutate()}
-              className="flex-1"
+            <button
+              onClick={() => setStep(0)}
+              className="flex-1 h-12 rounded-full text-sm font-semibold"
+              style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
             >
+              ← Back
+            </button>
+            <button
+              onClick={() => confirmMutation.mutate()}
+              disabled={confirmMutation.isPending}
+              className="flex-1 h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
+              style={{
+                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                color: 'white',
+                border: 'none',
+                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+                opacity: confirmMutation.isPending ? 0.55 : 1,
+              }}
+            >
+              {confirmMutation.isPending && <span className="loading loading-spinner loading-xs" />}
               Import
-            </Button>
+            </button>
           </div>
         </div>
       )}
 
+      {/* Step 2: Done */}
       {step === 2 && result && (
-        <div className="flex flex-col items-center gap-4 py-8">
-          <div className="text-success text-5xl">✓</div>
-          <p className="font-semibold">Imported {result.imported_count} rows</p>
-          <Button variant="primary" onClick={() => navigate('/settings')} className="w-full">
+        <div className="rounded-2xl px-5 py-12 flex flex-col items-center gap-5" style={glass}>
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center"
+            style={{ background: 'rgba(1,163,134,0.12)' }}
+          >
+            <LuCheck className="w-7 h-7" style={{ color: '#01a386' }} />
+          </div>
+          <div className="text-center">
+            <p className="text-base font-bold text-gray-800">Import complete</p>
+            <p className="text-sm text-gray-400 mt-1">{result.imported_count} rows imported</p>
+          </div>
+          <button
+            onClick={() => navigate('/settings')}
+            className="px-8 h-11 rounded-full text-sm font-semibold"
+            style={{
+              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              color: 'white',
+              border: 'none',
+              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            }}
+          >
             Done
-          </Button>
+          </button>
         </div>
       )}
     </div>
