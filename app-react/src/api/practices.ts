@@ -23,10 +23,10 @@ export const practicesApi = {
     await apiClient.put('/user/practices/reorder', { ids })
   },
   async getDiaryEntries(date: string): Promise<DiaryEntry[]> {
-    const res = await apiClient.get<{ diary: DiaryEntry[] }>(`/diary?date=${date}`)
-    return res.data.diary
+    const res = await apiClient.get<{ diary_day: DiaryEntry[] }>(`/diary/${date}`)
+    return res.data.diary_day
   },
   async saveDiaryEntry(date: string, practice: string, value: PracticeValue): Promise<void> {
-    await apiClient.put('/diary', { diary: { date, practice, value } })
+    await apiClient.put(`/diary/${date}/entry`, { entry: { practice, value } })
   },
 }
