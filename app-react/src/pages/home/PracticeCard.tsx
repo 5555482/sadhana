@@ -98,6 +98,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
     mutationFn: (v: PracticeValue) => practicesApi.saveDiaryEntry(date, practice.practice, v),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['diary', date] })
+      qc.invalidateQueries({ queryKey: ['report-data'] })
       setFlash(true)
       setTimeout(() => setFlash(false), 1200)
     },

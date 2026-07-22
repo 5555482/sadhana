@@ -221,8 +221,9 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                     dataKey={name}
                     stroke={color}
                     strokeWidth={2}
-                    dot={false}
+                    dot={{ r: 2.5, fill: color, strokeWidth: 0 }}
                     activeDot={{ r: 4 }}
+                    connectNulls
                     name={name}
                   />
                 )
