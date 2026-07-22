@@ -78,7 +78,7 @@ export function HomePage() {
 
         {/* Practice cards — skeletons hold layout while loading to prevent jump */}
         <div className="flex flex-col gap-3">
-          {practicesQuery.isLoading ? (
+          {(practicesQuery.isLoading || diaryQuery.isLoading) ? (
             Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
