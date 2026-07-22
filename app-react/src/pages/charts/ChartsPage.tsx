@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { FaPlus, FaChartLine, FaTrash, FaTh } from 'react-icons/fa'
-import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX } from 'react-icons/lu'
+import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX, LuChartLine } from 'react-icons/lu'
 import {
   ComposedChart,
   Line,
@@ -31,8 +31,7 @@ const glass: React.CSSProperties = {
 }
 
 const ACCENT = '#01a386'
-
-const TRACE_COLORS = ['#01a386', '#6366f1', '#d97706', '#e11d48', '#0ea5e9', '#8b5cf6', '#f59e0b']
+const TRACE_COLORS = ['#01a386', '#6366f1', '#d97706', '#e11d48', '#0ea5e9', '#8b5cf6', '#f59e0b', '#10b981']
 
 const DURATIONS: { label: string; value: ReportDuration }[] = [
   { label: '1W', value: 'Week' },
@@ -42,6 +41,8 @@ const DURATIONS: { label: string; value: ReportDuration }[] = [
   { label: '1Y', value: 'Year' },
   { label: 'All', value: 'AllData' },
 ]
+
+const ALL_PRACTICES_ID = '__all__'
 
 function isGrid(def: ReportDefinition): def is { Grid: { practices: string[] } } {
   return 'Grid' in def
@@ -58,10 +59,7 @@ function TraceTypeBadge({ type_ }: { type_: TraceType }) {
   const label = traceLabel(type_)
   const color = label === 'Bar' ? '#6366f1' : label === 'Dot' ? '#d97706' : ACCENT
   return (
-    <span
-      className="text-xs font-semibold px-1.5 py-0.5 rounded-md flex-shrink-0"
-      style={{ background: `${color}18`, color }}
-    >
+    <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md flex-shrink-0" style={{ background: `${color}18`, color }}>
       {label}
     </span>
   )
@@ -107,109 +105,137 @@ function buildChartData(
   return Array.from(dateMap.values())
 }
 
-function GraphChart({
-  traces,
-  practiceMap,
-  cob,
-  duration,
-}: {
-  traces: PracticeTrace[]
+// ─── Main chart panel ───────────────────────────────────────────────────────
+
+interface ChartPanelProps {
+  report: Report | null  // null = show all practices
+  practices: UserPractice[]
   practiceMap: Record<string, string>
-  cob: string
-  duration: ReportDuration
-}) {
+}
+
+function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
+  const [duration, setDuration] = useState<ReportDuration>('Month')
+  const todayCob = new Date().toISOString().slice(0, 10)
+
   const { data: rawValues = [], isLoading } = useQuery({
-    queryKey: ['report-data', cob, duration],
-    queryFn: () => chartsApi.getReportData(cob, duration),
+    queryKey: ['report-data', todayCob, duration],
+    queryFn: () => chartsApi.getReportData(todayCob, duration),
   })
 
-  const practiceNames = traces.map(t => practiceMap[t.practice] ?? t.practice)
-  const chartData = buildChartData(rawValues, practiceNames)
+  // Build traces for "all practices" (every active practice as a Line)
+  const activePractices = practices.filter(p => p.is_active)
 
-  if (isLoading) return <div className="flex justify-center py-8"><Spinner /></div>
-  if (chartData.length === 0) return (
-    <p className="text-xs text-center py-6" style={{ color: '#9ca3af' }}>No data for this period</p>
-  )
+  const traces: { name: string; type_: TraceType; color: string }[] = report === null
+    ? activePractices.map((p, i) => ({
+        name: p.practice,
+        type_: { Line: { style: 'Regular' as const } },
+        color: TRACE_COLORS[i % TRACE_COLORS.length],
+      }))
+    : isGrid(report.definition)
+      ? report.definition.Grid.practices.map((pid, i) => ({
+          name: practiceMap[pid] ?? pid,
+          type_: { Line: { style: 'Regular' as const } } as TraceType,
+          color: TRACE_COLORS[i % TRACE_COLORS.length],
+        }))
+      : report.definition.Graph.traces.map((t, i) => ({
+          name: practiceMap[t.practice] ?? t.practice,
+          type_: t.type_,
+          color: TRACE_COLORS[i % TRACE_COLORS.length],
+        }))
+
+  const practiceNames = traces.map(t => t.name)
+  const chartData = buildChartData(rawValues, practiceNames)
+  const isGridReport = report !== null && isGrid(report.definition)
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
-      <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
-        <XAxis
-          dataKey="date"
-          tick={{ fontSize: 10, fill: '#9ca3af' }}
-          tickLine={false}
-          axisLine={false}
-          interval="preserveStartEnd"
-        />
-        <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
-        <Tooltip
-          contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
-        />
-        <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-        {traces.map((trace, i) => {
-          const name = practiceMap[trace.practice] ?? trace.practice
-          const color = TRACE_COLORS[i % TRACE_COLORS.length]
-          const tLabel = traceLabel(trace.type_)
-          if (tLabel === 'Bar') {
-            return <Bar key={trace.practice} dataKey={name} fill={color} radius={[2, 2, 0, 0]} maxBarSize={20} />
-          }
-          if (tLabel === 'Dot') {
-            return (
-              <Line
-                key={trace.practice}
-                type="monotone"
-                dataKey={name}
-                stroke="none"
-                strokeWidth={0}
-                dot={{ r: 4, fill: color, strokeWidth: 0 }}
-                activeDot={{ r: 5, fill: color }}
-                name={name}
+    <div className="rounded-2xl overflow-hidden" style={glass}>
+      {/* Duration strip */}
+      <div className="px-4 pt-3 pb-2 flex gap-1.5 flex-wrap items-center" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+        <span className="text-xs font-semibold text-gray-400 mr-1">Duration</span>
+        {DURATIONS.map(d => (
+          <button
+            key={d.value}
+            onClick={() => setDuration(d.value)}
+            className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
+            style={{
+              background: duration === d.value ? ACCENT : 'rgba(0,0,0,0.05)',
+              color: duration === d.value ? 'white' : '#6b7280',
+              border: 'none',
+            }}
+          >
+            {d.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Chart body */}
+      <div className="px-2 py-4">
+        {isLoading ? (
+          <div className="flex justify-center py-12"><Spinner /></div>
+        ) : chartData.length === 0 || practiceNames.length === 0 ? (
+          <div className="flex flex-col items-center py-12 gap-2">
+            <p className="text-sm text-gray-400">No data for this period</p>
+          </div>
+        ) : isGridReport ? (
+          <GridTable chartData={chartData} practiceNames={practiceNames} />
+        ) : (
+          <ResponsiveContainer width="100%" height={240}>
+            <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+              <XAxis
+                dataKey="date"
+                tick={{ fontSize: 10, fill: '#9ca3af' }}
+                tickLine={false}
+                axisLine={false}
+                interval="preserveStartEnd"
               />
-            )
-          }
-          const isSquare = typeof trace.type_ === 'object' && 'Line' in trace.type_ && trace.type_.Line.style === 'Square'
-          return (
-            <Line
-              key={trace.practice}
-              type={isSquare ? 'stepAfter' : 'monotone'}
-              dataKey={name}
-              stroke={color}
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 4 }}
-            />
-          )
-        })}
-      </ComposedChart>
-    </ResponsiveContainer>
+              <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
+              <Tooltip
+                contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+              />
+              <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+              {traces.map(({ name, type_, color }) => {
+                const label = traceLabel(type_)
+                if (label === 'Bar') {
+                  return <Bar key={name} dataKey={name} fill={color} radius={[2, 2, 0, 0]} maxBarSize={20} />
+                }
+                if (label === 'Dot') {
+                  return (
+                    <Line
+                      key={name}
+                      type="monotone"
+                      dataKey={name}
+                      stroke="none"
+                      strokeWidth={0}
+                      dot={{ r: 4, fill: color, strokeWidth: 0 }}
+                      activeDot={{ r: 5, fill: color }}
+                      name={name}
+                    />
+                  )
+                }
+                const isSquare = typeof type_ === 'object' && 'Line' in type_ && type_.Line.style === 'Square'
+                return (
+                  <Line
+                    key={name}
+                    type={isSquare ? 'stepAfter' : 'monotone'}
+                    dataKey={name}
+                    stroke={color}
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                    name={name}
+                  />
+                )
+              })}
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+      </div>
+    </div>
   )
 }
 
-function GridTable({
-  practiceIds,
-  practiceMap,
-  cob,
-  duration,
-}: {
-  practiceIds: string[]
-  practiceMap: Record<string, string>
-  cob: string
-  duration: ReportDuration
-}) {
-  const { data: rawValues = [], isLoading } = useQuery({
-    queryKey: ['report-data', cob, duration],
-    queryFn: () => chartsApi.getReportData(cob, duration),
-  })
-
-  const practiceNames = practiceIds.map(id => practiceMap[id] ?? id)
-  const chartData = buildChartData(rawValues, practiceNames)
-
-  if (isLoading) return <div className="flex justify-center py-8"><Spinner /></div>
-  if (chartData.length === 0) return (
-    <p className="text-xs text-center py-6" style={{ color: '#9ca3af' }}>No data for this period</p>
-  )
-
+function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; practiceNames: string[] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
@@ -217,7 +243,7 @@ function GridTable({
           <tr>
             <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>Date</th>
             {practiceNames.map(name => (
-              <th key={name} className="text-right px-2 py-1.5 font-semibold truncate max-w-16" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+              <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                 {name}
               </th>
             ))}
@@ -240,6 +266,90 @@ function GridTable({
   )
 }
 
+// ─── Report picker dropdown ──────────────────────────────────────────────────
+
+function ReportPicker({
+  reports,
+  selectedId,
+  onSelect,
+}: {
+  reports: Report[]
+  selectedId: string
+  onSelect: (id: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function onClickOut(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onClickOut)
+    return () => document.removeEventListener('mousedown', onClickOut)
+  }, [])
+
+  const selectedLabel = selectedId === ALL_PRACTICES_ID
+    ? 'All practices'
+    : reports.find(r => r.id === selectedId)?.name ?? 'All practices'
+
+  const options = [
+    { id: ALL_PRACTICES_ID, label: 'All practices', icon: <FaChartLine className="w-3.5 h-3.5" /> },
+    ...reports.map(r => ({
+      id: r.id,
+      label: r.name,
+      icon: isGrid(r.definition)
+        ? <FaTh className="w-3.5 h-3.5" />
+        : <FaChartLine className="w-3.5 h-3.5" />,
+    })),
+  ]
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold transition-all"
+        style={{
+          background: 'rgba(0,0,0,0.05)',
+          color: '#374151',
+          border: 'none',
+          maxWidth: 150,
+        }}
+      >
+        <LuChartLine className="w-3.5 h-3.5 flex-shrink-0" style={{ color: ACCENT }} />
+        <span className="truncate">{selectedLabel}</span>
+        {open ? <LuChevronUp className="w-3 h-3 flex-shrink-0 ml-0.5" /> : <LuChevronDown className="w-3 h-3 flex-shrink-0 ml-0.5" />}
+      </button>
+      {open && (
+        <div
+          className="absolute right-0 top-full mt-1 z-50 rounded-2xl overflow-hidden min-w-44"
+          style={{ ...glass, boxShadow: '0 8px 32px rgba(0,0,0,0.14)' }}
+        >
+          {options.map((opt, i) => (
+            <button
+              key={opt.id}
+              onClick={() => { onSelect(opt.id); setOpen(false) }}
+              className="w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors"
+              style={{
+                background: selectedId === opt.id ? 'rgba(1,163,134,0.06)' : 'transparent',
+                color: selectedId === opt.id ? ACCENT : '#374151',
+                border: 'none',
+                borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.04)',
+                fontWeight: selectedId === opt.id ? 600 : 400,
+              }}
+            >
+              <span style={{ color: selectedId === opt.id ? ACCENT : '#9ca3af' }}>{opt.icon}</span>
+              <span className="truncate">{opt.label}</span>
+              {selectedId === opt.id && <LuCheck className="w-3.5 h-3.5 ml-auto flex-shrink-0" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Manage report card ──────────────────────────────────────────────────────
+
 function ReportCard({
   report,
   practiceMap,
@@ -250,13 +360,10 @@ function ReportCard({
   practices: UserPractice[]
 }) {
   const qc = useQueryClient()
-  const [open, setOpen] = useState(true)
-  const [duration, setDuration] = useState<ReportDuration>('Month')
+  const [open, setOpen] = useState(false)
   const [addPracticeId, setAddPracticeId] = useState('')
   const [addTraceType, setAddTraceType] = useState<'Line' | 'Bar' | 'Dot'>('Line')
-
   const isGridType = isGrid(report.definition)
-  const todayCob = new Date().toISOString().slice(0, 10)
 
   const updateMutation = useMutation({
     mutationFn: (def: ReportDefinition) => chartsApi.updateReport(report.id, report.name, def),
@@ -280,8 +387,7 @@ function ReportCard({
       if (report.definition.Grid.practices.includes(addPracticeId)) return
       newDef = { Grid: { practices: [...report.definition.Grid.practices, addPracticeId] } }
     } else {
-      const alreadyHas = report.definition.Graph.traces.some(t => t.practice === addPracticeId)
-      if (alreadyHas) return
+      if (report.definition.Graph.traces.some(t => t.practice === addPracticeId)) return
       const type_: TraceType = addTraceType === 'Line'
         ? { Line: { style: 'Regular' } }
         : addTraceType === 'Bar' ? 'Bar' : 'Dot'
@@ -299,15 +405,14 @@ function ReportCard({
 
   return (
     <div className="rounded-2xl overflow-hidden" style={glass}>
-      {/* Header row */}
-      <div className="px-4 py-3.5 flex items-center gap-3">
+      <div className="px-4 py-3 flex items-center gap-3">
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{ background: isGridType ? 'rgba(99,102,241,0.10)' : 'rgba(1,163,134,0.10)' }}
         >
           {isGridType
-            ? <FaTh className="w-4 h-4" style={{ color: '#6366f1' }} />
-            : <FaChartLine className="w-4 h-4" style={{ color: ACCENT }} />
+            ? <FaTh className="w-3.5 h-3.5" style={{ color: '#6366f1' }} />
+            : <FaChartLine className="w-3.5 h-3.5" style={{ color: ACCENT }} />
           }
         </div>
         <div className="flex-1 min-w-0">
@@ -318,76 +423,29 @@ function ReportCard({
         </div>
         <button
           onClick={() => (document.getElementById(`del-report-${report.id}`) as HTMLDialogElement)?.showModal()}
-          className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
+          className="w-7 h-7 flex items-center justify-center rounded-xl flex-shrink-0"
           style={{ background: 'rgba(225,29,72,0.07)', color: 'rgba(225,29,72,0.55)', border: 'none' }}
         >
           <FaTrash className="w-3 h-3" />
         </button>
         <button
           onClick={() => setOpen(o => !o)}
-          className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
+          className="w-7 h-7 flex items-center justify-center rounded-xl flex-shrink-0"
           style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
         >
           {open ? <LuChevronUp className="w-4 h-4" /> : <LuChevronDown className="w-4 h-4" />}
         </button>
       </div>
 
-      {/* Expanded body */}
       {open && (
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-          {/* Duration selector */}
-          {currentIds.length > 0 && (
-            <div className="px-4 pt-3 flex gap-1 flex-wrap">
-              {DURATIONS.map(d => (
-                <button
-                  key={d.value}
-                  onClick={() => setDuration(d.value)}
-                  className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
-                  style={{
-                    background: duration === d.value ? ACCENT : 'rgba(0,0,0,0.05)',
-                    color: duration === d.value ? 'white' : '#6b7280',
-                    border: 'none',
-                  }}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Chart or grid */}
-          {currentIds.length > 0 && (
-            <div className="px-2 pt-3 pb-2">
-              {isGrid(report.definition) ? (
-                <GridTable
-                  practiceIds={report.definition.Grid.practices}
-                  practiceMap={practiceMap}
-                  cob={todayCob}
-                  duration={duration}
-                />
-              ) : 'Graph' in report.definition ? (
-                <GraphChart
-                  traces={report.definition.Graph.traces}
-                  practiceMap={practiceMap}
-                  cob={todayCob}
-                  duration={duration}
-                />
-              ) : null}
-            </div>
-          )}
-
-          {/* Trace / practice list */}
           {currentIds.length > 0 ? (
-            <div className="px-4 pb-2 flex flex-col gap-1" style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.625rem' }}>
+            <div className="px-4 py-2 flex flex-col gap-1">
               {isGrid(report.definition)
                 ? report.definition.Grid.practices.map(pid => (
                     <div key={pid} className="flex items-center gap-2 py-0.5">
                       <span className="flex-1 text-xs text-gray-600">{practiceMap[pid] ?? pid}</span>
-                      <button
-                        onClick={() => removeItem(pid)}
-                        className="w-5 h-5 flex items-center justify-center rounded-lg"
-                        style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}
-                      >
+                      <button onClick={() => removeItem(pid)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}>
                         <LuX className="w-3 h-3" />
                       </button>
                     </div>
@@ -396,11 +454,7 @@ function ReportCard({
                     <div key={trace.practice} className="flex items-center gap-2 py-0.5">
                       <TraceTypeBadge type_={trace.type_} />
                       <span className="flex-1 text-xs text-gray-600">{practiceMap[trace.practice] ?? trace.practice}</span>
-                      <button
-                        onClick={() => removeItem(trace.practice)}
-                        className="w-5 h-5 flex items-center justify-center rounded-lg"
-                        style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}
-                      >
+                      <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}>
                         <LuX className="w-3 h-3" />
                       </button>
                     </div>
@@ -408,11 +462,10 @@ function ReportCard({
               }
             </div>
           ) : (
-            <p className="px-4 py-3 text-xs text-gray-400">No practices added yet</p>
+            <p className="px-4 py-2 text-xs text-gray-400">No practices added yet</p>
           )}
 
-          {/* Add trace row */}
-          <div className="px-4 pb-4 flex items-center gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.75rem' }}>
+          <div className="px-4 pb-3 flex items-center gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.625rem' }}>
             <select
               value={addPracticeId}
               onChange={e => setAddPracticeId(e.target.value)}
@@ -439,13 +492,8 @@ function ReportCard({
             <button
               onClick={addItem}
               disabled={!addPracticeId || updateMutation.isPending}
-              className="h-9 px-4 rounded-xl text-sm font-semibold flex-shrink-0 transition-opacity"
-              style={{
-                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-                color: 'white',
-                border: 'none',
-                opacity: addPracticeId ? 1 : 0.4,
-              }}
+              className="h-9 px-4 rounded-xl text-sm font-semibold flex-shrink-0"
+              style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', color: 'white', border: 'none', opacity: addPracticeId ? 1 : 0.4 }}
             >
               Add
             </button>
@@ -464,13 +512,18 @@ function ReportCard({
   )
 }
 
+// ─── Page ────────────────────────────────────────────────────────────────────
+
 export function ChartsPage() {
   const user = useAuthStore(s => s.user)
   const { data: reports = [], isLoading: reportsLoading } = useQuery({ queryKey: ['reports'], queryFn: chartsApi.getReports })
   const { data: practices = [] } = useQuery({ queryKey: ['practices'], queryFn: practicesApi.getUserPractices })
+  const [selectedId, setSelectedId] = useState(ALL_PRACTICES_ID)
   const [shareCopied, setShareCopied] = useState(false)
+  const [manageOpen, setManageOpen] = useState(false)
 
   const practiceMap = Object.fromEntries(practices.map(p => [p.id, p.practice]))
+  const selectedReport = selectedId === ALL_PRACTICES_ID ? null : (reports.find(r => r.id === selectedId) ?? null)
 
   function copyShareLink() {
     if (!user) return
@@ -484,57 +537,63 @@ export function ChartsPage() {
   return (
     <>
       <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
-        {/* Page header */}
-        <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
+        {/* Header */}
+        <div className="rounded-2xl px-5 py-4 flex items-center gap-3" style={glass}>
           <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
-            }}
+            className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 16px rgba(1,163,134,0.30)' }}
           >
-            <FaChartLine className="w-5 h-5 text-white" />
+            <FaChartLine className="w-4 h-4 text-white" />
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="text-base font-bold text-gray-800 leading-tight">Charts</h1>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {reports.length > 0 ? `${reports.length} report${reports.length === 1 ? '' : 's'}` : 'No reports yet'}
-            </p>
           </div>
+          {/* Report picker */}
+          <ReportPicker reports={reports} selectedId={selectedId} onSelect={setSelectedId} />
+          {/* Share */}
           <button
             onClick={copyShareLink}
-            className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition-all"
-            style={{
-              background: shareCopied ? 'rgba(1,163,134,0.12)' : 'rgba(0,0,0,0.05)',
-              color: shareCopied ? ACCENT : '#6b7280',
-              border: 'none',
-            }}
-            title="Copy link to share your reports"
+            className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold flex-shrink-0"
+            style={{ background: shareCopied ? 'rgba(1,163,134,0.12)' : 'rgba(0,0,0,0.05)', color: shareCopied ? ACCENT : '#6b7280', border: 'none' }}
           >
             {shareCopied ? <LuCheck className="w-3.5 h-3.5" /> : <LuCopy className="w-3.5 h-3.5" />}
             {shareCopied ? 'Copied!' : 'Share'}
           </button>
         </div>
 
-        {reports.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-4">
-            <p className="text-sm" style={{ color: '#9ca3af' }}>No reports yet — create your first one</p>
-            <Link
-              to="/charts/new"
-              className="px-6 h-11 rounded-full text-sm font-semibold flex items-center gap-2"
-              style={{
-                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-                color: 'white',
-                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-              }}
+        {/* Chart panel */}
+        <ChartPanel
+          report={selectedReport}
+          practices={practices}
+          practiceMap={practiceMap}
+        />
+
+        {/* Manage reports section */}
+        {reports.length > 0 && (
+          <div className="rounded-2xl overflow-hidden" style={glass}>
+            <button
+              onClick={() => setManageOpen(o => !o)}
+              className="w-full px-4 py-3 flex items-center gap-2 text-left"
+              style={{ background: 'transparent', border: 'none' }}
             >
-              Create report
-            </Link>
+              <span className="text-xs font-semibold text-gray-500 flex-1">Manage reports ({reports.length})</span>
+              {manageOpen ? <LuChevronUp className="w-4 h-4 text-gray-400" /> : <LuChevronDown className="w-4 h-4 text-gray-400" />}
+            </button>
+            {manageOpen && (
+              <div className="px-3 pb-3 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+                {reports.map(r => (
+                  <ReportCard key={r.id} report={r} practiceMap={practiceMap} practices={practices} />
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          reports.map(r => (
-            <ReportCard key={r.id} report={r} practiceMap={practiceMap} practices={practices} />
-          ))
+        )}
+
+        {reports.length === 0 && (
+          <p className="text-xs text-center" style={{ color: '#9ca3af' }}>
+            No custom reports yet —{' '}
+            <Link to="/charts/new" style={{ color: ACCENT }}>create one</Link>
+          </p>
         )}
       </div>
 
@@ -542,10 +601,7 @@ export function ChartsPage() {
         to="/charts/new"
         aria-label="New report"
         className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
-        style={{
-          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-          boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
-        }}
+        style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 24px rgba(45,212,191,0.45)' }}
       >
         <FaPlus className="w-5 h-5 text-white" />
       </Link>

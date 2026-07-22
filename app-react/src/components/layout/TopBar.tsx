@@ -48,23 +48,23 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         </button>
       ) : (
         <Link to="/" className="flex items-center gap-2 no-underline">
-          <img
-            src="/logo.png"
-            className="h-8 w-8 object-contain"
-            alt="Sadhana logo"
-            style={{
-              filter: 'invert(42%) sepia(99%) saturate(431%) hue-rotate(131deg) brightness(93%) contrast(101%)',
-              mixBlendMode: 'multiply',
-            }}
-          />
-          <span
-            className="font-serif text-xl font-bold tracking-wide"
+          <div
+            className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
               background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+              boxShadow: '0 2px 8px rgba(1,163,134,0.35)',
             }}
+          >
+            <img
+              src="/logo.png"
+              className="h-5 w-5 object-contain"
+              alt="Sadhana"
+              style={{ filter: 'brightness(0) invert(1)' }}
+            />
+          </div>
+          <span
+            className="text-lg font-bold leading-none tracking-tight"
+            style={{ color: '#111827', letterSpacing: '-0.01em' }}
           >
             Sadhana
           </span>
