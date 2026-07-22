@@ -5,7 +5,6 @@ import { FaUsers, FaPlus, FaCog } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
 import { yatrasApi } from '../../api/yatras'
 import { TopBar } from '../../components/layout/TopBar'
-import { WeekCalendar } from '../home/WeekCalendar'
 import { Spinner } from '../../components/ui/Spinner'
 import type { UserYatraDataRow } from '../../types/api'
 
@@ -18,10 +17,6 @@ const glass: React.CSSProperties = {
 }
 
 const SELECTED_YATRA_KEY = 'selected_yatra'
-
-function toDateStr(d: Date): string {
-  return d.toISOString().split('T')[0]
-}
 
 function todayStr(): string {
   return new Date().toISOString().split('T')[0]
@@ -139,9 +134,8 @@ export function YatrasPage() {
   const { t } = useTranslation()
   const qc = useQueryClient()
 
-  const [date, setDate] = useState(new Date())
-  const dateStr = toDateStr(date)
-  const isToday = dateStr === todayStr()
+  const dateStr = todayStr()
+  const isToday = true
 
   const [selectedId, setSelectedId] = useState<string | null>(
     () => localStorage.getItem(SELECTED_YATRA_KEY),
@@ -255,9 +249,6 @@ export function YatrasPage() {
           </button>
         </div>
 
-        {/* Date picker */}
-        <WeekCalendar date={date} onDateChange={setDate} />
-
         {/* Loading */}
         {(yatraListQuery.isLoading || dataQuery.isLoading) && (
           <div className="flex justify-center py-10"><Spinner /></div>
@@ -303,21 +294,28 @@ export function YatrasPage() {
         {data && !dataQuery.isLoading && (
           <div className="rounded-2xl overflow-hidden" style={glass}>
             <div className="overflow-x-auto">
-              <table className="text-sm" style={{ minWidth: 'max-content', width: '100%' }}>
+              <table className="text-sm w-full" style={{ tableLayout: 'fixed' }}>
+                <colgroup>
+                  <col style={{ width: '35%' }} />
+                  {showStability && <col style={{ width: `${65 / (data.practices.length + 1)}%` }} />}
+                  {data.practices.map(p => (
+                    <col key={p.id} style={{ width: `${65 / (data.practices.length + (showStability ? 1 : 0))}%` }} />
+                  ))}
+                </colgroup>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap" style={{ color: '#9ca3af' }}>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
                       Sadhaka
                     </th>
                     {showStability && (
-                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap" style={{ color: '#9ca3af' }}>
+                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
                         7d trend
                       </th>
                     )}
                     {data.practices.map(p => (
                       <th
                         key={p.id}
-                        className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap"
+                        className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide"
                         style={{ color: '#9ca3af' }}
                       >
                         {p.practice}
