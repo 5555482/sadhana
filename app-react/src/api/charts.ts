@@ -48,4 +48,16 @@ export const chartsApi = {
     const res = await apiClient.get<{ reports: Report[] }>(`/share/${userId}/reports`)
     return res.data.reports
   },
+  async getReportData(cob: string, duration: string): Promise<ReportDataEntry[]> {
+    const res = await apiClient.get<{ values: ReportDataEntry[] }>(`/diary/${cob}/report`, { params: { duration } })
+    return res.data.values
+  },
+}
+
+export type ReportDuration = 'Week' | 'Month' | 'Quarter' | 'HalfYear' | 'Year' | 'AllData'
+
+export interface ReportDataEntry {
+  cob_date: string
+  practice: string
+  value: unknown
 }

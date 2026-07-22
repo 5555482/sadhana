@@ -3,8 +3,20 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { FaPlus, FaChartLine, FaTrash, FaTh } from 'react-icons/fa'
 import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX } from 'react-icons/lu'
+import {
+  ComposedChart,
+  Line,
+  Bar,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts'
 import { chartsApi } from '../../api/charts'
-import type { Report, ReportDefinition, TraceType, PracticeTrace } from '../../api/charts'
+import type { Report, ReportDefinition, TraceType, PracticeTrace, ReportDuration } from '../../api/charts'
 import { practicesApi } from '../../api/practices'
 import { Spinner } from '../../components/ui/Spinner'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
@@ -20,6 +32,17 @@ const glass: React.CSSProperties = {
 }
 
 const ACCENT = '#01a386'
+
+const TRACE_COLORS = ['#01a386', '#6366f1', '#d97706', '#e11d48', '#0ea5e9', '#8b5cf6', '#f59e0b']
+
+const DURATIONS: { label: string; value: ReportDuration }[] = [
+  { label: '1W', value: 'Week' },
+  { label: '1M', value: 'Month' },
+  { label: '3M', value: 'Quarter' },
+  { label: '6M', value: 'HalfYear' },
+  { label: '1Y', value: 'Year' },
+  { label: 'All', value: 'AllData' },
+]
 
 function isGrid(def: ReportDefinition): def is { Grid: { practices: string[] } } {
   return 'Grid' in def
@@ -45,29 +68,191 @@ function TraceTypeBadge({ type_ }: { type_: TraceType }) {
   )
 }
 
+function valueToNumber(raw: unknown): number | null {
+  if (raw === null || raw === undefined) return null
+  if (typeof raw === 'number') return raw
+  if (typeof raw === 'boolean') return raw ? 1 : 0
+  if (typeof raw === 'object') {
+    const obj = raw as Record<string, unknown>
+    if ('Int' in obj) return obj.Int as number
+    if ('Bool' in obj) return (obj.Bool as boolean) ? 1 : 0
+    if ('Duration' in obj) return obj.Duration as number
+    if ('Time' in obj) {
+      const t = obj.Time as { h: number; m: number }
+      return t.h * 60 + t.m
+    }
+  }
+  return null
+}
+
+function shortDate(iso: string): string {
+  const d = new Date(iso + 'T00:00:00')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+type ChartDataRow = { date: string; [key: string]: number | null | string }
+
+function buildChartData(
+  rawValues: { cob_date: string; practice: string; value: unknown }[],
+  practiceNames: string[],
+): ChartDataRow[] {
+  const dateMap = new Map<string, ChartDataRow>()
+  for (const entry of rawValues) {
+    const date = shortDate(entry.cob_date)
+    if (!dateMap.has(date)) dateMap.set(date, { date })
+    const row = dateMap.get(date)!
+    if (practiceNames.includes(entry.practice)) {
+      row[entry.practice] = valueToNumber(entry.value)
+    }
+  }
+  return Array.from(dateMap.values())
+}
+
+function GraphChart({
+  traces,
+  practiceMap,
+  cob,
+  duration,
+}: {
+  traces: PracticeTrace[]
+  practiceMap: Record<string, string>
+  cob: string
+  duration: ReportDuration
+}) {
+  const { data: rawValues = [], isLoading } = useQuery({
+    queryKey: ['report-data', cob, duration],
+    queryFn: () => chartsApi.getReportData(cob, duration),
+  })
+
+  const practiceNames = traces.map(t => practiceMap[t.practice] ?? t.practice)
+  const chartData = buildChartData(rawValues, practiceNames)
+
+  if (isLoading) return <div className="flex justify-center py-8"><Spinner /></div>
+  if (chartData.length === 0) return (
+    <p className="text-xs text-center py-6" style={{ color: '#9ca3af' }}>No data for this period</p>
+  )
+
+  return (
+    <ResponsiveContainer width="100%" height={220}>
+      <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+        <XAxis
+          dataKey="date"
+          tick={{ fontSize: 10, fill: '#9ca3af' }}
+          tickLine={false}
+          axisLine={false}
+          interval="preserveStartEnd"
+        />
+        <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
+        <Tooltip
+          contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+        />
+        <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+        {traces.map((trace, i) => {
+          const name = practiceMap[trace.practice] ?? trace.practice
+          const color = TRACE_COLORS[i % TRACE_COLORS.length]
+          const tLabel = traceLabel(trace.type_)
+          if (tLabel === 'Bar') {
+            return <Bar key={trace.practice} dataKey={name} fill={color} radius={[2, 2, 0, 0]} maxBarSize={20} />
+          }
+          if (tLabel === 'Dot') {
+            return <Scatter key={trace.practice} dataKey={name} fill={color} name={name} />
+          }
+          const isSquare = typeof trace.type_ === 'object' && 'Line' in trace.type_ && trace.type_.Line.style === 'Square'
+          return (
+            <Line
+              key={trace.practice}
+              type={isSquare ? 'stepAfter' : 'monotone'}
+              dataKey={name}
+              stroke={color}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4 }}
+            />
+          )
+        })}
+      </ComposedChart>
+    </ResponsiveContainer>
+  )
+}
+
+function GridTable({
+  practiceIds,
+  practiceMap,
+  cob,
+  duration,
+}: {
+  practiceIds: string[]
+  practiceMap: Record<string, string>
+  cob: string
+  duration: ReportDuration
+}) {
+  const { data: rawValues = [], isLoading } = useQuery({
+    queryKey: ['report-data', cob, duration],
+    queryFn: () => chartsApi.getReportData(cob, duration),
+  })
+
+  const practiceNames = practiceIds.map(id => practiceMap[id] ?? id)
+  const chartData = buildChartData(rawValues, practiceNames)
+
+  if (isLoading) return <div className="flex justify-center py-8"><Spinner /></div>
+  if (chartData.length === 0) return (
+    <p className="text-xs text-center py-6" style={{ color: '#9ca3af' }}>No data for this period</p>
+  )
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>Date</th>
+            {practiceNames.map(name => (
+              <th key={name} className="text-right px-2 py-1.5 font-semibold truncate max-w-16" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                {name}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {chartData.slice(-14).map((row, i) => (
+            <tr key={row.date} style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.015)' }}>
+              <td className="px-2 py-1.5 text-gray-500">{row.date}</td>
+              {practiceNames.map(name => (
+                <td key={name} className="px-2 py-1.5 text-right text-gray-700">
+                  {row[name] == null ? '—' : String(row[name])}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 function ReportCard({
   report,
   practiceMap,
   practices,
 }: {
   report: Report
-  practiceMap: Record<string, string>  // id → name
+  practiceMap: Record<string, string>
   practices: UserPractice[]
 }) {
   const qc = useQueryClient()
   const [open, setOpen] = useState(false)
-  // add-trace form state
+  const [duration, setDuration] = useState<ReportDuration>('Month')
   const [addPracticeId, setAddPracticeId] = useState('')
   const [addTraceType, setAddTraceType] = useState<'Line' | 'Bar' | 'Dot'>('Line')
 
   const isGridType = isGrid(report.definition)
+  const todayCob = new Date().toISOString().slice(0, 10)
 
   const updateMutation = useMutation({
     mutationFn: (def: ReportDefinition) => chartsApi.updateReport(report.id, report.name, def),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['reports'] }),
   })
 
-  // Remove a trace / practice from the report
   function removeItem(itemId: string) {
     let newDef: ReportDefinition
     if (isGrid(report.definition)) {
@@ -78,7 +263,6 @@ function ReportCard({
     updateMutation.mutate(newDef)
   }
 
-  // Add a trace / practice to the report
   function addItem() {
     if (!addPracticeId) return
     let newDef: ReportDefinition
@@ -98,7 +282,6 @@ function ReportCard({
     setAddPracticeId('')
   }
 
-  // Collect current practice IDs for display
   const currentIds = isGrid(report.definition)
     ? report.definition.Grid.practices
     : report.definition.Graph.traces.map(t => t.practice)
@@ -142,16 +325,57 @@ function ReportCard({
       {/* Expanded body */}
       {open && (
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+          {/* Duration selector */}
+          {currentIds.length > 0 && (
+            <div className="px-4 pt-3 flex gap-1 flex-wrap">
+              {DURATIONS.map(d => (
+                <button
+                  key={d.value}
+                  onClick={() => setDuration(d.value)}
+                  className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
+                  style={{
+                    background: duration === d.value ? ACCENT : 'rgba(0,0,0,0.05)',
+                    color: duration === d.value ? 'white' : '#6b7280',
+                    border: 'none',
+                  }}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Chart or grid */}
+          {currentIds.length > 0 && (
+            <div className="px-2 pt-3 pb-2">
+              {isGrid(report.definition) ? (
+                <GridTable
+                  practiceIds={report.definition.Grid.practices}
+                  practiceMap={practiceMap}
+                  cob={todayCob}
+                  duration={duration}
+                />
+              ) : 'Graph' in report.definition ? (
+                <GraphChart
+                  traces={report.definition.Graph.traces}
+                  practiceMap={practiceMap}
+                  cob={todayCob}
+                  duration={duration}
+                />
+              ) : null}
+            </div>
+          )}
+
           {/* Trace / practice list */}
           {currentIds.length > 0 ? (
-            <div className="px-4 pt-3 pb-2 flex flex-col gap-1.5">
+            <div className="px-4 pb-2 flex flex-col gap-1" style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.625rem' }}>
               {isGrid(report.definition)
                 ? report.definition.Grid.practices.map(pid => (
-                    <div key={pid} className="flex items-center gap-2 py-1">
-                      <span className="flex-1 text-sm text-gray-700">{practiceMap[pid] ?? pid}</span>
+                    <div key={pid} className="flex items-center gap-2 py-0.5">
+                      <span className="flex-1 text-xs text-gray-600">{practiceMap[pid] ?? pid}</span>
                       <button
                         onClick={() => removeItem(pid)}
-                        className="w-6 h-6 flex items-center justify-center rounded-lg"
+                        className="w-5 h-5 flex items-center justify-center rounded-lg"
                         style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}
                       >
                         <LuX className="w-3 h-3" />
@@ -159,12 +383,12 @@ function ReportCard({
                     </div>
                   ))
                 : currentTraces.map(trace => (
-                    <div key={trace.practice} className="flex items-center gap-2 py-1">
+                    <div key={trace.practice} className="flex items-center gap-2 py-0.5">
                       <TraceTypeBadge type_={trace.type_} />
-                      <span className="flex-1 text-sm text-gray-700">{practiceMap[trace.practice] ?? trace.practice}</span>
+                      <span className="flex-1 text-xs text-gray-600">{practiceMap[trace.practice] ?? trace.practice}</span>
                       <button
                         onClick={() => removeItem(trace.practice)}
-                        className="w-6 h-6 flex items-center justify-center rounded-lg"
+                        className="w-5 h-5 flex items-center justify-center rounded-lg"
                         style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}
                       >
                         <LuX className="w-3 h-3" />
@@ -236,7 +460,6 @@ export function ChartsPage() {
   const { data: practices = [] } = useQuery({ queryKey: ['practices'], queryFn: practicesApi.getUserPractices })
   const [shareCopied, setShareCopied] = useState(false)
 
-  // Build id→name map
   const practiceMap = Object.fromEntries(practices.map(p => [p.id, p.practice]))
 
   function copyShareLink() {
@@ -268,7 +491,6 @@ export function ChartsPage() {
               {reports.length > 0 ? `${reports.length} report${reports.length === 1 ? '' : 's'}` : 'No reports yet'}
             </p>
           </div>
-          {/* Share my charts link */}
           <button
             onClick={copyShareLink}
             className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition-all"
@@ -306,7 +528,6 @@ export function ChartsPage() {
         )}
       </div>
 
-      {/* FAB */}
       <Link
         to="/charts/new"
         aria-label="New report"
