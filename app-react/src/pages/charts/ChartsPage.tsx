@@ -7,7 +7,6 @@ import {
   ComposedChart,
   Line,
   Bar,
-  Scatter,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -156,7 +155,18 @@ function GraphChart({
             return <Bar key={trace.practice} dataKey={name} fill={color} radius={[2, 2, 0, 0]} maxBarSize={20} />
           }
           if (tLabel === 'Dot') {
-            return <Scatter key={trace.practice} dataKey={name} fill={color} name={name} />
+            return (
+              <Line
+                key={trace.practice}
+                type="monotone"
+                dataKey={name}
+                stroke="none"
+                strokeWidth={0}
+                dot={{ r: 4, fill: color, strokeWidth: 0 }}
+                activeDot={{ r: 5, fill: color }}
+                name={name}
+              />
+            )
           }
           const isSquare = typeof trace.type_ === 'object' && 'Line' in trace.type_ && trace.type_.Line.style === 'Square'
           return (
@@ -240,7 +250,7 @@ function ReportCard({
   practices: UserPractice[]
 }) {
   const qc = useQueryClient()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const [duration, setDuration] = useState<ReportDuration>('Month')
   const [addPracticeId, setAddPracticeId] = useState('')
   const [addTraceType, setAddTraceType] = useState<'Line' | 'Bar' | 'Dot'>('Line')
