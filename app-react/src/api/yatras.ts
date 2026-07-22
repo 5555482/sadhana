@@ -1,5 +1,5 @@
 import { apiClient } from './client'
-import type { Yatra, UserPractice, PracticeDataType } from '../types/api'
+import type { Yatra, UserPractice, PracticeDataType, YatraDataResponse } from '../types/api'
 
 export const yatrasApi = {
   async getYatras(): Promise<Yatra[]> {
@@ -31,5 +31,15 @@ export const yatrasApi = {
   },
   async deleteYatraPractice(yatraId: string, practiceId: string): Promise<void> {
     await apiClient.delete(`/yatras/${yatraId}/practices/${practiceId}`)
+  },
+  async getYatraData(id: string, date: string): Promise<YatraDataResponse> {
+    const res = await apiClient.get<YatraDataResponse>(`/yatra/${id}/data`, {
+      params: { cob_date: date },
+    })
+    return res.data
+  },
+  async createYatra(name: string): Promise<Yatra> {
+    const res = await apiClient.post<{ yatra: Yatra }>('/yatras', { name })
+    return res.data.yatra
   },
 }

@@ -1,10 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
+import { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { FaUsers, FaPlus, FaChevronRight } from 'react-icons/fa'
-import { yatrasApi } from '../../api/yatras'
-import { Spinner } from '../../components/ui/Spinner'
+import { FaUsers, FaPlus, FaCog } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
-import type { Yatra } from '../../types/api'
+import { yatrasApi } from '../../api/yatras'
+import { TopBar } from '../../components/layout/TopBar'
+import { Spinner } from '../../components/ui/Spinner'
+import type { UserYatraDataRow } from '../../types/api'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -14,94 +16,157 @@ const glass: React.CSSProperties = {
   boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
 }
 
-function YatraCard({ y }: { y: Yatra }) {
-  const to = y.is_member ? `/yatra/${y.id}/settings` : `/yatra/${y.id}/join`
+const SELECTED_YATRA_KEY = 'selected_yatra'
 
-  return (
-    <Link
-      to={to}
-      className="rounded-2xl px-4 py-4 flex items-center gap-3 transition-all no-underline"
-      style={glass}
-    >
-      {/* Avatar circle */}
-      <div
-        className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 text-white text-base font-bold"
-        style={{
-          background: y.is_member
-            ? 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)'
-            : 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
-          boxShadow: y.is_member
-            ? '0 4px 12px rgba(1,163,134,0.28)'
-            : '0 4px 12px rgba(124,58,237,0.24)',
-        }}
-      >
-        {y.name.charAt(0).toUpperCase()}
-      </div>
+function todayStr(): string {
+  return new Date().toISOString().split('T')[0]
+}
 
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-800 truncate">{y.name}</p>
-        <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
-          {y.member_count} member{y.member_count === 1 ? '' : 's'} · {y.practices.length} practice{y.practices.length === 1 ? '' : 's'}
-        </p>
-      </div>
+function formatValue(val: unknown): string {
+  if (val === null || val === undefined) return '—'
+  if (typeof val === 'object') {
+    const v = val as Record<string, unknown>
+    if ('Bool' in v) return (v.Bool as boolean) ? '✓' : '✗'
+    if ('Int' in v) return String(v.Int)
+    if ('Duration' in v) {
+      const min = v.Duration as number
+      if (min === 0) return '—'
+      if (min < 60) return `${min}m`
+      const h = Math.floor(min / 60), m = min % 60
+      return m === 0 ? `${h}h` : `${h}h ${m}m`
+    }
+    if ('Time' in v) {
+      const t = v.Time as { h: number; m: number }
+      return `${String(t.h).padStart(2, '0')}:${String(t.m).padStart(2, '0')}`
+    }
+    if ('Text' in v) return (v.Text as string) || '—'
+  }
+  return String(val)
+}
 
-      {/* Badge + chevron */}
-      <div className="flex items-center gap-2 flex-shrink-0">
-        {y.is_member && (
-          <span
-            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={{ background: 'rgba(1,163,134,0.10)', color: '#01a386' }}
-          >
-            Member
-          </span>
-        )}
-        {y.is_admin && (
-          <span
-            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={{ background: 'rgba(99,102,241,0.10)', color: '#6366f1' }}
-          >
-            Admin
-          </span>
-        )}
-        <FaChevronRight className="w-3 h-3" style={{ color: '#d1d5db' }} />
-      </div>
-    </Link>
-  )
+function trendSymbol(arrow: UserYatraDataRow['trend_arrow']): string {
+  if (arrow === 'Up') return '↑'
+  if (arrow === 'Down') return '↓'
+  if (arrow === 'Flat') return '→'
+  return '—'
+}
+
+function trendColor(arrow: UserYatraDataRow['trend_arrow']): string {
+  if (arrow === 'Up') return '#16a34a'
+  if (arrow === 'Down') return '#dc2626'
+  return '#9ca3af'
 }
 
 export function YatrasPage() {
   const { t } = useTranslation()
-  const { data = [], isLoading } = useQuery({ queryKey: ['yatras'], queryFn: yatrasApi.getYatras })
+  const qc = useQueryClient()
+  const today = todayStr()
 
-  if (isLoading) return <Spinner />
+  const [selectedId, setSelectedId] = useState<string | null>(
+    () => localStorage.getItem(SELECTED_YATRA_KEY),
+  )
+
+  const yatraListQuery = useQuery({
+    queryKey: ['yatras'],
+    queryFn: yatrasApi.getYatras,
+  })
+  const yatras = yatraListQuery.data ?? []
+
+  const selectedYatra = yatras.find(y => y.id === selectedId) ?? yatras[0] ?? null
+
+  useEffect(() => {
+    if (selectedYatra && selectedYatra.id !== selectedId) {
+      setSelectedId(selectedYatra.id)
+      localStorage.setItem(SELECTED_YATRA_KEY, selectedYatra.id)
+    }
+  }, [selectedYatra?.id])
+
+  const dataQuery = useQuery({
+    queryKey: ['yatra-data', selectedYatra?.id, today],
+    queryFn: () => yatrasApi.getYatraData(selectedYatra!.id, today),
+    enabled: !!selectedYatra,
+  })
+
+  const createMutation = useMutation({
+    mutationFn: yatrasApi.createYatra,
+    onSuccess: (newYatra) => {
+      qc.invalidateQueries({ queryKey: ['yatras'] })
+      setSelectedId(newYatra.id)
+      localStorage.setItem(SELECTED_YATRA_KEY, newYatra.id)
+    },
+  })
+
+  const handleCreate = () => {
+    const name = window.prompt('New yatra name:')?.trim()
+    if (name) createMutation.mutate(name)
+  }
+
+  const handleSelect = (id: string) => {
+    setSelectedId(id)
+    localStorage.setItem(SELECTED_YATRA_KEY, id)
+  }
+
+  const data = dataQuery.data
+  const showStability = selectedYatra?.show_stability_metrics ?? false
 
   return (
     <>
-      <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
-        {/* Page header */}
-        <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
+      <TopBar />
+      <div className="px-4 py-4 pb-28 max-w-2xl mx-auto flex flex-col gap-3">
+
+        {/* Header card: icon + selector + settings + create */}
+        <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
           <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
               background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+              boxShadow: '0 4px 12px rgba(1,163,134,0.28)',
             }}
           >
-            <FaUsers className="w-5 h-5 text-white" />
+            <FaUsers className="w-4 h-4 text-white" />
           </div>
-          <div>
-            <h1 className="text-base font-bold text-gray-800 leading-tight">{t('yatras.title') || 'Yatras'}</h1>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {data.length > 0
-                ? `${data.length} group${data.length === 1 ? '' : 's'}`
-                : 'Group practice circles'}
-            </p>
-          </div>
+
+          {yatras.length > 0 ? (
+            <select
+              value={selectedYatra?.id ?? ''}
+              onChange={e => handleSelect(e.target.value)}
+              className="flex-1 text-sm font-semibold text-gray-800 bg-transparent border-none outline-none cursor-pointer"
+            >
+              {yatras.map(y => (
+                <option key={y.id} value={y.id}>{y.name}</option>
+              ))}
+            </select>
+          ) : (
+            <span className="flex-1 text-sm text-gray-400">No yatras yet</span>
+          )}
+
+          {selectedYatra && (
+            <Link
+              to={`/yatra/${selectedYatra.id}/settings`}
+              className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
+              style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)' }}
+            >
+              <FaCog className="w-3.5 h-3.5" />
+            </Link>
+          )}
+
+          <button
+            onClick={handleCreate}
+            className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
+            style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)', border: 'none' }}
+          >
+            <FaPlus className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        {data.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-4">
+        {/* Loading */}
+        {(yatraListQuery.isLoading || dataQuery.isLoading) && (
+          <div className="flex justify-center py-10"><Spinner /></div>
+        )}
+
+        {/* Empty state */}
+        {!yatraListQuery.isLoading && yatras.length === 0 && (
+          <div className="flex flex-col items-center py-16 gap-4">
             <div
               className="w-16 h-16 rounded-3xl flex items-center justify-center"
               style={{ background: 'rgba(1,163,134,0.08)' }}
@@ -109,7 +174,9 @@ export function YatrasPage() {
               <FaUsers className="w-7 h-7" style={{ color: '#01a386' }} />
             </div>
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700">{t('yatras.empty') || 'No yatras yet'}</p>
+              <p className="text-sm font-medium text-gray-700">
+                {t('yatras.empty') || 'No yatras yet'}
+              </p>
               <p className="text-xs text-gray-400 mt-1">Join or create a group practice circle</p>
             </div>
             <Link
@@ -123,13 +190,106 @@ export function YatrasPage() {
             >
               Join a Yatra
             </Link>
+            <button
+              onClick={handleCreate}
+              className="text-sm font-medium"
+              style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              or create new
+            </button>
           </div>
-        ) : (
-          data.map((y) => <YatraCard key={y.id} y={y} />)
         )}
+
+        {/* Data grid */}
+        {data && !dataQuery.isLoading && (
+          <div className="rounded-2xl overflow-hidden" style={glass}>
+            <div className="overflow-x-auto">
+              <table className="text-sm" style={{ minWidth: 'max-content', width: '100%' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap" style={{ color: '#9ca3af' }}>
+                      Sadhaka
+                    </th>
+                    {showStability && (
+                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
+                        Trend
+                      </th>
+                    )}
+                    {data.practices.map(p => (
+                      <th
+                        key={p.id}
+                        className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap"
+                        style={{ color: '#9ca3af' }}
+                      >
+                        {p.practice}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.data.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={data.practices.length + (showStability ? 2 : 1)}
+                        className="px-4 py-10 text-center text-sm text-gray-400"
+                      >
+                        No entries for today yet
+                      </td>
+                    </tr>
+                  )}
+                  {data.data.map((row, i) => (
+                    <tr
+                      key={row.user_id}
+                      style={{ borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : undefined }}
+                    >
+                      <td className="px-4 py-3 font-semibold text-gray-800 whitespace-nowrap">
+                        {row.user_name}
+                      </td>
+                      {showStability && (
+                        <td
+                          className="px-3 py-3 text-center font-bold text-base"
+                          style={{ color: trendColor(row.trend_arrow) }}
+                        >
+                          {trendSymbol(row.trend_arrow)}
+                        </td>
+                      )}
+                      {row.row.map((val, j) => (
+                        <td key={j} className="px-3 py-3 text-center" style={{ color: '#374151' }}>
+                          {formatValue(val)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Statistics */}
+        {data && data.statistics.length > 0 && (
+          <div className="rounded-2xl px-4 py-4 flex flex-col gap-1" style={glass}>
+            <span className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>
+              Statistics
+            </span>
+            {data.statistics.map((stat, i) => (
+              <div
+                key={i}
+                className="flex justify-between items-center py-1.5"
+                style={{ borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : undefined }}
+              >
+                <span className="text-sm text-gray-600">{stat.label}</span>
+                <span className="text-sm font-bold text-gray-800">
+                  {stat.value !== null ? formatValue(stat.value) : '—'}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
 
-      {/* FAB */}
+      {/* FAB — Join a yatra */}
       <Link
         to="/yatra/join"
         aria-label="Join yatra"

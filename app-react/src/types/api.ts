@@ -65,12 +65,41 @@ export interface YatraMember {
 export interface Yatra {
   id: string
   name: string
-  description?: string
-  member_count: number
-  is_member: boolean
-  is_admin: boolean
-  practices: UserPractice[]
-  members: YatraMember[]
+  statistics?: unknown
+  show_stability_metrics: boolean
+  // Optional fields used by settings pages (may not be present in all responses)
+  member_count?: number
+  is_member?: boolean
+  is_admin?: boolean
+  practices?: UserPractice[]
+  members?: YatraMember[]
+}
+
+export interface YatraPractice {
+  id: string
+  practice: string
+  data_type: PracticeDataType
+  colour_zones?: unknown
+}
+
+export interface UserYatraDataRow {
+  user_id: string
+  user_name: string
+  row: (unknown | null)[]
+  trend_arrow: 'Up' | 'Down' | 'Flat' | null
+  stability_heatmap: number[]
+}
+
+export interface YatraStatistic {
+  label: string
+  value: unknown | null
+}
+
+export interface YatraDataResponse {
+  practices: YatraPractice[]
+  data: UserYatraDataRow[]
+  statistics: YatraStatistic[]
+  stability_heatmap_days: number[]
 }
 
 export interface ImportPreview {

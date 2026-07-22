@@ -110,9 +110,12 @@ export function SettingsPage() {
         onClick={() => { logout(); navigate('/login', { replace: true }) }}
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
-          background: 'rgba(225,29,72,0.08)',
-          color: '#e11d48',
-          border: '1px solid rgba(225,29,72,0.20)',
+          background: 'rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          color: '#dc2626',
+          border: '1.5px solid rgba(220,38,38,0.35)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         }}
       >
         <FaSignOutAlt className="w-3.5 h-3.5" />
