@@ -1,48 +1,94 @@
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { FaChartLine, FaTh } from 'react-icons/fa'
 import { chartsApi } from '../../api/charts'
+import type { ReportDefinition } from '../../api/charts'
+
+function isGridDef(def: ReportDefinition): def is { Grid: { practices: string[] } } {
+  return 'Grid' in def
+}
 import { Spinner } from '../../components/ui/Spinner'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+
+const glass: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.90)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(255,255,255,0.80)',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+}
 
 export function SharedChartPage() {
   const { id } = useParams<{ id: string }>()
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['shared-chart', id],
-    queryFn: () => chartsApi.getSharedChart(id!),
+
+  const { data: reports = [], isLoading, isError } = useQuery({
+    queryKey: ['shared-reports', id],
+    queryFn: () => chartsApi.getSharedReports(id!),
+    enabled: !!id,
   })
 
   if (isLoading) return <Spinner />
-  if (isError || !data) {
+
+  if (isError) {
     return (
-      <div className="flex items-center justify-center h-screen text-error">
-        Chart not found
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-sm text-gray-400">Reports not found</p>
       </div>
     )
   }
 
-  const chartData = (data.entries ?? []).map((e) => ({
-    name: e.practice,
-    value: e.value ? Object.values(e.value)[0] : 0,
-  }))
-
   return (
-    <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
-      <div className="card bg-base-100 shadow-sm w-full max-w-lg">
-        <div className="card-body gap-3">
-          <h1 className="card-title">{data.name}</h1>
-          <p className="text-sm text-base-content/50">{data.date_from} – {data.date_to}</p>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="value" stroke="var(--color-primary)" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-          <p className="text-xs text-center text-base-content/40">Made with Sadhana Pro</p>
+    <div className="min-h-screen px-4 py-8 max-w-lg mx-auto flex flex-col gap-4">
+      {/* Header */}
+      <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style={{
+            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+          }}
+        >
+          <FaChartLine className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <h1 className="text-base font-bold text-gray-800">Shared reports</h1>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {reports.length} report{reports.length === 1 ? '' : 's'}
+          </p>
         </div>
       </div>
+
+      {reports.length === 0 ? (
+        <p className="text-center text-sm text-gray-400 py-12">No reports shared yet</p>
+      ) : (
+        reports.map(r => {
+          const def = r.definition
+          const gridDef = isGridDef(def) ? def : null
+          const count = gridDef
+            ? gridDef.Grid.practices.length
+            : (def as { Graph: { bar_layout: string; traces: unknown[] } }).Graph.traces.length
+          return (
+            <div key={r.id} className="rounded-2xl px-4 py-4 flex items-center gap-3" style={glass}>
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: gridDef ? 'rgba(99,102,241,0.10)' : 'rgba(1,163,134,0.10)' }}
+              >
+                {gridDef
+                  ? <FaTh className="w-4 h-4" style={{ color: '#6366f1' }} />
+                  : <FaChartLine className="w-4 h-4" style={{ color: '#01a386' }} />
+                }
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-800 truncate">{r.name}</p>
+                <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
+                  {gridDef ? 'Grid' : 'Graph'} · {count} practice{count === 1 ? '' : 's'}
+                </p>
+              </div>
+            </div>
+          )
+        })
+      )}
+
+      <p className="text-xs text-center mt-4" style={{ color: '#d1d5db' }}>Made with Sadhana</p>
     </div>
   )
 }

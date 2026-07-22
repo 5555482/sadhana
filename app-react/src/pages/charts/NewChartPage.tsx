@@ -1,33 +1,15 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { FaChartBar, FaChartLine, FaTh } from 'react-icons/fa'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { FaChartLine, FaTh } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { practicesApi } from '../../api/practices'
-import { apiClient } from '../../api/client'
+import { chartsApi } from '../../api/charts'
+import type { ReportDefinition, TraceType, PracticeTrace } from '../../api/charts'
 import { Spinner } from '../../components/ui/Spinner'
-import { useTranslation } from 'react-i18next'
 
-type ChartType = 'Line' | 'Bar' | 'Grid'
-
-const PRESETS = [
-  { label: 'Last 7 days', days: 7 },
-  { label: 'Last 30 days', days: 30 },
-  { label: 'Last 90 days', days: 90 },
-]
-
-const CHART_TYPES: { value: ChartType; icon: React.ElementType; label: string; desc: string }[] = [
-  { value: 'Line', icon: FaChartLine, label: 'Line',  desc: 'Track trends over time'      },
-  { value: 'Bar',  icon: FaChartBar,  label: 'Bar',   desc: 'Compare values by day'       },
-  { value: 'Grid', icon: FaTh,        label: 'Grid',  desc: 'See activity heatmap'        },
-]
-
-function daysAgo(n: number) {
-  const d = new Date()
-  d.setDate(d.getDate() - n)
-  return d.toISOString().split('T')[0]
-}
-function today() { return new Date().toISOString().split('T')[0] }
+type ReportKind = 'Graph' | 'Grid'
+type GraphTraceType = 'Line' | 'Bar' | 'Dot'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -49,24 +31,32 @@ const inputStyle: React.CSSProperties = {
   transition: 'border-color 0.15s, box-shadow 0.15s',
 }
 
-function onInputFocus(e: React.FocusEvent<HTMLInputElement>) {
+function onFocus(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = '#01a386'
   e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)'
 }
-function onInputBlur(e: React.FocusEvent<HTMLInputElement>) {
+function onBlur(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = 'rgba(0,0,0,0.10)'
   e.target.style.boxShadow = 'none'
 }
 
+const TRACE_TYPES: { value: GraphTraceType; label: string; desc: string }[] = [
+  { value: 'Line', label: 'Line', desc: 'Trend over time' },
+  { value: 'Bar',  label: 'Bar',  desc: 'Compare by day' },
+  { value: 'Dot',  label: 'Dot',  desc: 'Scatter points' },
+]
+
 export function NewChartPage() {
-  const { t } = useTranslation()
   const navigate = useNavigate()
-  const [step, setStep]         = useState(0)
+  const qc = useQueryClient()
+
+  const [step, setStep] = useState(0)
+  const [name, setName] = useState('')
+  const [kind, setKind] = useState<ReportKind>('Graph')
+  // Map: practice_id → trace type (for Graph)
+  const [traceTypes, setTraceTypes] = useState<Record<string, GraphTraceType>>({})
+  // Selected practice IDs (both Grid and Graph)
   const [selected, setSelected] = useState<string[]>([])
-  const [dateFrom, setDateFrom] = useState(daysAgo(30))
-  const [dateTo, setDateTo]     = useState(today())
-  const [chartType, setChartType] = useState<ChartType>('Line')
-  const [name, setName]         = useState('')
 
   const { data: practices = [], isLoading } = useQuery({
     queryKey: ['practices'],
@@ -75,32 +65,40 @@ export function NewChartPage() {
 
   const mutation = useMutation({
     mutationFn: () => {
-      const idMap = Object.fromEntries(practices.map(p => [p.practice, p.id]))
-      const ids = selected.map(n => idMap[n]).filter(Boolean)
-
-      const definition = chartType === 'Grid'
-        ? { Grid: { practices: ids } }
-        : {
-            Graph: {
-              bar_layout: null,
-              traces: ids.map(id => ({
-                label: null,
-                type_: chartType === 'Bar' ? 'Bar' : { Line: { style: 'Solid' } },
-                practice: id,
-                y_axis: null,
-                show_average: false,
-              })),
-            },
-          }
-
-      return apiClient.post('/reports', { report: { name, definition } })
+      let definition: ReportDefinition
+      if (kind === 'Grid') {
+        definition = { Grid: { practices: selected } }
+      } else {
+        const traces: PracticeTrace[] = selected.map(id => {
+          const tt: GraphTraceType = traceTypes[id] ?? 'Line'
+          const type_: TraceType = tt === 'Line'
+            ? { Line: { style: 'Regular' } }
+            : tt === 'Bar' ? 'Bar' : 'Dot'
+          return { label: null, type_, practice: id, y_axis: null, show_average: true }
+        })
+        definition = { Graph: { bar_layout: 'Grouped', traces } }
+      }
+      return chartsApi.createReport(name, definition)
     },
-    onSuccess: () => navigate('/charts'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['reports'] })
+      navigate('/charts')
+    },
   })
 
   if (isLoading) return <Spinner />
 
-  const STEP_LABELS = [t('charts.pickMetrics'), t('charts.dateRange'), t('charts.chartType')]
+  const activePractices = practices.filter(p => p.is_active)
+  const STEP_LABELS = ['Setup', 'Practices']
+  const canNext0 = name.trim().length > 0
+  const canSave = selected.length > 0
+
+  function togglePractice(id: string) {
+    setSelected(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    )
+    if (!traceTypes[id]) setTraceTypes(prev => ({ ...prev, [id]: 'Line' }))
+  }
 
   return (
     <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
@@ -116,7 +114,7 @@ export function NewChartPage() {
           <FaChartLine className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800 leading-tight">{t('charts.create') || 'New Chart'}</h1>
+          <h1 className="text-base font-bold text-gray-800 leading-tight">New report</h1>
           <p className="text-xs text-gray-400 mt-0.5">Step {step + 1} of {STEP_LABELS.length}</p>
         </div>
         <Link
@@ -129,7 +127,7 @@ export function NewChartPage() {
         </Link>
       </div>
 
-      {/* Step indicator */}
+      {/* Step indicators */}
       <div className="flex items-center gap-1 px-1">
         {STEP_LABELS.map((label, i) => (
           <div key={label} className="flex-1 flex flex-col gap-1.5">
@@ -137,66 +135,70 @@ export function NewChartPage() {
               className="h-1 rounded-full transition-all duration-300"
               style={{ background: i <= step ? '#01a386' : 'rgba(0,0,0,0.10)' }}
             />
-            <span className="text-xs font-medium truncate" style={{ color: i === step ? '#01a386' : '#9ca3af' }}>
+            <span className="text-xs font-medium" style={{ color: i === step ? '#01a386' : '#9ca3af' }}>
               {label}
             </span>
           </div>
         ))}
       </div>
 
-      {/* Step 0 — pick practices */}
+      {/* ── Step 0: name + kind ── */}
       {step === 0 && (
-        <div className="flex flex-col gap-2">
-          {practices.filter((p) => p.is_active).map((p) => {
-            const active = selected.includes(p.practice)
-            return (
-              <label
-                key={p.id}
-                className="rounded-2xl px-4 py-3.5 flex items-center gap-3 cursor-pointer transition-all"
-                style={{
-                  ...glass,
-                  border: active ? '1px solid rgba(1,163,134,0.45)' : '1px solid rgba(255,255,255,0.80)',
-                  boxShadow: active ? '0 4px 16px rgba(1,163,134,0.10)' : '0 4px 16px rgba(0,0,0,0.08)',
-                }}
-              >
-                <div
-                  className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 transition-all"
-                  style={{
-                    background: active ? '#01a386' : 'rgba(0,0,0,0.06)',
-                    border: active ? 'none' : '1.5px solid rgba(0,0,0,0.15)',
-                  }}
-                >
-                  {active && (
-                    <svg viewBox="0 0 10 8" fill="none" className="w-2.5 h-2.5">
-                      <path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                </div>
-                <input
-                  type="checkbox"
-                  className="sr-only"
-                  checked={active}
-                  onChange={(e) =>
-                    setSelected(e.target.checked
-                      ? [...selected, p.practice]
-                      : selected.filter((s) => s !== p.practice))
-                  }
-                />
-                <span className="text-sm font-semibold text-gray-800">{p.practice}</span>
-              </label>
-            )
-          })}
+        <div className="flex flex-col gap-3">
+          {/* Name */}
+          <div className="rounded-2xl px-5 py-4 flex flex-col gap-2" style={glass}>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Report name</label>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="My weekly report"
+              style={inputStyle}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              autoFocus
+              onKeyDown={e => { if (e.key === 'Enter' && canNext0) setStep(1) }}
+            />
+          </div>
+
+          {/* Kind: Graph vs Grid */}
+          <div className="rounded-2xl p-4 flex flex-col gap-3" style={glass}>
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Report type</span>
+            <div className="flex gap-3">
+              {([['Graph', 'Line chart or bar chart', FaChartLine], ['Grid', 'Activity heatmap grid', FaTh]] as const).map(
+                ([k, desc, Icon]) => {
+                  const active = kind === k
+                  return (
+                    <button
+                      key={k}
+                      onClick={() => setKind(k)}
+                      className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl transition-all"
+                      style={{
+                        background: active ? 'rgba(1,163,134,0.08)' : 'rgba(0,0,0,0.03)',
+                        border: active ? '1.5px solid rgba(1,163,134,0.40)' : '1.5px solid rgba(0,0,0,0.07)',
+                      }}
+                    >
+                      <Icon className="w-5 h-5" style={{ color: active ? '#01a386' : '#9ca3af' }} />
+                      <div>
+                        <div className="text-sm font-semibold" style={{ color: active ? '#01a386' : '#374151' }}>{k}</div>
+                        <div className="text-xs text-center" style={{ color: '#9ca3af' }}>{desc}</div>
+                      </div>
+                    </button>
+                  )
+                }
+              )}
+            </div>
+          </div>
 
           <button
             onClick={() => setStep(1)}
-            disabled={selected.length === 0}
-            className="w-full h-12 rounded-full text-sm font-semibold mt-2 transition-opacity"
+            disabled={!canNext0}
+            className="w-full h-12 rounded-full text-sm font-semibold transition-opacity"
             style={{
               background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
               color: 'white',
               border: 'none',
               boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-              opacity: selected.length === 0 ? 0.45 : 1,
+              opacity: canNext0 ? 1 : 0.45,
             }}
           >
             Next →
@@ -204,63 +206,73 @@ export function NewChartPage() {
         </div>
       )}
 
-      {/* Step 1 — date range */}
+      {/* ── Step 1: pick practices (+ trace type for Graph) ── */}
       {step === 1 && (
-        <div className="flex flex-col gap-3">
-          {/* Presets */}
-          <div className="rounded-2xl px-5 py-4 flex flex-col gap-3" style={glass}>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Quick select</span>
-            <div className="flex gap-2">
-              {PRESETS.map((p) => (
-                <button
-                  key={p.label}
-                  onClick={() => { setDateFrom(daysAgo(p.days)); setDateTo(today()) }}
-                  className="flex-1 h-9 rounded-xl text-xs font-semibold transition-all"
-                  style={{
-                    background: dateFrom === daysAgo(p.days) && dateTo === today()
-                      ? 'rgba(1,163,134,0.12)' : 'rgba(0,0,0,0.04)',
-                    color: dateFrom === daysAgo(p.days) && dateTo === today()
-                      ? '#01a386' : '#6b7280',
-                    border: dateFrom === daysAgo(p.days) && dateTo === today()
-                      ? '1.5px solid rgba(1,163,134,0.30)' : '1.5px solid rgba(0,0,0,0.08)',
-                  }}
+        <div className="flex flex-col gap-2">
+          <div className="rounded-2xl px-4 py-3 flex flex-col gap-1.5" style={glass}>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest pb-1">
+              {kind === 'Grid' ? 'Select practices' : 'Select practices & trace type'}
+            </p>
+
+            {activePractices.map(p => {
+              const sel = selected.includes(p.id)
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center gap-3 py-2"
+                  style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}
                 >
-                  {p.label}
-                </button>
-              ))}
-            </div>
+                  {/* Checkbox */}
+                  <button
+                    type="button"
+                    onClick={() => togglePractice(p.id)}
+                    className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 transition-all"
+                    style={{
+                      background: sel ? '#01a386' : 'rgba(0,0,0,0.06)',
+                      border: sel ? 'none' : '1.5px solid rgba(0,0,0,0.15)',
+                    }}
+                  >
+                    {sel && (
+                      <svg viewBox="0 0 10 8" fill="none" className="w-2.5 h-2.5">
+                        <path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </button>
+
+                  <span className="flex-1 text-sm font-semibold text-gray-800">{p.practice}</span>
+
+                  {/* Trace type selector (Graph only, when selected) */}
+                  {kind === 'Graph' && sel && (
+                    <div className="flex gap-1 flex-shrink-0">
+                      {TRACE_TYPES.map(tt => (
+                        <button
+                          key={tt.value}
+                          onClick={() => setTraceTypes(prev => ({ ...prev, [p.id]: tt.value }))}
+                          className="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all"
+                          style={{
+                            background: (traceTypes[p.id] ?? 'Line') === tt.value
+                              ? 'rgba(1,163,134,0.12)' : 'rgba(0,0,0,0.05)',
+                            color: (traceTypes[p.id] ?? 'Line') === tt.value
+                              ? '#01a386' : '#6b7280',
+                            border: (traceTypes[p.id] ?? 'Line') === tt.value
+                              ? '1px solid rgba(1,163,134,0.30)' : '1px solid transparent',
+                          }}
+                        >
+                          {tt.value}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+
+            {activePractices.length === 0 && (
+              <p className="text-sm text-gray-400 py-4 text-center">No active practices</p>
+            )}
           </div>
 
-          {/* Custom date range */}
-          <div className="rounded-2xl px-5 py-4 flex flex-col gap-3" style={glass}>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Custom range</span>
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="text-xs text-gray-500 mb-1 block">From</label>
-                <input
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                  style={inputStyle}
-                  onFocus={onInputFocus}
-                  onBlur={onInputBlur}
-                />
-              </div>
-              <div className="flex-1">
-                <label className="text-xs text-gray-500 mb-1 block">To</label>
-                <input
-                  type="date"
-                  value={dateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
-                  style={inputStyle}
-                  onFocus={onInputFocus}
-                  onBlur={onInputBlur}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-1">
             <button
               onClick={() => setStep(0)}
               className="flex-1 h-12 rounded-full text-sm font-semibold"
@@ -269,87 +281,19 @@ export function NewChartPage() {
               ← Back
             </button>
             <button
-              onClick={() => setStep(2)}
-              className="flex-1 h-12 rounded-full text-sm font-semibold"
-              style={{
-                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-                color: 'white',
-                border: 'none',
-                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-              }}
-            >
-              Next →
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Step 2 — chart type + name */}
-      {step === 2 && (
-        <div className="flex flex-col gap-3">
-          {/* Chart type */}
-          <div className="rounded-2xl p-5 flex flex-col gap-3" style={glass}>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Chart type</span>
-            <div className="flex flex-col gap-2">
-              {CHART_TYPES.map(({ value, icon: Icon, label, desc }) => {
-                const active = chartType === value
-                return (
-                  <button
-                    key={value}
-                    onClick={() => setChartType(value)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all"
-                    style={{
-                      background: active ? 'rgba(1,163,134,0.08)' : 'rgba(0,0,0,0.03)',
-                      border: active ? '1.5px solid rgba(1,163,134,0.40)' : '1.5px solid rgba(0,0,0,0.07)',
-                    }}
-                  >
-                    <Icon className="w-4 h-4 flex-shrink-0" style={{ color: active ? '#01a386' : '#9ca3af' }} />
-                    <div>
-                      <div className="text-sm font-semibold" style={{ color: active ? '#01a386' : '#374151' }}>{label}</div>
-                      <div className="text-xs" style={{ color: '#9ca3af' }}>{desc}</div>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Report name */}
-          <div className="rounded-2xl px-5 py-4 flex flex-col gap-2" style={glass}>
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Report name</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="My weekly report"
-              style={inputStyle}
-              onFocus={onInputFocus}
-              onBlur={onInputBlur}
-              autoFocus
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => setStep(1)}
-              className="flex-1 h-12 rounded-full text-sm font-semibold"
-              style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
-            >
-              ← Back
-            </button>
-            <button
               onClick={() => mutation.mutate()}
-              disabled={!name || mutation.isPending}
+              disabled={!canSave || mutation.isPending}
               className="flex-1 h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
               style={{
                 background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
                 color: 'white',
                 border: 'none',
                 boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-                opacity: !name || mutation.isPending ? 0.55 : 1,
+                opacity: canSave && !mutation.isPending ? 1 : 0.45,
               }}
             >
               {mutation.isPending && <span className="loading loading-spinner loading-xs" />}
-              Save
+              Save report
             </button>
           </div>
         </div>
