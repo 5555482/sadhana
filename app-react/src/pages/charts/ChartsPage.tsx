@@ -304,7 +304,7 @@ function ReportPicker({
   ]
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} style={{ position: 'relative', zIndex: 200 }}>
       <button
         onClick={() => setOpen(o => !o)}
         className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold transition-all"
@@ -321,8 +321,8 @@ function ReportPicker({
       </button>
       {open && (
         <div
-          className="absolute right-0 top-full mt-1 z-50 rounded-2xl overflow-hidden min-w-44"
-          style={{ ...glass, boxShadow: '0 8px 32px rgba(0,0,0,0.14)' }}
+          className="absolute right-0 top-full mt-1 rounded-2xl overflow-hidden min-w-44"
+          style={{ ...glass, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', zIndex: 9999 }}
         >
           {options.map((opt, i) => (
             <button
@@ -537,8 +537,8 @@ export function ChartsPage() {
   return (
     <>
       <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
-        {/* Header */}
-        <div className="rounded-2xl px-5 py-4 flex items-center gap-3" style={glass}>
+        {/* Header — z-index needed so ReportPicker dropdown appears above the chart panel */}
+        <div className="rounded-2xl px-5 py-4 flex items-center gap-3" style={{ ...glass, position: 'relative', zIndex: 100 }}>
           <div
             className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
             style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 16px rgba(1,163,134,0.30)' }}
