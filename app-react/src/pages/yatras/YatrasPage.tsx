@@ -5,6 +5,7 @@ import { FaUsers, FaPlus, FaCog } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
 import { yatrasApi } from '../../api/yatras'
 import { TopBar } from '../../components/layout/TopBar'
+import { WeekCalendar } from '../home/WeekCalendar'
 import { Spinner } from '../../components/ui/Spinner'
 import type { UserYatraDataRow } from '../../types/api'
 
@@ -18,8 +19,30 @@ const glass: React.CSSProperties = {
 
 const SELECTED_YATRA_KEY = 'selected_yatra'
 
+function toDateStr(d: Date): string {
+  return d.toISOString().split('T')[0]
+}
+
 function todayStr(): string {
   return new Date().toISOString().split('T')[0]
+}
+
+// ── Value display ──────────────────────────────────────────────────────────
+
+function valueToNumber(val: unknown): number | null {
+  if (val === null || val === undefined) return null
+  if (typeof val === 'number') return val
+  if (typeof val === 'object') {
+    const v = val as Record<string, unknown>
+    if ('Bool' in v) return (v.Bool as boolean) ? 1 : 0
+    if ('Int' in v) return v.Int as number
+    if ('Duration' in v) return v.Duration as number
+    if ('Time' in v) {
+      const t = v.Time as { h: number; m: number }
+      return t.h * 60 + t.m
+    }
+  }
+  return null
 }
 
 function formatValue(val: unknown): string {
@@ -44,23 +67,81 @@ function formatValue(val: unknown): string {
   return String(val)
 }
 
+// ── Colour zones ───────────────────────────────────────────────────────────
+
+type ZoneColour = 'Neutral' | 'MutedRed' | 'Red' | 'Yellow' | 'Green' | 'DarkGreen'
+
+function zoneToBackground(zone: ZoneColour): string {
+  switch (zone) {
+    case 'MutedRed':  return 'rgba(220,38,38,0.12)'
+    case 'Red':       return 'rgba(220,38,38,0.30)'
+    case 'Yellow':    return 'rgba(234,179,8,0.30)'
+    case 'Green':     return 'rgba(22,163,74,0.30)'
+    case 'DarkGreen': return 'rgba(15,118,55,0.45)'
+    default:          return 'transparent'
+  }
+}
+
+interface ColourZonesConfig {
+  better_direction: 'Higher' | 'Lower'
+  bounds: { to: unknown; colour: ZoneColour }[]
+  no_value_colour: ZoneColour
+  best_colour?: ZoneColour
+}
+
+function findZone(val: unknown, cfg: ColourZonesConfig): ZoneColour {
+  const num = valueToNumber(val)
+  if (num === null) return cfg.no_value_colour
+
+  for (const bound of cfg.bounds) {
+    const toNum = valueToNumber(bound.to)
+    if (toNum === null) continue
+    if (num <= toNum) return bound.colour
+  }
+
+  return cfg.best_colour ?? (cfg.better_direction === 'Higher' ? 'Green' : 'Red')
+}
+
+function cellBackground(val: unknown, colourZones: unknown): string {
+  if (!colourZones) return 'transparent'
+  return zoneToBackground(findZone(val, colourZones as ColourZonesConfig))
+}
+
+// ── Stability heatmap ──────────────────────────────────────────────────────
+
+function heatmapBackground(score: number): string {
+  if (score === 0) return 'transparent'
+  if (score <= 50)  return 'rgba(220,38,38,0.15)'
+  if (score <= 70)  return 'rgba(220,38,38,0.32)'
+  if (score <= 95)  return 'rgba(234,179,8,0.35)'
+  if (score <= 105) return 'rgba(22,163,74,0.35)'
+  return 'rgba(15,118,55,0.50)'
+}
+
+// ── Trend arrow ────────────────────────────────────────────────────────────
+
 function trendSymbol(arrow: UserYatraDataRow['trend_arrow']): string {
-  if (arrow === 'Up') return '↑'
-  if (arrow === 'Down') return '↓'
+  if (arrow === 'Up')   return '↗'
+  if (arrow === 'Down') return '↘'
   if (arrow === 'Flat') return '→'
   return '—'
 }
 
 function trendColor(arrow: UserYatraDataRow['trend_arrow']): string {
-  if (arrow === 'Up') return '#16a34a'
+  if (arrow === 'Up')   return '#16a34a'
   if (arrow === 'Down') return '#dc2626'
   return '#9ca3af'
 }
 
+// ── Component ─────────────────────────────────────────────────────────────
+
 export function YatrasPage() {
   const { t } = useTranslation()
   const qc = useQueryClient()
-  const today = todayStr()
+
+  const [date, setDate] = useState(new Date())
+  const dateStr = toDateStr(date)
+  const isToday = dateStr === todayStr()
 
   const [selectedId, setSelectedId] = useState<string | null>(
     () => localStorage.getItem(SELECTED_YATRA_KEY),
@@ -79,11 +160,12 @@ export function YatrasPage() {
       setSelectedId(selectedYatra.id)
       localStorage.setItem(SELECTED_YATRA_KEY, selectedYatra.id)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYatra?.id])
 
   const dataQuery = useQuery({
-    queryKey: ['yatra-data', selectedYatra?.id, today],
-    queryFn: () => yatrasApi.getYatraData(selectedYatra!.id, today),
+    queryKey: ['yatra-data', selectedYatra?.id, dateStr],
+    queryFn: () => yatrasApi.getYatraData(selectedYatra!.id, dateStr),
     enabled: !!selectedYatra,
   })
 
@@ -109,12 +191,26 @@ export function YatrasPage() {
   const data = dataQuery.data
   const showStability = selectedYatra?.show_stability_metrics ?? false
 
+  // Heatmap: 15 values, drop last if today (incomplete), else drop first
+  const heatmapDays = data
+    ? (isToday
+        ? data.stability_heatmap_days.slice(0, 14)
+        : data.stability_heatmap_days.slice(1))
+    : []
+
+  function heatmapScores(row: UserYatraDataRow): number[] {
+    const raw = isToday
+      ? row.stability_heatmap.slice(0, 14)
+      : row.stability_heatmap.slice(1)
+    return raw
+  }
+
   return (
     <>
       <TopBar />
       <div className="px-4 py-4 pb-28 max-w-2xl mx-auto flex flex-col gap-3">
 
-        {/* Header card: icon + selector + settings + create */}
+        {/* Yatra selector header */}
         <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -159,6 +255,9 @@ export function YatrasPage() {
           </button>
         </div>
 
+        {/* Date picker */}
+        <WeekCalendar date={date} onDateChange={setDate} />
+
         {/* Loading */}
         {(yatraListQuery.isLoading || dataQuery.isLoading) && (
           <div className="flex justify-center py-10"><Spinner /></div>
@@ -200,7 +299,7 @@ export function YatrasPage() {
           </div>
         )}
 
-        {/* Data grid */}
+        {/* Main data grid */}
         {data && !dataQuery.isLoading && (
           <div className="rounded-2xl overflow-hidden" style={glass}>
             <div className="overflow-x-auto">
@@ -211,8 +310,8 @@ export function YatrasPage() {
                       Sadhaka
                     </th>
                     {showStability && (
-                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
-                        Trend
+                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap" style={{ color: '#9ca3af' }}>
+                        7d trend
                       </th>
                     )}
                     {data.practices.map(p => (
@@ -233,7 +332,7 @@ export function YatrasPage() {
                         colSpan={data.practices.length + (showStability ? 2 : 1)}
                         className="px-4 py-10 text-center text-sm text-gray-400"
                       >
-                        No entries for today yet
+                        No entries for this date yet
                       </td>
                     </tr>
                   )}
@@ -254,8 +353,70 @@ export function YatrasPage() {
                         </td>
                       )}
                       {row.row.map((val, j) => (
-                        <td key={j} className="px-3 py-3 text-center" style={{ color: '#374151' }}>
+                        <td
+                          key={j}
+                          className="px-3 py-3 text-center"
+                          style={{
+                            color: '#374151',
+                            background: cellBackground(val, data.practices[j]?.colour_zones),
+                          }}
+                        >
                           {formatValue(val)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Stability heatmap */}
+        {data && showStability && heatmapDays.length > 0 && (
+          <div className="rounded-2xl overflow-hidden" style={glass}>
+            <div
+              className="px-4 py-3"
+              style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}
+            >
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
+                Stability (7-day average %)
+              </span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="text-xs" style={{ minWidth: 'max-content', width: '100%' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                    <th className="px-4 py-2 text-left font-semibold whitespace-nowrap" style={{ color: '#9ca3af' }}>
+                      Sadhaka
+                    </th>
+                    {heatmapDays.map((day, i) => (
+                      <th key={i} className="px-2 py-2 text-center font-semibold w-8" style={{ color: '#9ca3af' }}>
+                        {day}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.data.map((row, i) => (
+                    <tr
+                      key={row.user_id}
+                      style={{ borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : undefined }}
+                    >
+                      <td className="px-4 py-2 font-semibold text-gray-800 whitespace-nowrap">
+                        {row.user_name}
+                      </td>
+                      {heatmapScores(row).map((score, j) => (
+                        <td
+                          key={j}
+                          className="px-2 py-2 text-center w-8"
+                          style={{
+                            background: heatmapBackground(score),
+                            color: score > 0 ? '#374151' : '#d1d5db',
+                            fontWeight: score > 0 ? 600 : 400,
+                          }}
+                        >
+                          {score > 0 ? score : '·'}
                         </td>
                       ))}
                     </tr>
