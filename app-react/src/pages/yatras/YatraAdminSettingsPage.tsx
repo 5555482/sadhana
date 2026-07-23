@@ -1,11 +1,17 @@
-import { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { FaEdit, FaTrash, FaPlus, FaShieldAlt } from 'react-icons/fa'
-import { LuCheck, LuCopy, LuLink, LuHash, LuTimer, LuClock, LuType, LuToggleRight, LuX } from 'react-icons/lu'
+import {
+  FaEdit, FaTrash, FaPlus, FaShieldAlt, FaChevronDown, FaChevronRight, FaGripVertical,
+} from 'react-icons/fa'
+import {
+  LuCheck, LuCopy, LuLink, LuHash, LuTimer, LuClock, LuType, LuToggleRight, LuX,
+  LuChartBar,
+} from 'react-icons/lu'
 import { yatrasApi } from '../../api/yatras'
 import { Spinner } from '../../components/ui/Spinner'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
+import type { YatraStatisticConfig, Aggregation, TimeRange, YatraPractice } from '../../types/api'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -23,55 +29,197 @@ const inputStyle: React.CSSProperties = {
   fontSize: '0.9rem',
   color: '#1f2937',
   padding: '0.5rem 0.875rem',
-  flex: 1,
+  width: '100%',
   transition: 'border-color 0.15s, box-shadow 0.15s',
 }
 
-const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, label: string }> = {
-  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   label: 'Yes/No'   },
+const selectStyle: React.CSSProperties = {
+  ...inputStyle,
+  cursor: 'pointer',
+  appearance: 'none' as const,
+}
+
+const ACCENT = '#01a386'
+
+const TYPE_META: Record<string, {
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
+  color: string
+  bg: string
+  label: string
+}> = {
+  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(1,163,134,0.10)',   label: 'Yes/No'   },
   Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  label: 'Count'    },
   Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  label: 'Duration' },
   Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  label: 'Time'     },
   Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', label: 'Text'     },
 }
 
+const AGGREGATIONS: { value: Aggregation; label: string }[] = [
+  { value: 'Sum',   label: 'Sum'     },
+  { value: 'Avg',   label: 'Average' },
+  { value: 'Min',   label: 'Minimum' },
+  { value: 'Max',   label: 'Maximum' },
+  { value: 'Count', label: 'Count'   },
+]
+
+const TIME_RANGES: { value: TimeRange; label: string }[] = [
+  { value: 'Last7Days',   label: 'Last 7 days'   },
+  { value: 'Last30Days',  label: 'Last 30 days'  },
+  { value: 'Last90Days',  label: 'Last 90 days'  },
+  { value: 'Last365Days', label: 'Last 365 days' },
+  { value: 'ThisWeek',    label: 'This week'     },
+  { value: 'ThisMonth',   label: 'This month'    },
+  { value: 'ThisQuarter', label: 'This quarter'  },
+  { value: 'ThisYear',    label: 'This year'     },
+]
+
+function isGoodForPractice(agg: Aggregation, dt: string): boolean {
+  switch (dt) {
+    case 'Int':
+    case 'Duration':
+      return true
+    case 'Time':
+      return agg !== 'Sum'
+    default:
+      return agg === 'Count'
+  }
+}
+
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: '#9ca3af' }}>
+    <span className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: '#6b7280' }}>
       {children}
     </span>
+  )
+}
+
+function SectionToggle({
+  label,
+  open,
+  onToggle,
+}: {
+  label: string
+  open: boolean
+  onToggle: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="flex items-center gap-2 w-full"
+      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+    >
+      <SectionLabel>{label}</SectionLabel>
+      <span className="flex-1" />
+      {open
+        ? <FaChevronDown className="w-3 h-3" style={{ color: '#6b7280' }} />
+        : <FaChevronRight className="w-3 h-3" style={{ color: '#6b7280' }} />
+      }
+    </button>
   )
 }
 
 export function YatraAdminSettingsPage() {
   const { id } = useParams<{ id: string }>()
   const qc = useQueryClient()
-  const [editingName, setEditingName] = useState(false)
-  const [name, setName] = useState('')
+  const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
 
-  const { data, isLoading } = useQuery({
+  // Collapsible sections
+  const [showPractices, setShowPractices] = useState(true)
+  const [showMembers, setShowMembers] = useState(true)
+  const [showStats, setShowStats] = useState(false)
+
+  // Form state (loaded from yatra on mount)
+  const [yatraName, setYatraName] = useState('')
+  const [showStability, setShowStability] = useState(false)
+  const [statsVisibleToAll, setStatsVisibleToAll] = useState(false)
+  const [statistics, setStatistics] = useState<YatraStatisticConfig[]>([])
+
+  // ── Queries ──────────────────────────────────────────────────────────────────
+
+  const yatraQuery = useQuery({
     queryKey: ['yatra', id],
     queryFn: () => yatrasApi.getYatra(id!),
   })
 
-  const updateName = useMutation({
-    mutationFn: () => yatrasApi.updateYatra(id!, name),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['yatra', id] }); setEditingName(false) },
+  const usersQuery = useQuery({
+    queryKey: ['yatra-users', id],
+    queryFn: () => yatrasApi.getYatraUsers(id!),
+  })
+
+  const practicesQuery = useQuery({
+    queryKey: ['yatra-practices', id],
+    queryFn: () => yatrasApi.getYatraPractices(id!),
+  })
+
+  // Populate form state when yatra loads
+  useEffect(() => {
+    const y = yatraQuery.data
+    if (!y) return
+    setYatraName(y.name)
+    setShowStability(y.show_stability_metrics)
+    if (y.statistics) {
+      setStatsVisibleToAll(y.statistics.visible_to_all)
+      setStatistics(y.statistics.statistics)
+    }
+  }, [yatraQuery.data])
+
+  // ── Mutations ─────────────────────────────────────────────────────────────────
+
+  const saveMutation = useMutation({
+    mutationFn: () => yatrasApi.updateYatra(id!, {
+      name: yatraName,
+      show_stability_metrics: showStability,
+      statistics: statistics.length > 0
+        ? { visible_to_all: statsVisibleToAll, statistics }
+        : null,
+    }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['yatra', id] })
+      navigate(`/yatra/${id}/settings`)
+    },
   })
 
   const removeMember = useMutation({
-    mutationFn: (mId: string) => yatrasApi.removeMember(id!, mId),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['yatra', id] }),
+    mutationFn: (userId: string) => yatrasApi.removeMember(id!, userId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['yatra-users', id] }),
+  })
+
+  const toggleAdmin = useMutation({
+    mutationFn: (userId: string) => yatrasApi.toggleAdmin(id!, userId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['yatra-users', id] }),
   })
 
   const deletePractice = useMutation({
     mutationFn: (pId: string) => yatrasApi.deleteYatraPractice(id!, pId),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['yatra', id] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['yatra-practices', id] }),
   })
 
-  if (isLoading) return <Spinner />
-  if (!data) return null
+  const deleteYatra = useMutation({
+    mutationFn: () => yatrasApi.deleteYatra(id!),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['yatras'] })
+      navigate('/yatras', { replace: true })
+    },
+  })
+
+  // ── Stat helpers ──────────────────────────────────────────────────────────────
+
+  function addStat() {
+    setStatistics(prev => [...prev, { label: '', practice_id: '', aggregation: 'Count', time_range: 'ThisMonth' }])
+    setShowStats(true)
+  }
+
+  function updateStat(idx: number, patch: Partial<YatraStatisticConfig>) {
+    setStatistics(prev => prev.map((s, i) => i === idx ? { ...s, ...patch } : s))
+  }
+
+  function deleteStat(idx: number) {
+    setStatistics(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  // ── Other helpers ─────────────────────────────────────────────────────────────
 
   function copyInvite() {
     navigator.clipboard.writeText(`${window.location.origin}/yatra/${id}/join`)
@@ -79,10 +227,23 @@ export function YatraAdminSettingsPage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const initial = data.name.charAt(0).toUpperCase()
+  function getPracticeType(practiceId: string): string {
+    return practicesQuery.data?.find(p => p.id === practiceId)?.data_type ?? ''
+  }
+
+  const isLoading = yatraQuery.isLoading || usersQuery.isLoading || practicesQuery.isLoading
+  const members = usersQuery.data ?? []
+  const practices = practicesQuery.data ?? []
+  const initial = yatraQuery.data?.name.charAt(0).toUpperCase() ?? '?'
+
+  if (isLoading) return <Spinner />
+  if (!yatraQuery.data) return null
 
   return (
-    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
+    <form
+      onSubmit={e => { e.preventDefault(); saveMutation.mutate() }}
+      className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24"
+    >
       {/* Header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
@@ -95,7 +256,9 @@ export function YatraAdminSettingsPage() {
           <FaShieldAlt className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800 leading-tight truncate">{data.name}</h1>
+          <h1 className="text-base font-bold text-gray-800 leading-tight truncate">
+            {yatraQuery.data.name}
+          </h1>
           <p className="text-xs text-gray-400 mt-0.5">Admin settings</p>
         </div>
         <Link
@@ -108,59 +271,52 @@ export function YatraAdminSettingsPage() {
         </Link>
       </div>
 
-      {/* Yatra name */}
-      <SectionLabel>Yatra name</SectionLabel>
-      <div className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
-        {editingName ? (
-          <>
-            <input
-              style={inputStyle}
-              value={name}
-              autoFocus
-              onChange={(e) => setName(e.target.value)}
-              onFocus={(e) => { e.target.style.borderColor = '#01a386'; e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)' }}
-              onBlur={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
-              onKeyDown={(e) => { if (e.key === 'Enter') updateName.mutate(); if (e.key === 'Escape') setEditingName(false) }}
-            />
-            <button
-              onClick={() => updateName.mutate()}
-              disabled={updateName.isPending}
-              className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors"
-              style={{ background: '#01a386', color: 'white', border: 'none' }}
-            >
-              <LuCheck className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setEditingName(false)}
-              className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0"
-              style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
-            >
-              <LuX className="w-4 h-4" />
-            </button>
-          </>
-        ) : (
-          <>
+      {/* General */}
+      <SectionLabel>General</SectionLabel>
+      <div className="rounded-2xl px-4 py-4 flex flex-col gap-3" style={glass}>
+        {/* Name */}
+        <div className="flex flex-col gap-1">
+          <label htmlFor="yatra-name" className="text-xs font-medium text-gray-500">Yatra name</label>
+          <input
+            id="yatra-name"
+            style={inputStyle}
+            value={yatraName}
+            required
+            onChange={e => setYatraName(e.target.value)}
+            onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(1,163,134,0.12)` }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
+          />
+        </div>
+
+        {/* Show stability metrics */}
+        <label className="flex items-center gap-3 cursor-pointer select-none py-1">
+          <span className="flex-1 text-sm font-medium text-gray-700">Show stability metrics</span>
+          <div
+            onClick={() => setShowStability(v => !v)}
+            className="relative w-10 h-6 rounded-full transition-colors flex-shrink-0"
+            style={{
+              background: showStability ? ACCENT : 'rgba(0,0,0,0.15)',
+              cursor: 'pointer',
+            }}
+          >
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
-              style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)' }}
-            >
-              {initial}
-            </div>
-            <span className="flex-1 text-sm font-semibold text-gray-800">{data.name}</span>
-            <button
-              onClick={() => { setName(data.name); setEditingName(true) }}
-              className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors"
-              style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)', border: 'none' }}
-            >
-              <FaEdit className="w-3.5 h-3.5" />
-            </button>
-          </>
-        )}
+              className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform"
+              style={{
+                transform: showStability ? 'translateX(1.125rem)' : 'translateX(0.125rem)',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.20)',
+              }}
+            />
+          </div>
+        </label>
+        <p className="text-xs text-gray-400 -mt-1">
+          Show heatmap and trend arrows for each member's practice consistency.
+        </p>
       </div>
 
       {/* Invite link */}
       <SectionLabel>Invite</SectionLabel>
       <button
+        type="button"
         onClick={copyInvite}
         className="rounded-2xl px-4 py-3.5 flex items-center gap-3 w-full text-left transition-all"
         style={glass}
@@ -169,106 +325,285 @@ export function YatraAdminSettingsPage() {
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{ background: copied ? 'rgba(1,163,134,0.10)' : 'rgba(0,0,0,0.05)' }}
         >
-          <LuLink className="w-4 h-4" style={{ color: copied ? '#01a386' : '#6b7280' }} />
+          <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : '#6b7280' }} />
         </div>
         <span className="flex-1 text-sm font-semibold text-gray-800">
           {copied ? 'Invite link copied!' : 'Copy invite link'}
         </span>
         {copied
-          ? <LuCheck className="w-4 h-4 flex-shrink-0" style={{ color: '#01a386' }} />
+          ? <LuCheck className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />
           : <LuCopy className="w-4 h-4 flex-shrink-0" style={{ color: '#d1d5db' }} />
         }
       </button>
 
-      {/* Members */}
-      <SectionLabel>Members ({data.members.length})</SectionLabel>
-      <div className="flex flex-col gap-2">
-        {data.members.map((m) => (
-          <div key={m.id} className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
-              style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)' }}
-            >
-              {m.name.charAt(0).toUpperCase()}
-            </div>
-            <span className="flex-1 text-sm font-semibold text-gray-800">{m.name}</span>
-            <button
-              onClick={() => (document.getElementById(`del-member-${m.id}`) as HTMLDialogElement)?.showModal()}
-              className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors"
-              style={{ background: 'rgba(225,29,72,0.07)', color: 'rgba(225,29,72,0.55)', border: 'none' }}
-            >
-              <FaTrash className="w-3 h-3" />
-            </button>
-            <ConfirmModal
-              id={`del-member-${m.id}`}
-              title="Remove member?"
-              message={`Remove ${m.name} from the yatra?`}
-              confirmLabel="Remove"
-              onConfirm={() => removeMember.mutate(m.id)}
-            />
-          </div>
-        ))}
-        {data.members.length === 0 && (
-          <p className="text-center text-sm text-gray-400 py-4">No members yet</p>
-        )}
-      </div>
-
       {/* Practices */}
-      <SectionLabel>Practices ({data.practices.length})</SectionLabel>
-      <div className="flex flex-col gap-2">
-        {data.practices.map((p) => {
-          const meta = TYPE_META[p.data_type] ?? TYPE_META.Text
-          const TypeIcon = meta.icon
-          return (
-            <div key={p.id} className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
+      <SectionToggle label={`Practices (${practices.length})`} open={showPractices} onToggle={() => setShowPractices(v => !v)} />
+      {showPractices && (
+        <div className="flex flex-col gap-2">
+          {practices.map((p: YatraPractice) => {
+            const meta = TYPE_META[p.data_type] ?? TYPE_META.Text
+            const TypeIcon = meta.icon
+            return (
+              <div key={p.id} className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
+                <FaGripVertical className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#d1d5db' }} />
+                <div
+                  className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: meta.bg }}
+                >
+                  <TypeIcon className="w-3.5 h-3.5" style={{ color: meta.color }} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm font-semibold text-gray-800 block truncate">{p.practice}</span>
+                  <span className="text-xs font-medium" style={{ color: meta.color }}>{meta.label}</span>
+                </div>
+                <Link
+                  to={`/yatra/${id}/practice/${p.id}/edit`}
+                  className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
+                  style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+                >
+                  <FaEdit className="w-3 h-3" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => (document.getElementById(`del-practice-${p.id}`) as HTMLDialogElement)?.showModal()}
+                  className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
+                  style={{ background: 'rgba(225,29,72,0.07)', color: 'rgba(225,29,72,0.55)', border: 'none' }}
+                >
+                  <FaTrash className="w-3 h-3" />
+                </button>
+                <ConfirmModal
+                  id={`del-practice-${p.id}`}
+                  title="Delete practice?"
+                  message={`Delete "${p.practice}"? This cannot be undone.`}
+                  confirmLabel="Delete"
+                  onConfirm={() => deletePractice.mutate(p.id)}
+                />
+              </div>
+            )
+          })}
+          <Link
+            to={`/yatra/${id}/practice/new`}
+            className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 no-underline"
+            style={{
+              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              color: 'white',
+              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            }}
+          >
+            <FaPlus className="w-3.5 h-3.5" />
+            Add new practice
+          </Link>
+        </div>
+      )}
+
+      {/* Members */}
+      <SectionToggle label={`Members (${members.length})`} open={showMembers} onToggle={() => setShowMembers(v => !v)} />
+      {showMembers && (
+        <div className="flex flex-col gap-2">
+          {members.map(m => (
+            <div key={m.user_id} className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
               <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: meta.bg }}
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
+                style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)' }}
               >
-                <TypeIcon className="w-3.5 h-3.5" style={{ color: meta.color }} />
+                {m.user_name.charAt(0).toUpperCase()}
               </div>
-              <div className="flex-1 min-w-0">
-                <span className="text-sm font-semibold text-gray-800 block truncate">{p.practice}</span>
-                <span className="text-xs font-medium" style={{ color: meta.color }}>{meta.label}</span>
-              </div>
-              <Link
-                to={`/yatra/${id}/practice/${p.id}/edit`}
-                className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors"
-                style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
-              >
-                <FaEdit className="w-3 h-3" />
-              </Link>
+              <span className="flex-1 text-sm font-semibold text-gray-800">{m.user_name}</span>
               <button
-                onClick={() => (document.getElementById(`del-practice-${p.id}`) as HTMLDialogElement)?.showModal()}
-                className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors"
+                type="button"
+                onClick={() => toggleAdmin.mutate(m.user_id)}
+                disabled={toggleAdmin.isPending}
+                className="text-xs font-semibold px-2 py-0.5 rounded-full transition-colors"
+                style={{
+                  background: m.is_admin ? 'rgba(124,58,237,0.12)' : 'rgba(0,0,0,0.06)',
+                  color: m.is_admin ? '#7c3aed' : '#9ca3af',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => (document.getElementById(`del-member-${m.user_id}`) as HTMLDialogElement)?.showModal()}
+                className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
                 style={{ background: 'rgba(225,29,72,0.07)', color: 'rgba(225,29,72,0.55)', border: 'none' }}
               >
                 <FaTrash className="w-3 h-3" />
               </button>
               <ConfirmModal
-                id={`del-practice-${p.id}`}
-                title="Delete practice?"
-                message={`Delete "${p.practice}"?`}
-                confirmLabel="Delete"
-                onConfirm={() => deletePractice.mutate(p.id)}
+                id={`del-member-${m.user_id}`}
+                title="Remove member?"
+                message={`Remove ${m.user_name} from the yatra?`}
+                confirmLabel="Remove"
+                onConfirm={() => removeMember.mutate(m.user_id)}
               />
             </div>
-          )
-        })}
-      </div>
+          ))}
+          {members.length === 0 && (
+            <p className="text-center text-sm text-gray-400 py-4">No members yet</p>
+          )}
+        </div>
+      )}
 
-      {/* Add practice FAB */}
-      <Link
-        to={`/yatra/${id}/practice/new`}
-        aria-label="Add practice"
-        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
+      {/* Statistics */}
+      <SectionToggle label="Statistics" open={showStats} onToggle={() => setShowStats(v => !v)} />
+      {showStats && (
+        <div className="flex flex-col gap-3">
+          {/* Visibility */}
+          <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
+            <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#6366f1' }} />
+            <span className="flex-1 text-sm font-medium text-gray-700">Visible to</span>
+            <select
+              value={statsVisibleToAll ? 'Everyone' : 'Admins'}
+              onChange={e => setStatsVisibleToAll(e.target.value === 'Everyone')}
+              style={{ ...selectStyle, width: 'auto', flex: 'none', paddingRight: '1.5rem' }}
+            >
+              <option value="Admins">Admins only</option>
+              <option value="Everyone">Everyone</option>
+            </select>
+          </div>
+
+          {/* Stat rows */}
+          {statistics.map((stat, idx) => {
+            const dt = getPracticeType(stat.practice_id)
+            return (
+              <div key={idx} className="rounded-2xl px-4 py-4 flex flex-col gap-3" style={glass}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                    {stat.label || `Stat ${idx + 1}`}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => deleteStat(idx)}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg"
+                    style={{ background: 'rgba(225,29,72,0.07)', color: 'rgba(225,29,72,0.55)', border: 'none' }}
+                  >
+                    <LuX className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-medium text-gray-500">Label</label>
+                  <input
+                    style={inputStyle}
+                    placeholder="e.g. Average meditation time"
+                    value={stat.label}
+                    required
+                    onChange={e => updateStat(idx, { label: e.target.value })}
+                    onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(1,163,134,0.12)` }}
+                    onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-medium text-gray-500">Practice</label>
+                  <select
+                    style={selectStyle}
+                    value={stat.practice_id}
+                    required
+                    onChange={e => updateStat(idx, { practice_id: e.target.value, aggregation: 'Count' })}
+                  >
+                    <option value="" disabled>Select practice…</option>
+                    {practices.map(p => (
+                      <option key={p.id} value={p.id}>{p.practice}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-500">Aggregation</label>
+                    <select
+                      style={selectStyle}
+                      value={stat.aggregation}
+                      onChange={e => updateStat(idx, { aggregation: e.target.value as Aggregation })}
+                    >
+                      {AGGREGATIONS.filter(a => !stat.practice_id || isGoodForPractice(a.value, dt)).map(a => (
+                        <option key={a.value} value={a.value}>{a.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-500">Time range</label>
+                    <select
+                      style={selectStyle}
+                      value={stat.time_range}
+                      onChange={e => updateStat(idx, { time_range: e.target.value as TimeRange })}
+                    >
+                      {TIME_RANGES.map(tr => (
+                        <option key={tr.value} value={tr.value}>{tr.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+
+          <button
+            type="button"
+            onClick={addStat}
+            className="rounded-2xl px-4 py-3.5 flex items-center gap-3 w-full"
+            style={{ ...glass, borderStyle: 'dashed', borderColor: 'rgba(99,102,241,0.30)', background: 'rgba(99,102,241,0.03)', cursor: 'pointer', border: '1px dashed rgba(99,102,241,0.30)' }}
+          >
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.10)' }}>
+              <FaPlus className="w-3 h-3" style={{ color: '#6366f1' }} />
+            </div>
+            <span className="text-sm font-semibold" style={{ color: '#6366f1' }}>Add statistic</span>
+          </button>
+        </div>
+      )}
+
+      {/* Save button */}
+      <button
+        type="submit"
+        disabled={saveMutation.isPending}
+        className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
-          background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
-          boxShadow: '0 4px 24px rgba(124,58,237,0.35)',
+          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+          color: 'white',
+          border: 'none',
+          boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+          opacity: saveMutation.isPending ? 0.7 : 1,
         }}
       >
-        <FaPlus className="w-5 h-5 text-white" />
-      </Link>
-    </div>
+        {saveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
+        <LuCheck className="w-4 h-4" />
+        Save
+      </button>
+
+      {/* Delete yatra */}
+      <button
+        type="button"
+        onClick={() => (document.getElementById('del-yatra') as HTMLDialogElement)?.showModal()}
+        className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+        style={{
+          background: 'rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          color: '#dc2626',
+          border: '1.5px solid rgba(220,38,38,0.35)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}
+      >
+        <FaTrash className="w-3.5 h-3.5" />
+        Delete yatra
+      </button>
+      <ConfirmModal
+        id="del-yatra"
+        title="Delete yatra?"
+        message="This will permanently delete the yatra and all its data. This cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => deleteYatra.mutate()}
+      />
+
+      {/* Error */}
+      {saveMutation.isError && (
+        <p className="text-sm text-red-600 text-center">
+          {(saveMutation.error as Error)?.message ?? 'Failed to save'}
+        </p>
+      )}
+    </form>
   )
 }

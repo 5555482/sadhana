@@ -68,17 +68,32 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
               to={to}
               end={exact}
               aria-label={label}
-              style={({ isActive }) => ({
-                color: isActive ? '#01a386' : 'rgba(0,0,0,0.40)',
-                textDecoration: isActive ? 'underline' : 'none',
-                textUnderlineOffset: '3px',
-              })}
-              className="flex items-center px-2 py-1 rounded transition-colors text-sm font-medium"
+              className="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium"
             >
-              {/* Below sm: icon only */}
-              <Icon className="w-4 h-4 sm:hidden" />
-              {/* sm and above: text label */}
-              <span className="hidden sm:inline">{label}</span>
+              {({ isActive }) => (
+                <>
+                  {/* Below sm: icon only */}
+                  <Icon
+                    className="w-4 h-4 sm:hidden transition-colors"
+                    style={{ color: isActive ? '#01a386' : 'rgba(0,0,0,0.40)' }}
+                  />
+                  {/* sm and above: text label */}
+                  <span
+                    className="hidden sm:inline transition-colors"
+                    style={{
+                      color: isActive ? '#01a386' : 'rgba(0,0,0,0.40)',
+                      fontWeight: isActive ? 600 : 500,
+                    }}
+                  >
+                    {label}
+                  </span>
+                  {/* Active dot */}
+                  <span
+                    className="w-1 h-1 rounded-full transition-all"
+                    style={{ background: isActive ? '#01a386' : 'transparent' }}
+                  />
+                </>
+              )}
             </NavLink>
           ))}
         </nav>

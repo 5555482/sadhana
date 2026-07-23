@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { LuCircleHelp, LuChevronDown, LuChevronUp, LuMessageSquare } from 'react-icons/lu'
+import { LuCircleHelp, LuChevronDown, LuChevronUp, LuMessageSquare, LuX } from 'react-icons/lu'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -62,10 +62,18 @@ export function HelpPage() {
         >
           <LuCircleHelp className="w-5 h-5 text-white" />
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-gray-800">Help</h1>
           <p className="text-xs text-gray-400 mt-0.5">Frequently asked questions</p>
         </div>
+        <Link
+          to="/settings"
+          aria-label="Close"
+          className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
+          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+        >
+          <LuX className="w-4 h-4" />
+        </Link>
       </div>
 
       {FAQS.map(faq => <FaqItem key={faq.q} {...faq} />)}

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { LuGlobe, LuCheck } from 'react-icons/lu'
+import { Link } from 'react-router-dom'
+import { LuGlobe, LuCheck, LuX } from 'react-icons/lu'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -32,10 +33,18 @@ export function LanguagePage() {
         >
           <LuGlobe className="w-5 h-5 text-white" />
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-gray-800">Language</h1>
           <p className="text-xs text-gray-400 mt-0.5">Choose your preferred language</p>
         </div>
+        <Link
+          to="/settings"
+          aria-label="Close"
+          className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
+          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+        >
+          <LuX className="w-4 h-4" />
+        </Link>
       </div>
 
       {/* Language options */}

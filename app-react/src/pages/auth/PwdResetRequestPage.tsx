@@ -2,9 +2,34 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { authApi } from '../../api/auth'
-import { Button } from '../../components/ui/Button'
-import { Input } from '../../components/ui/Input'
-import { ErrorBanner } from '../../components/ui/ErrorBanner'
+
+const inputStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.6)',
+  border: '1px solid rgba(0,0,0,0.10)',
+}
+
+function GlassShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
+      style={{ backgroundImage: 'url(/login-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+      <div
+        className="relative w-full max-w-sm rounded-3xl px-8 py-10 flex flex-col gap-5"
+        style={{
+          background: 'rgba(255,255,255,0.60)',
+          backdropFilter: 'blur(36px)',
+          WebkitBackdropFilter: 'blur(36px)',
+          border: '1px solid rgba(255,255,255,0.80)',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.9)',
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
 
 export function PwdResetRequestPage() {
   const { t } = useTranslation()
@@ -29,31 +54,75 @@ export function PwdResetRequestPage() {
 
   if (sent) {
     return (
-      <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
-        <div className="card bg-base-100 shadow-sm w-full max-w-sm">
-          <div className="card-body text-center flex flex-col gap-4">
-            <h1 className="font-serif text-2xl text-primary font-bold">Sadhana Pro</h1>
-            <p>{t('auth.resetSent')}</p>
-            <Link to="/login" className="link link-primary text-sm">{t('auth.signIn')}</Link>
-          </div>
+      <GlassShell>
+        <div className="flex flex-col gap-4 text-center">
+          <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
+            Check your inbox.
+          </h1>
+          <p className="text-sm text-base-content/60">{t('auth.resetSent')}</p>
+          <Link to="/login" className="text-sm font-medium hover:underline" style={{ color: '#01a386' }}>
+            {t('auth.signIn')}
+          </Link>
         </div>
-      </div>
+      </GlassShell>
     )
   }
 
   return (
-    <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
-      <div className="card bg-base-100 shadow-sm w-full max-w-sm">
-        <div className="card-body flex flex-col gap-5">
-          <h1 className="font-serif text-2xl text-primary text-center font-bold">Sadhana Pro</h1>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <Input label={t('auth.email')} name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
-            <ErrorBanner message={error} />
-            <Button variant="primary" type="submit" loading={loading} className="w-full">{t('auth.sendLink')}</Button>
-          </form>
-          <Link to="/login" className="text-center text-sm link link-primary">{t('auth.signIn')}</Link>
-        </div>
+    <GlassShell>
+      <div className="mb-1 text-center">
+        <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
+          Reset your<br />password.
+        </h1>
+        <p className="text-xs text-base-content/50 mt-2">
+          Enter your email and we'll send a reset link.
+        </p>
       </div>
-    </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="email" className="text-xs font-medium text-base-content/50 uppercase tracking-wider">
+            {t('auth.email')}
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            autoComplete="email"
+            placeholder="you@example.com"
+            className="w-full h-12 px-4 rounded-xl text-base-content placeholder:text-base-content/30 text-sm focus:outline-none transition-colors"
+            style={inputStyle}
+            onFocus={e => (e.target.style.borderColor = 'rgba(99,102,241,0.5)')}
+            onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.10)')}
+          />
+        </div>
+
+        {error && <p className="text-sm text-error text-center">{error}</p>}
+
+        <button
+          type="submit"
+          disabled={loading || !email}
+          className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+          style={{
+            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            color: '#134e4a',
+            boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            opacity: loading || !email ? 0.6 : 1,
+            cursor: loading || !email ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {loading && <span className="loading loading-spinner loading-sm" />}
+          {t('auth.sendLink')}
+        </button>
+      </form>
+
+      <p className="text-center text-xs text-base-content/40">
+        Remember it?{' '}
+        <Link to="/login" className="font-medium hover:underline" style={{ color: '#01a386' }}>
+          {t('auth.signIn')}
+        </Link>
+      </p>
+    </GlassShell>
   )
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FaCog, FaChevronRight, FaSignOutAlt } from 'react-icons/fa'
 import { LuUser, LuLock, LuLayers, LuUpload, LuGlobe, LuCircleHelp } from 'react-icons/lu'
 import { useAuthStore } from '../../store/authStore'
+import { TopBar } from '../../components/layout/TopBar'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -62,10 +63,13 @@ function SectionCard({
 export function SettingsPage() {
   const { t } = useTranslation()
   const logout = useAuthStore((s) => s.logout)
+  const user = useAuthStore((s) => s.user)
   const navigate = useNavigate()
 
   return (
-    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
+    <>
+    <TopBar />
+    <div className="px-4 py-4 pt-[4.5rem] max-w-lg mx-auto flex flex-col gap-4 pb-24">
       {/* Page header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
@@ -78,7 +82,7 @@ export function SettingsPage() {
           <FaCog className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold text-gray-800 leading-tight">{t('settings.title') || 'Settings'}</h1>
+          <h1 className="text-base font-bold text-gray-800 leading-tight">{user?.name || t('settings.title') || 'Settings'}</h1>
           <p className="text-xs text-gray-400 mt-0.5">Account & preferences</p>
         </div>
       </div>
@@ -116,11 +120,13 @@ export function SettingsPage() {
           color: '#dc2626',
           border: '1.5px solid rgba(220,38,38,0.35)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          cursor: 'pointer',
         }}
       >
         <FaSignOutAlt className="w-3.5 h-3.5" />
         {t('auth.logout')}
       </button>
     </div>
+    </>
   )
 }

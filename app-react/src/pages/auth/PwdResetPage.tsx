@@ -1,10 +1,72 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { authApi } from '../../api/auth'
-import { Button } from '../../components/ui/Button'
-import { Input } from '../../components/ui/Input'
-import { ErrorBanner } from '../../components/ui/ErrorBanner'
+
+const inputStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.6)',
+  border: '1px solid rgba(0,0,0,0.10)',
+}
+
+function GlassShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
+      style={{ backgroundImage: 'url(/login-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+      <div
+        className="relative w-full max-w-sm rounded-3xl px-8 py-10 flex flex-col gap-5"
+        style={{
+          background: 'rgba(255,255,255,0.60)',
+          backdropFilter: 'blur(36px)',
+          WebkitBackdropFilter: 'blur(36px)',
+          border: '1px solid rgba(255,255,255,0.80)',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.9)',
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
+function PasswordField({ id, label, value, onChange, autoComplete }: {
+  id: string
+  label: string
+  value: string
+  onChange: (v: string) => void
+  autoComplete: string
+}) {
+  const [show, setShow] = useState(false)
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{label}</label>
+      <div className="relative">
+        <input
+          id={id}
+          type={show ? 'text' : 'password'}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          autoComplete={autoComplete}
+          className="w-full h-12 px-4 pr-14 rounded-xl text-base-content text-sm focus:outline-none transition-colors"
+          style={inputStyle}
+          onFocus={e => (e.target.style.borderColor = 'rgba(99,102,241,0.5)')}
+          onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.10)')}
+        />
+        <button
+          type="button"
+          onClick={() => setShow(v => !v)}
+          className="absolute right-4 top-1/2 -translate-y-1/2"
+          style={{ color: '#01a386', background: 'none', border: 'none' }}
+        >
+          {show ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export function PwdResetPage() {
   const { t } = useTranslation()
@@ -31,19 +93,47 @@ export function PwdResetPage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
-      <div className="card bg-base-100 shadow-sm w-full max-w-sm">
-        <div className="card-body flex flex-col gap-5">
-          <h1 className="font-serif text-2xl text-primary text-center font-bold">Sadhana Pro</h1>
-          <h2 className="font-semibold text-center text-lg">{t('auth.setPassword')}</h2>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <Input label={t('auth.newPassword')} name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
-            <Input label={t('auth.confirmPassword')} name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} autoComplete="new-password" />
-            <ErrorBanner message={error} />
-            <Button variant="primary" type="submit" loading={loading} className="w-full">{t('auth.setPassword')}</Button>
-          </form>
-        </div>
+    <GlassShell>
+      <div className="mb-1 text-center">
+        <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
+          Set your new<br />password.
+        </h1>
       </div>
-    </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <PasswordField
+          id="new-password"
+          label={t('auth.newPassword')}
+          value={password}
+          onChange={setPassword}
+          autoComplete="new-password"
+        />
+        <PasswordField
+          id="confirm-password"
+          label={t('auth.confirmPassword')}
+          value={confirmPassword}
+          onChange={setConfirmPassword}
+          autoComplete="new-password"
+        />
+
+        {error && <p className="text-sm text-error text-center">{error}</p>}
+
+        <button
+          type="submit"
+          disabled={loading || !password || !confirmPassword}
+          className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+          style={{
+            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            color: '#134e4a',
+            boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            opacity: loading || !password || !confirmPassword ? 0.6 : 1,
+            cursor: loading || !password || !confirmPassword ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {loading && <span className="loading loading-spinner loading-sm" />}
+          {t('auth.setPassword')}
+        </button>
+      </form>
+    </GlassShell>
   )
 }

@@ -73,9 +73,16 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         else await practicesApi.createUserPractice(data)
         qc.invalidateQueries({ queryKey: ['practices'] })
       } else {
-        if (initialValues?.id) await yatrasApi.updateYatraPractice(mode.yatraId, initialValues.id, data)
-        else await yatrasApi.createYatraPractice(mode.yatraId, data)
-        qc.invalidateQueries({ queryKey: ['yatra', mode.yatraId] })
+        if (initialValues?.id) {
+          await yatrasApi.updateYatraPractice(mode.yatraId, {
+            id: initialValues.id,
+            practice: name,
+            data_type: dataType,
+          })
+        } else {
+          await yatrasApi.createYatraPractice(mode.yatraId, { practice: name, data_type: dataType })
+        }
+        qc.invalidateQueries({ queryKey: ['yatra-practices', mode.yatraId] })
       }
     },
     onSuccess,
@@ -155,9 +162,13 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         {/* Is required — user practices only */}
         {mode.type === 'user' && (
           <div className="rounded-2xl p-5 flex flex-col gap-3" style={cardStyle}>
-            <div
-              className="flex items-center justify-between cursor-pointer select-none"
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isRequired}
               onClick={() => setIsRequired((v) => !v)}
+              className="flex items-center justify-between w-full select-none"
+              style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
             >
               <span className="text-sm font-medium text-gray-700">{t('practice.isRequired')}</span>
               <div
@@ -186,7 +197,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
                   }}
                 />
               </div>
-            </div>
+            </button>
             <p className="text-xs text-gray-400 leading-relaxed">{t('practice.isRequiredHint')}</p>
           </div>
         )}
@@ -195,7 +206,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
 
         <button
           type="submit"
-          disabled={mutation.isPending}
+          disabled={mutation.isPending || !name.trim()}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
             background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
@@ -203,9 +214,9 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
             border: 'none',
             appearance: 'none' as React.CSSProperties['appearance'],
             boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
-            opacity: name.trim() ? 1 : 0.55,
+            opacity: name.trim() && !mutation.isPending ? 1 : 0.55,
             transition: 'opacity 0.2s',
-            cursor: name.trim() ? 'pointer' : 'default',
+            cursor: name.trim() && !mutation.isPending ? 'pointer' : 'not-allowed',
           }}
         >
           {mutation.isPending && <span className="loading loading-spinner loading-sm" />}

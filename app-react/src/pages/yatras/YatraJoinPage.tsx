@@ -1,15 +1,26 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { FaUsers } from 'react-icons/fa'
+import { LuX } from 'react-icons/lu'
 import { yatrasApi } from '../../api/yatras'
 import { Spinner } from '../../components/ui/Spinner'
-import { Button } from '../../components/ui/Button'
+
+const glass: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.90)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(255,255,255,0.80)',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+}
+
+const ACCENT = '#01a386'
 
 export function YatraJoinPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const qc = useQueryClient()
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['yatra', id],
     queryFn: () => yatrasApi.getYatra(id!),
   })
@@ -23,38 +34,113 @@ export function YatraJoinPage() {
   })
 
   if (isLoading) return <Spinner />
-  if (!data) return <p className="p-4 text-error">Not found</p>
 
-  return (
-    <div className="px-4 py-4">
-      <div className="card bg-base-100 shadow-sm">
-        <div className="card-body flex flex-col gap-4">
-          <h2 className="card-title">{data.name}</h2>
-          {data.description && <p className="text-base-content/70">{data.description}</p>}
-          <p className="text-sm text-base-content/60">
-            {data.member_count} members · {data.practices.length} practices
-          </p>
-          {data.practices.length > 0 && (
-            <div className="flex flex-col gap-1">
-              <p className="text-xs font-semibold text-base-content/50 uppercase tracking-wider">Practices</p>
-              {data.practices.map((p) => (
-                <div key={p.id} className="flex items-center gap-2">
-                  <span className="text-sm">{p.practice}</span>
-                  <span className="badge badge-ghost badge-xs">{p.data_type}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="flex flex-col gap-2 mt-2">
-            <Button variant="primary" loading={join.isPending} onClick={() => join.mutate()} className="w-full">
-              Join
-            </Button>
-            <Button variant="secondary" onClick={() => navigate(-1)} className="w-full">
-              Back
-            </Button>
-          </div>
+  if (isError || !data) {
+    return (
+      <div className="px-4 py-6 max-w-lg mx-auto">
+        <div className="rounded-2xl px-5 py-12 flex flex-col items-center gap-4 text-center" style={glass}>
+          <p className="text-sm font-semibold text-gray-500">Yatra not found or link has expired.</p>
+          <button
+            onClick={() => navigate('/yatras')}
+            className="text-sm font-medium"
+            style={{ color: ACCENT, background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            Go to Yatras →
+          </button>
         </div>
       </div>
+    )
+  }
+
+  const initial = data.name.charAt(0).toUpperCase()
+
+  return (
+    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
+      {/* Header */}
+      <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style={{
+            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            boxShadow: '0 4px 16px rgba(1,163,134,0.28)',
+          }}
+        >
+          <FaUsers className="w-5 h-5 text-white" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-base font-bold text-gray-800">Join Yatra</h1>
+          <p className="text-xs text-gray-400 mt-0.5">You've been invited</p>
+        </div>
+        <button
+          onClick={() => navigate(-1)}
+          aria-label="Close"
+          className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
+          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)', border: 'none', cursor: 'pointer' }}
+        >
+          <LuX className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Yatra info */}
+      <div className="rounded-2xl px-5 py-8 flex flex-col items-center gap-4 text-center" style={glass}>
+        <div
+          className="w-20 h-20 rounded-3xl flex items-center justify-center text-white text-3xl font-bold"
+          style={{
+            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            boxShadow: '0 8px 32px rgba(1,163,134,0.30)',
+          }}
+        >
+          {initial}
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-gray-800">{data.name}</h2>
+          {data.member_count != null && (
+            <p className="text-sm text-gray-400 mt-1">
+              {data.member_count} member{data.member_count === 1 ? '' : 's'}
+            </p>
+          )}
+        </div>
+        <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+          Join this group practice circle and track your practices together.
+        </p>
+      </div>
+
+      {/* Actions */}
+      <button
+        onClick={() => join.mutate()}
+        disabled={join.isPending}
+        className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+        style={{
+          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+          color: 'white',
+          border: 'none',
+          boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+          opacity: join.isPending ? 0.7 : 1,
+          cursor: join.isPending ? 'default' : 'pointer',
+        }}
+      >
+        {join.isPending && <span className="loading loading-spinner loading-xs" />}
+        Join Yatra
+      </button>
+
+      <button
+        onClick={() => navigate(-1)}
+        className="w-full h-12 rounded-full text-sm font-semibold"
+        style={{
+          background: 'rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          color: '#6b7280',
+          border: '1.5px solid rgba(0,0,0,0.10)',
+          cursor: 'pointer',
+        }}
+      >
+        Cancel
+      </button>
+
+      {join.isError && (
+        <p className="text-sm text-red-600 text-center">Failed to join. Please try again.</p>
+      )}
     </div>
   )
 }

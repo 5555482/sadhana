@@ -62,10 +62,16 @@ export interface YatraMember {
   name: string
 }
 
+export interface YatraUser {
+  user_id: string
+  user_name: string
+  is_admin: boolean
+}
+
 export interface Yatra {
   id: string
   name: string
-  statistics?: unknown
+  statistics?: YatraStatisticsConfig | null
   show_stability_metrics: boolean
   // Optional fields used by settings pages (may not be present in all responses)
   member_count?: number
@@ -75,11 +81,26 @@ export interface Yatra {
   members?: YatraMember[]
 }
 
+export type ZoneColour = 'Neutral' | 'MutedRed' | 'Red' | 'Yellow' | 'Green' | 'DarkGreen'
+export type BetterDirection = 'Higher' | 'Lower'
+
+export interface ColourBound {
+  to: PracticeValue | null
+  colour: ZoneColour
+}
+
+export interface ColourZonesConfig {
+  better_direction: BetterDirection
+  bounds: ColourBound[]
+  no_value_colour: ZoneColour
+  best_colour?: ZoneColour | null
+}
+
 export interface YatraPractice {
   id: string
   practice: string
   data_type: PracticeDataType
-  colour_zones?: unknown
+  colour_zones?: ColourZonesConfig | null
 }
 
 export interface UserYatraDataRow {
@@ -90,6 +111,31 @@ export interface UserYatraDataRow {
   stability_heatmap: number[]
 }
 
+// Yatra statistics configuration (used in admin settings)
+export type Aggregation = 'Sum' | 'Avg' | 'Min' | 'Max' | 'Count'
+export type TimeRange =
+  | 'Last7Days'
+  | 'Last30Days'
+  | 'Last90Days'
+  | 'Last365Days'
+  | 'ThisWeek'
+  | 'ThisMonth'
+  | 'ThisQuarter'
+  | 'ThisYear'
+
+export interface YatraStatisticConfig {
+  label: string
+  practice_id: string
+  aggregation: Aggregation
+  time_range: TimeRange
+}
+
+export interface YatraStatisticsConfig {
+  visible_to_all: boolean
+  statistics: YatraStatisticConfig[]
+}
+
+// Response row from /yatra/:id/data
 export interface YatraStatistic {
   label: string
   value: unknown | null
@@ -100,6 +146,11 @@ export interface YatraDataResponse {
   data: UserYatraDataRow[]
   statistics: YatraStatistic[]
   stability_heatmap_days: number[]
+}
+
+export interface YatraUserPracticeItem {
+  yatra_practice: YatraPractice
+  user_practice: string | null
 }
 
 export interface ImportPreview {

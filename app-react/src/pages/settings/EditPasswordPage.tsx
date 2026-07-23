@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
-import { LuLock, LuCheck } from 'react-icons/lu'
+import { LuLock, LuCheck, LuX } from 'react-icons/lu'
+import { Link } from 'react-router-dom'
 import { authApi } from '../../api/auth'
 
 const glass: React.CSSProperties = {
@@ -33,11 +34,12 @@ function onBlurInput(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.boxShadow = 'none'
 }
 
-function Field({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function Field({ id, label, value, onChange }: { id: string; label: string; value: string; onChange: (v: string) => void }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{label}</label>
+      <label htmlFor={id} className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{label}</label>
       <input
+        id={id}
         type="password"
         value={value}
         onChange={e => onChange(e.target.value)}
@@ -90,17 +92,25 @@ export function EditPasswordPage() {
         >
           <LuLock className="w-5 h-5 text-white" />
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-gray-800">{t('settings.changePassword')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">Update your login password</p>
         </div>
+        <Link
+          to="/settings"
+          aria-label="Close"
+          className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
+          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+        >
+          <LuX className="w-4 h-4" />
+        </Link>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="rounded-2xl px-5 py-5 flex flex-col gap-4" style={glass}>
-          <Field label={t('settings.currentPassword')} value={current} onChange={v => { setCurrent(v); setSuccess(false) }} />
-          <Field label={t('auth.newPassword')} value={next} onChange={v => { setNext(v); setSuccess(false) }} />
-          <Field label={t('auth.confirmPassword')} value={confirm} onChange={v => { setConfirm(v); setSuccess(false) }} />
+          <Field id="current-password" label={t('settings.currentPassword')} value={current} onChange={v => { setCurrent(v); setSuccess(false) }} />
+          <Field id="new-password" label={t('auth.newPassword')} value={next} onChange={v => { setNext(v); setSuccess(false) }} />
+          <Field id="confirm-password" label={t('auth.confirmPassword')} value={confirm} onChange={v => { setConfirm(v); setSuccess(false) }} />
 
           {error && (
             <p className="text-sm rounded-xl px-3 py-2.5" style={{ background: 'rgba(225,29,72,0.07)', color: '#e11d48' }}>
@@ -121,6 +131,7 @@ export function EditPasswordPage() {
             border: success ? '1px solid rgba(1,163,134,0.30)' : 'none',
             boxShadow: success ? 'none' : '0 4px 20px rgba(45,212,191,0.35)',
             opacity: mutation.isPending || !current || !next || !confirm ? 0.55 : 1,
+            cursor: mutation.isPending || !current || !next || !confirm ? 'not-allowed' : 'pointer',
           }}
         >
           {mutation.isPending && <span className="loading loading-spinner loading-xs" />}

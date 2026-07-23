@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, memo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LuToggleRight, LuHash, LuTimer, LuClock, LuType } from 'react-icons/lu'
 import { practicesApi } from '../../api/practices'
@@ -52,11 +52,12 @@ function fieldBlur(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.background = 'rgba(0,0,0,0.04)'
 }
 
-function Step({ label, onClick }: { label: string; onClick: () => void }) {
+function Step({ label, onClick, ariaLabel }: { label: string; onClick: () => void; ariaLabel: string }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-label={ariaLabel}
       className="w-7 h-7 rounded-lg flex items-center justify-center text-base font-light select-none active:scale-90 transition-transform flex-shrink-0"
       style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: ACCENT }}
     >
@@ -65,7 +66,7 @@ function Step({ label, onClick }: { label: string; onClick: () => void }) {
   )
 }
 
-export function PracticeCard({ practice, date, currentValue }: PracticeCardProps) {
+export const PracticeCard = memo(function PracticeCard({ practice, date, currentValue }: PracticeCardProps) {
   const qc = useQueryClient()
   const hasValue = currentValue !== undefined
   const meta = TYPE_META[practice.data_type]
@@ -98,7 +99,6 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
     mutationFn: (v: PracticeValue) => practicesApi.saveDiaryEntry(date, practice.practice, v),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['diary', date] })
-      qc.invalidateQueries({ queryKey: ['report-data'] })
       setFlash(true)
       setTimeout(() => setFlash(false), 1200)
     },
@@ -141,6 +141,9 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
       {/* Name */}
       <span className="flex-1 min-w-0 text-sm font-semibold text-gray-800 leading-tight truncate">
         {practice.practice}
+        {practice.is_required && (
+          <span className="ml-1 text-xs font-bold" style={{ color: ACCENT }}>*</span>
+        )}
       </span>
 
       {/* ── Bool ── */}
@@ -163,7 +166,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
       {/* ── Duration — smart input: shows "45 min" / "1h 30m" when idle ── */}
       {practice.data_type === 'Duration' && (
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          <Step label="−" onClick={() => {
+          <Step label="−" ariaLabel="Decrease by 5 minutes" onClick={() => {
             durRef.current = Math.max(0, durRef.current - 5)
             if (durEl.current) {
               const focused = document.activeElement === durEl.current
@@ -178,6 +181,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
             type="text"
             inputMode="numeric"
             defaultValue={fmtDur(durVal)}
+            aria-label={`${practice.practice} duration`}
             className="focus:outline-none text-sm"
             style={{ ...field, width: '5rem', height: '2rem', color: durVal > 0 ? ACCENT : '#9ca3af' }}
             onFocus={(e) => {
@@ -200,7 +204,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
             onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
           />
 
-          <Step label="+" onClick={() => {
+          <Step label="+" ariaLabel="Increase by 5 minutes" onClick={() => {
             durRef.current = durRef.current + 5
             if (durEl.current) {
               const focused = document.activeElement === durEl.current
@@ -215,7 +219,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
       {/* ── Int ── */}
       {practice.data_type === 'Int' && (
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          <Step label="−" onClick={() => {
+          <Step label="−" ariaLabel="Decrease by 1" onClick={() => {
             intRef.current = Math.max(0, intRef.current - 1)
             if (intEl.current) {
               intEl.current.value = String(intRef.current)
@@ -229,6 +233,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
             type="number"
             min={0}
             defaultValue={intVal}
+            aria-label={practice.practice}
             className="focus:outline-none text-sm"
             style={{ ...field, width: '3rem', height: '2rem', color: intVal > 0 ? ACCENT : '#9ca3af' }}
             onFocus={(e) => { fieldFocus(e); setTimeout(() => e.target.select(), 0) }}
@@ -247,7 +252,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
             onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
           />
 
-          <Step label="+" onClick={() => {
+          <Step label="+" ariaLabel="Increase by 1" onClick={() => {
             intRef.current = intRef.current + 1
             if (intEl.current) {
               intEl.current.value = String(intRef.current)
@@ -264,6 +269,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
           <input
             type="number" min={0} max={23}
             defaultValue={String(timeH).padStart(2, '0')}
+            aria-label={`${practice.practice} hours`}
             className="focus:outline-none"
             style={{
               ...field,
@@ -293,6 +299,7 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
           <input
             type="number" min={0} max={59}
             defaultValue={String(timeM).padStart(2, '0')}
+            aria-label={`${practice.practice} minutes`}
             className="focus:outline-none"
             style={{
               ...field,
@@ -321,12 +328,39 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
         </div>
       )}
 
-      {/* ── Text ── */}
-      {practice.data_type === 'Text' && (
+      {/* ── Text (dropdown) ── */}
+      {practice.data_type === 'Text' && practice.dropdown_variants && (
+        <select
+          defaultValue={textVal}
+          aria-label={practice.practice}
+          className="focus:outline-none text-sm cursor-pointer"
+          style={{
+            ...field,
+            width: '7rem', height: '2.25rem',
+            padding: '0 0.5rem',
+            textAlign: 'left',
+            fontWeight: 500,
+            color: textVal ? ACCENT : '#9ca3af',
+          }}
+          onChange={(e) => {
+            e.target.style.color = e.target.value ? ACCENT : '#9ca3af'
+            save({ Text: e.target.value })
+          }}
+        >
+          <option value="">—</option>
+          {practice.dropdown_variants.split('\n').map(v => v.trim()).filter(Boolean).map(v => (
+            <option key={v} value={v}>{v}</option>
+          ))}
+        </select>
+      )}
+
+      {/* ── Text (free input) ── */}
+      {practice.data_type === 'Text' && !practice.dropdown_variants && (
         <input
           type="text"
           defaultValue={textVal}
           placeholder="—"
+          aria-label={practice.practice}
           className="focus:outline-none text-sm"
           style={{
             ...field,
@@ -346,4 +380,4 @@ export function PracticeCard({ practice, date, currentValue }: PracticeCardProps
       )}
     </div>
   )
-}
+})

@@ -22,7 +22,7 @@ export function ConfirmModal({ id, title, message, confirmLabel = 'Confirm', onC
         </div>
       </div>
       <form method="dialog" className="modal-backdrop">
-        <button>close</button>
+        <button aria-label="Close">close</button>
       </form>
     </dialog>
   )

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
-import { LuUser, LuCheck } from 'react-icons/lu'
+import { LuUser, LuCheck, LuX } from 'react-icons/lu'
+import { Link } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import { authApi } from '../../api/auth'
 
@@ -58,17 +59,26 @@ export function EditUserPage() {
         >
           <LuUser className="w-5 h-5 text-white" />
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-gray-800">{t('settings.editProfile')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">Update your display name</p>
         </div>
+        <Link
+          to="/settings"
+          aria-label="Close"
+          className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
+          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+        >
+          <LuX className="w-4 h-4" />
+        </Link>
       </div>
 
       {/* Form */}
       <div className="rounded-2xl px-5 py-5 flex flex-col gap-4" style={glass}>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.name')}</label>
+          <label htmlFor="display-name" className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.name')}</label>
           <input
+            id="display-name"
             value={name}
             onChange={e => { setName(e.target.value); setSuccess(false) }}
             style={inputStyle}
@@ -77,8 +87,9 @@ export function EditUserPage() {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.email')}</label>
+          <label htmlFor="user-email" className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.email')}</label>
           <input
+            id="user-email"
             value={user?.email ?? ''}
             readOnly
             style={{ ...inputStyle, background: 'rgba(0,0,0,0.03)', color: '#9ca3af', cursor: 'default' }}
@@ -104,6 +115,7 @@ export function EditUserPage() {
           border: success ? '1px solid rgba(1,163,134,0.30)' : 'none',
           boxShadow: success ? 'none' : '0 4px 20px rgba(45,212,191,0.35)',
           opacity: mutation.isPending || !name.trim() ? 0.55 : 1,
+          cursor: mutation.isPending || !name.trim() ? 'not-allowed' : 'pointer',
         }}
       >
         {mutation.isPending && <span className="loading loading-spinner loading-xs" />}

@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { FaCog, FaChevronRight, FaSignOutAlt } from 'react-icons/fa'
 import { LuHash, LuTimer, LuClock, LuType, LuToggleRight, LuX } from 'react-icons/lu'
+import { FaCog, FaPlus, FaUsers } from 'react-icons/fa'
 import { yatrasApi } from '../../api/yatras'
+import { practicesApi } from '../../api/practices'
+import { TopBar } from '../../components/layout/TopBar'
 import { Spinner } from '../../components/ui/Spinner'
-import { ConfirmModal } from '../../components/ui/ConfirmModal'
+import type { PracticeDataType } from '../../types/api'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -15,26 +17,78 @@ const glass: React.CSSProperties = {
   boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
 }
 
-const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, label: string }> = {
-  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   label: 'Yes/No'   },
-  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  label: 'Count'    },
-  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  label: 'Duration' },
-  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  label: 'Time'     },
-  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', label: 'Text'     },
+const TYPE_META: Record<PracticeDataType, {
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
+  color: string
+  bg: string
+}> = {
+  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)'   },
+  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)'  },
+  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)'  },
+  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)'  },
+  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)' },
 }
+
+const ACCENT = '#01a386'
 
 export function YatraSettingsPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const qc = useQueryClient()
-  const [tab, setTab] = useState<'members' | 'practices'>('members')
 
-  const { data, isLoading } = useQuery({
+  // ── Queries ──────────────────────────────────────────────────────────────
+
+  const yatraQuery = useQuery({
     queryKey: ['yatra', id],
     queryFn: () => yatrasApi.getYatra(id!),
   })
 
-  const leave = useMutation({
+  const mappingsQuery = useQuery({
+    queryKey: ['yatra-user-practices', id],
+    queryFn: () => yatrasApi.getYatraUserPractices(id!),
+  })
+
+  const userPracticesQuery = useQuery({
+    queryKey: ['practices'],
+    queryFn: practicesApi.getUserPractices,
+  })
+
+  const isAdminQuery = useQuery({
+    queryKey: ['yatra-is-admin', id],
+    queryFn: () => yatrasApi.isAdmin(id!),
+  })
+
+  // ── Local mapping state ──────────────────────────────────────────────────
+  // keyed by yatra practice name → user practice name (or null)
+  const [mappings, setMappings] = useState<Record<string, string | null>>({})
+  const [showCreate, setShowCreate] = useState(false)
+  const [newName, setNewName] = useState('')
+  const nameInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (mappingsQuery.data) {
+      const m: Record<string, string | null> = {}
+      for (const p of mappingsQuery.data) {
+        m[p.yatra_practice.practice] = p.user_practice ?? null
+      }
+      setMappings(m)
+    }
+  }, [mappingsQuery.data])
+
+  // ── Mutations ─────────────────────────────────────────────────────────────
+
+  const saveMutation = useMutation({
+    mutationFn: () => {
+      const practices = (mappingsQuery.data ?? []).map(p => ({
+        yatra_practice: p.yatra_practice,
+        user_practice: mappings[p.yatra_practice.practice] ?? null,
+      }))
+      return yatrasApi.updateYatraUserPractices(id!, practices)
+    },
+    onSuccess: () => navigate('/yatras'),
+  })
+
+  const leaveMutation = useMutation({
     mutationFn: () => yatrasApi.leaveYatra(id!),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['yatras'] })
@@ -42,117 +96,145 @@ export function YatraSettingsPage() {
     },
   })
 
-  if (isLoading) return <Spinner />
-  if (!data) return null
+  const createMutation = useMutation({
+    mutationFn: (name: string) => yatrasApi.createYatra(name),
+    onSuccess: (newYatra) => {
+      qc.invalidateQueries({ queryKey: ['yatras'] })
+      setShowCreate(false)
+      setNewName('')
+      navigate(`/yatra/${newYatra.id}/settings`)
+    },
+  })
 
-  const initial = data.name.charAt(0).toUpperCase()
+  function submitCreate() {
+    const trimmed = newName.trim()
+    if (trimmed) createMutation.mutate(trimmed)
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  const activePractices = (userPracticesQuery.data ?? []).filter(p => p.is_active)
+  const usedPractices = new Set(Object.values(mappings).filter(Boolean) as string[])
+
+  const isLoading =
+    yatraQuery.isLoading ||
+    mappingsQuery.isLoading ||
+    userPracticesQuery.isLoading ||
+    isAdminQuery.isLoading
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <>
-      <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
-        {/* Header */}
-        <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
-          <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 text-white text-xl font-bold"
-            style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
-            }}
-          >
-            {initial}
-          </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-base font-bold text-gray-800 leading-tight truncate">{data.name}</h1>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {data.member_count} member{data.member_count === 1 ? '' : 's'} · {data.practices.length} practice{data.practices.length === 1 ? '' : 's'}
+      <TopBar showBack title={yatraQuery.data?.name ?? '…'} />
+
+      <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
+        {isLoading && <Spinner />}
+
+        {/* Info text */}
+        {!isLoading && (
+          <div className="rounded-2xl px-4 py-3" style={glass}>
+            <p className="text-xs text-gray-500">
+              Link each group practice to your personal practice so your diary entries count toward the group.
             </p>
           </div>
-          <Link
-            to="/yatras"
-            aria-label="Close"
-            className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
-          >
-            <LuX className="w-4 h-4" />
-          </Link>
-        </div>
+        )}
 
-        {/* Tab bar */}
-        <div className="rounded-2xl flex overflow-hidden" style={glass}>
-          {(['members', 'practices'] as const).map(t => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className="flex-1 h-11 text-sm font-semibold transition-all"
-              style={{
-                background: tab === t ? '#01a386' : 'transparent',
-                color: tab === t ? 'white' : '#6b7280',
-                border: 'none',
-              }}
+        {/* Practice mapping rows */}
+        {!isLoading && (mappingsQuery.data ?? []).map(item => {
+          const meta = TYPE_META[item.yatra_practice.data_type] ?? TYPE_META.Text
+          const Icon = meta.icon
+          const currentValue = mappings[item.yatra_practice.practice] ?? ''
+
+          // Options: active user practices with same type, not already used elsewhere, + currently selected
+          const options = activePractices.filter(up =>
+            up.data_type === item.yatra_practice.data_type &&
+            (!usedPractices.has(up.practice) || up.practice === currentValue)
+          )
+
+          return (
+            <div
+              key={item.yatra_practice.id}
+              className="rounded-2xl px-4 py-3.5 flex items-center gap-3"
+              style={glass}
             >
-              {t === 'members' ? `Members (${data.members.length})` : `Practices (${data.practices.length})`}
-            </button>
-          ))}
-        </div>
-
-        {/* Members tab */}
-        {tab === 'members' && (
-          <div className="flex flex-col gap-2">
-            {data.members.map((m) => (
               <div
-                key={m.id}
-                className="rounded-2xl px-4 py-3.5 flex items-center gap-3"
-                style={glass}
+                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: meta.bg }}
               >
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
-                  style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)' }}
-                >
-                  {m.name.charAt(0).toUpperCase()}
-                </div>
-                <span className="flex-1 text-sm font-semibold text-gray-800">{m.name}</span>
+                <Icon className="w-4 h-4" style={{ color: meta.color }} />
               </div>
-            ))}
-            {data.members.length === 0 && (
-              <p className="text-center text-sm text-gray-400 py-8">No members yet</p>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-gray-400 leading-none mb-0.5">Group practice</p>
+                <p className="text-sm font-semibold text-gray-800 truncate">
+                  {item.yatra_practice.practice}
+                </p>
+              </div>
+
+              <select
+                value={currentValue}
+                onChange={e => {
+                  const next = e.target.value
+                  setMappings(prev => ({ ...prev, [item.yatra_practice.practice]: next || null }))
+                }}
+                className="text-sm rounded-xl px-2 h-9 flex-shrink-0 outline-none cursor-pointer"
+                style={{
+                  background: 'rgba(0,0,0,0.04)',
+                  border: '1.5px solid rgba(0,0,0,0.08)',
+                  color: currentValue ? ACCENT : '#9ca3af',
+                  maxWidth: '10rem',
+                  fontWeight: currentValue ? 600 : 400,
+                }}
+              >
+                <option value="">— not mapped —</option>
+                {options.map(up => (
+                  <option key={up.id} value={up.practice}>{up.practice}</option>
+                ))}
+              </select>
+            </div>
+          )
+        })}
+
+        {!isLoading && mappingsQuery.data?.length === 0 && (
+          <div className="rounded-2xl px-4 py-8 text-center" style={glass}>
+            <p className="text-sm text-gray-400">No practices configured for this yatra yet.</p>
+            {isAdminQuery.data && (
+              <Link
+                to={`/yatra/${id}/admin/settings`}
+                className="mt-3 inline-block text-sm font-medium"
+                style={{ color: ACCENT }}
+              >
+                Add practices in admin settings →
+              </Link>
             )}
           </div>
         )}
 
-        {/* Practices tab */}
-        {tab === 'practices' && (
-          <div className="flex flex-col gap-2">
-            {data.practices.map((p) => {
-              const meta = TYPE_META[p.data_type] ?? TYPE_META.Text
-              const TypeIcon = meta.icon
-              return (
-                <div
-                  key={p.id}
-                  className="rounded-2xl px-4 py-3.5 flex items-center gap-3"
-                  style={glass}
-                >
-                  <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: meta.bg }}
-                  >
-                    <TypeIcon className="w-3.5 h-3.5" style={{ color: meta.color }} />
-                  </div>
-                  <span className="flex-1 text-sm font-semibold text-gray-800">{p.practice}</span>
-                  <span className="text-xs font-medium flex-shrink-0" style={{ color: meta.color }}>{meta.label}</span>
-                </div>
-              )
-            })}
-            {data.practices.length === 0 && (
-              <p className="text-center text-sm text-gray-400 py-8">No practices yet</p>
-            )}
-          </div>
+        {/* Save button */}
+        {!isLoading && (mappingsQuery.data?.length ?? 0) > 0 && (
+          <button
+            onClick={() => saveMutation.mutate()}
+            disabled={saveMutation.isPending}
+            className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+            style={{
+              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              color: 'white',
+              border: 'none',
+              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              opacity: saveMutation.isPending ? 0.7 : 1,
+            }}
+          >
+            {saveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
+            Save
+          </button>
         )}
 
-        {/* Admin settings link */}
-        {data.is_admin && (
+        {/* Admin settings */}
+        {!isLoading && isAdminQuery.data && (
           <Link
             to={`/yatra/${id}/admin/settings`}
-            className="rounded-2xl px-4 py-4 flex items-center gap-3 no-underline transition-all"
+            className="rounded-2xl px-4 py-4 flex items-center gap-3 no-underline"
             style={glass}
           >
             <div
@@ -162,32 +244,132 @@ export function YatraSettingsPage() {
               <FaCog className="w-4 h-4" style={{ color: '#6366f1' }} />
             </div>
             <span className="flex-1 text-sm font-semibold text-gray-800">Admin settings</span>
-            <FaChevronRight className="w-3 h-3 flex-shrink-0" style={{ color: '#d1d5db' }} />
+            <span className="text-xs" style={{ color: '#d1d5db' }}>›</span>
           </Link>
         )}
 
-        {/* Leave button */}
-        <button
-          onClick={() => (document.getElementById('leave-modal') as HTMLDialogElement)?.showModal()}
-          className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
-          style={{
-            background: 'rgba(225,29,72,0.08)',
-            color: '#e11d48',
-            border: '1px solid rgba(225,29,72,0.20)',
-          }}
-        >
-          <FaSignOutAlt className="w-3.5 h-3.5" />
-          Leave yatra
-        </button>
+        {/* Create new yatra */}
+        {!isLoading && (
+          <button
+            onClick={() => { setShowCreate(true); setTimeout(() => nameInputRef.current?.focus(), 50) }}
+            className="rounded-2xl px-4 py-3.5 flex items-center gap-3 w-full text-left"
+            style={glass}
+          >
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(1,163,134,0.10)' }}
+            >
+              <FaPlus className="w-3.5 h-3.5" style={{ color: ACCENT }} />
+            </div>
+            <span className="flex-1 text-sm font-medium text-gray-700">Create new yatra</span>
+          </button>
+        )}
+
+        {/* Leave */}
+        {!isLoading && (
+          <button
+            onClick={() => {
+              if (window.confirm('Leave this yatra? You can rejoin later.')) {
+                leaveMutation.mutate()
+              }
+            }}
+            disabled={leaveMutation.isPending}
+            className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+            style={{
+              background: 'rgba(255,255,255,0.85)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              color: '#dc2626',
+              border: '1.5px solid rgba(220,38,38,0.35)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            }}
+          >
+            {leaveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
+            Leave yatra
+          </button>
+        )}
+
+        {/* Errors */}
+        {saveMutation.isError && (
+          <p className="text-sm text-red-600 text-center">
+            {(saveMutation.error as Error)?.message ?? 'Failed to save'}
+          </p>
+        )}
+        {leaveMutation.isError && (
+          <p className="text-sm text-red-600 text-center">
+            {(leaveMutation.error as Error)?.message ?? 'Failed to leave'}
+          </p>
+        )}
       </div>
 
-      <ConfirmModal
-        id="leave-modal"
-        title="Leave yatra?"
-        message={`Leave "${data.name}"? You can rejoin later.`}
-        confirmLabel="Leave"
-        onConfirm={() => leave.mutate()}
-      />
+      {/* Create yatra modal */}
+      {showCreate && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(6px)' }}
+          onClick={e => { if (e.target === e.currentTarget) { setShowCreate(false); setNewName('') } }}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl px-6 py-6 flex flex-col gap-4"
+            style={glass}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 12px rgba(1,163,134,0.28)' }}
+              >
+                <FaUsers className="w-4.5 h-4.5 text-white" />
+              </div>
+              <h2 className="text-base font-bold text-gray-800">New Yatra</h2>
+              <button
+                type="button"
+                onClick={() => { setShowCreate(false); setNewName('') }}
+                aria-label="Close"
+                className="ml-auto w-8 h-8 flex items-center justify-center rounded-full"
+                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', cursor: 'pointer', color: '#6b7280' }}
+              >
+                <LuX className="w-4 h-4" />
+              </button>
+            </div>
+            <input
+              ref={nameInputRef}
+              type="text"
+              placeholder="Yatra name…"
+              aria-label="Yatra name"
+              value={newName}
+              onChange={e => setNewName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') submitCreate(); if (e.key === 'Escape') { setShowCreate(false); setNewName('') } }}
+              className="w-full px-4 py-3 rounded-2xl text-sm font-medium text-gray-800 outline-none"
+              style={{
+                background: 'rgba(0,0,0,0.04)',
+                border: '1.5px solid rgba(0,0,0,0.08)',
+              }}
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setShowCreate(false); setNewName('') }}
+                className="flex-1 h-11 rounded-full text-sm font-semibold"
+                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#6b7280', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={submitCreate}
+                disabled={!newName.trim() || createMutation.isPending}
+                className="flex-1 h-11 rounded-full text-sm font-semibold text-white"
+                style={{
+                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  opacity: !newName.trim() || createMutation.isPending ? 0.6 : 1,
+                }}
+              >
+                {createMutation.isPending ? '…' : 'Create'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

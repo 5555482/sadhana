@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { yatrasApi } from '../../api/yatras'
 import { TopBar } from '../../components/layout/TopBar'
 import { Spinner } from '../../components/ui/Spinner'
-import type { UserYatraDataRow } from '../../types/api'
+import type { UserYatraDataRow, ColourZonesConfig, ZoneColour } from '../../types/api'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -64,8 +64,6 @@ function formatValue(val: unknown): string {
 
 // ── Colour zones ───────────────────────────────────────────────────────────
 
-type ZoneColour = 'Neutral' | 'MutedRed' | 'Red' | 'Yellow' | 'Green' | 'DarkGreen'
-
 function zoneToBackground(zone: ZoneColour): string {
   switch (zone) {
     case 'MutedRed':  return 'rgba(220,38,38,0.12)'
@@ -75,13 +73,6 @@ function zoneToBackground(zone: ZoneColour): string {
     case 'DarkGreen': return 'rgba(15,118,55,0.45)'
     default:          return 'transparent'
   }
-}
-
-interface ColourZonesConfig {
-  better_direction: 'Higher' | 'Lower'
-  bounds: { to: unknown; colour: ZoneColour }[]
-  no_value_colour: ZoneColour
-  best_colour?: ZoneColour
 }
 
 function findZone(val: unknown, cfg: ColourZonesConfig): ZoneColour {
@@ -97,9 +88,9 @@ function findZone(val: unknown, cfg: ColourZonesConfig): ZoneColour {
   return cfg.best_colour ?? (cfg.better_direction === 'Higher' ? 'Green' : 'Red')
 }
 
-function cellBackground(val: unknown, colourZones: unknown): string {
+function cellBackground(val: unknown, colourZones: ColourZonesConfig | null | undefined): string {
   if (!colourZones) return 'transparent'
-  return zoneToBackground(findZone(val, colourZones as ColourZonesConfig))
+  return zoneToBackground(findZone(val, colourZones))
 }
 
 // ── Stability heatmap ──────────────────────────────────────────────────────
@@ -140,6 +131,8 @@ export function YatrasPage() {
   const [selectedId, setSelectedId] = useState<string | null>(
     () => localStorage.getItem(SELECTED_YATRA_KEY),
   )
+  const [showCreate, setShowCreate] = useState(false)
+  const [newName, setNewName] = useState('')
 
   const yatraListQuery = useQuery({
     queryKey: ['yatras'],
@@ -169,12 +162,19 @@ export function YatrasPage() {
       qc.invalidateQueries({ queryKey: ['yatras'] })
       setSelectedId(newYatra.id)
       localStorage.setItem(SELECTED_YATRA_KEY, newYatra.id)
+      setShowCreate(false)
+      setNewName('')
     },
   })
 
   const handleCreate = () => {
-    const name = window.prompt('New yatra name:')?.trim()
-    if (name) createMutation.mutate(name)
+    setNewName('')
+    setShowCreate(true)
+  }
+
+  const submitCreate = () => {
+    const n = newName.trim()
+    if (n) createMutation.mutate(n)
   }
 
   const handleSelect = (id: string) => {
@@ -202,7 +202,7 @@ export function YatrasPage() {
   return (
     <>
       <TopBar />
-      <div className="px-4 py-4 pb-28 max-w-2xl mx-auto flex flex-col gap-3">
+      <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
 
         {/* Yatra selector header */}
         <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
@@ -233,6 +233,7 @@ export function YatrasPage() {
           {selectedYatra && (
             <Link
               to={`/yatra/${selectedYatra.id}/settings`}
+              aria-label="Yatra settings"
               className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
               style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)' }}
             >
@@ -241,7 +242,9 @@ export function YatrasPage() {
           )}
 
           <button
+            type="button"
             onClick={handleCreate}
+            aria-label="Create yatra"
             className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
             style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)', border: 'none' }}
           >
@@ -269,23 +272,16 @@ export function YatrasPage() {
               </p>
               <p className="text-xs text-gray-400 mt-1">Join or create a group practice circle</p>
             </div>
-            <Link
-              to="/yatra/join"
-              className="px-6 h-11 rounded-full text-sm font-semibold flex items-center gap-2"
+            <button
+              onClick={handleCreate}
+              className="px-6 h-11 rounded-full text-sm font-semibold flex items-center gap-2 border-none cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
                 color: 'white',
                 boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
               }}
             >
-              Join a Yatra
-            </Link>
-            <button
-              onClick={handleCreate}
-              className="text-sm font-medium"
-              style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              or create new
+              Create a Yatra
             </button>
           </div>
         )}
@@ -448,18 +444,95 @@ export function YatrasPage() {
 
       </div>
 
-      {/* FAB — Join a yatra */}
-      <Link
-        to="/yatra/join"
-        aria-label="Join yatra"
-        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
+      {/* FAB — Create yatra */}
+      <button
+        onClick={handleCreate}
+        aria-label="Create yatra"
+        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center border-none cursor-pointer"
         style={{
           background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
           boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
         }}
       >
         <FaPlus className="w-5 h-5 text-white" />
-      </Link>
+      </button>
+
+      {/* Create yatra modal */}
+      {showCreate && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}
+          onClick={() => setShowCreate(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl p-6 flex flex-col gap-4"
+            style={{
+              background: 'rgba(255,255,255,0.96)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              boxShadow: '0 24px 48px rgba(0,0,0,0.18)',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Icon + title */}
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 12px rgba(1,163,134,0.30)' }}
+              >
+                <FaUsers className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-base font-bold text-gray-800 leading-tight">New Yatra</p>
+                <p className="text-xs text-gray-400">Create a group practice circle</p>
+              </div>
+            </div>
+
+            {/* Input */}
+            <input
+              autoFocus
+              type="text"
+              value={newName}
+              onChange={e => setNewName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') submitCreate(); if (e.key === 'Escape') setShowCreate(false) }}
+              placeholder="Yatra name…"
+              aria-label="Yatra name"
+              className="w-full rounded-2xl px-4 h-12 text-sm font-semibold text-gray-800 outline-none"
+              style={{
+                background: 'rgba(0,0,0,0.04)',
+                border: '1.5px solid rgba(1,163,134,0.30)',
+              }}
+            />
+
+            {/* Buttons */}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setShowCreate(false)}
+                className="flex-1 h-11 rounded-full text-sm font-semibold"
+                style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={submitCreate}
+                disabled={!newName.trim() || createMutation.isPending}
+                className="flex-1 h-11 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
+                style={{
+                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                  color: 'white',
+                  border: 'none',
+                  opacity: !newName.trim() || createMutation.isPending ? 0.5 : 1,
+                }}
+              >
+                {createMutation.isPending && <span className="loading loading-spinner loading-xs" />}
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
