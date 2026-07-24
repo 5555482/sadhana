@@ -189,7 +189,7 @@ export function YatraPracticeEditPage() {
         ...practiceQuery.data!,
         practice: name,
         colour_zones: zones.bounds.length > 0 ? zones : null,
-        daily_score_config: dailyScore.mandatory_threshold !== null ? dailyScore : null,
+        daily_score_config: (dailyScore.mandatory_threshold !== null || dailyScore.bonus_rules.length > 0) ? dailyScore : null,
       }
       return yatrasApi.updateYatraPractice(yatraId!, p)
     },
