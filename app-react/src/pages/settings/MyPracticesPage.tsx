@@ -21,12 +21,12 @@ import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import type { UserPractice } from '../../types/api'
 import { useTranslation } from 'react-i18next'
 
-const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, label: string }> = {
-  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   label: 'Yes/No'   },
-  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  label: 'Count'    },
-  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  label: 'Duration' },
-  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  label: 'Time'     },
-  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', label: 'Text'     },
+const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, tKey: string }> = {
+  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   tKey: 'practice.typeBool'     },
+  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  tKey: 'practice.typeInt'      },
+  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  tKey: 'practice.typeDuration' },
+  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  tKey: 'practice.typeTime'     },
+  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', tKey: 'practice.typeText'     },
 }
 
 function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete: (id: string) => void }) {
@@ -78,7 +78,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
               <span className="text-xs font-bold flex-shrink-0" style={{ color: '#e11d48' }}>*</span>
             )}
           </div>
-          <span className="text-xs font-medium" style={{ color: meta.color }}>{meta.label}</span>
+          <span className="text-xs font-medium" style={{ color: meta.color }}>{t(meta.tKey)}</span>
         </div>
 
         {/* Edit */}

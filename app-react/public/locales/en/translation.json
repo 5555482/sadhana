@@ -63,7 +63,12 @@
     "deleteConfirm": "Delete",
     "empty": "No practices yet",
     "edit": "Edit practice",
-    "notFound": "Not found"
+    "notFound": "Not found",
+    "typeBool": "Yes / No",
+    "typeInt": "Count",
+    "typeDuration": "Duration",
+    "typeTime": "Time",
+    "typeText": "Text"
   },
   "charts": {
     "empty": "No reports yet",

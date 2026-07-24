@@ -15,12 +15,12 @@ interface PracticeFormProps {
   onSuccess: () => void
 }
 
-const TYPE_OPTIONS: { value: PracticeDataType; icon: React.ElementType; label: string }[] = [
-  { value: 'Bool',     icon: FaCheckCircle, label: 'Yes / No'  },
-  { value: 'Int',      icon: FaHashtag,     label: 'Count'     },
-  { value: 'Duration', icon: FaStopwatch,   label: 'Duration'  },
-  { value: 'Time',     icon: FaClock,       label: 'Time'      },
-  { value: 'Text',     icon: FaList,        label: 'Text'      },
+const TYPE_ICONS: { value: PracticeDataType; icon: React.ElementType; key: string }[] = [
+  { value: 'Bool',     icon: FaCheckCircle, key: 'typeBool'     },
+  { value: 'Int',      icon: FaHashtag,     key: 'typeInt'      },
+  { value: 'Duration', icon: FaStopwatch,   key: 'typeDuration' },
+  { value: 'Time',     icon: FaClock,       key: 'typeTime'     },
+  { value: 'Text',     icon: FaList,        key: 'typeText'     },
 ]
 
 const inputBase: React.CSSProperties = {
@@ -117,7 +117,8 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
             {t('practice.type')}
           </label>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-            {TYPE_OPTIONS.map(({ value, icon: Icon, label }) => {
+            {TYPE_ICONS.map(({ value, icon: Icon, key }) => {
+              const label = t(`practice.${key}`)
               const active = dataType === value
               return (
                 <button

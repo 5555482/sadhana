@@ -1,11 +1,10 @@
 import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface WeekCalendarProps {
   date: Date
   onDateChange: (d: Date) => void
 }
-
-const WEEKDAY_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
 function isSameDay(a: Date, b: Date) {
   return (
@@ -29,6 +28,8 @@ function getWeekDays(date: Date): Date[] {
 }
 
 export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
+  const { i18n } = useTranslation()
+  const locale = i18n.language || 'en'
   const today = new Date()
   const week = getWeekDays(date)
   const prevWeekDay = addDays(week[0], -1)
@@ -70,7 +71,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
   const renderDay = (d: Date, isOutside: boolean, onClick: () => void) => {
     const selected = isSameDay(d, date)
     const isToday = isSameDay(d, today)
-    const weekdayIdx = (d.getDay() + 6) % 7
+    const narrowDay = d.toLocaleDateString(locale, { weekday: 'narrow' })
 
     return (
       <button
@@ -87,7 +88,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
             color: selected ? '#01a386' : '#9ca3af',
           }}
         >
-          {WEEKDAY_LETTERS[weekdayIdx]}
+          {narrowDay}
         </span>
         <div
           className="h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-150"
@@ -109,8 +110,8 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
     )
   }
 
-  const monthYear = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-  const shortDate = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+  const monthYear = date.toLocaleDateString(locale, { month: 'long', year: 'numeric' })
+  const shortDate = date.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' })
 
   return (
     <div

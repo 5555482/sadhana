@@ -46,7 +46,12 @@
     "deleteConfirm": "Удалить",
     "empty": "Практик пока нет",
     "edit": "Редактировать практику",
-    "notFound": "Не найдено"
+    "notFound": "Не найдено",
+    "typeBool": "Да / Нет",
+    "typeInt": "Число",
+    "typeDuration": "Длительность",
+    "typeTime": "Время",
+    "typeText": "Текст"
   },
   "charts": {
     "empty": "Отчётов пока нет",
