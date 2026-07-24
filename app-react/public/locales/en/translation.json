@@ -100,7 +100,14 @@
     "deleteMsg": "Delete \"{{name}}\"? This cannot be undone.",
     "add": "Add",
     "practiceCount_one": "{{count}} practice",
-    "practiceCount_other": "{{count}} practices"
+    "practiceCount_other": "{{count}} practices",
+    "barLayout": "Bar layout",
+    "barLayoutGrouped": "Grouped",
+    "barLayoutStacked": "Stacked",
+    "barLayoutOverlaid": "Overlaid",
+    "traceCustomLabel": "Custom label",
+    "showAverage": "Show average",
+    "download": "Download"
   },
   "yatras": {
     "empty": "No yatras found",

@@ -104,7 +104,14 @@
     "practiceCount_one": "{{count}} практика",
     "practiceCount_few": "{{count}} практики",
     "practiceCount_many": "{{count}} практик",
-    "practiceCount_other": "{{count}} практик"
+    "practiceCount_other": "{{count}} практик",
+    "barLayout": "Макет столбцов",
+    "barLayoutGrouped": "Сгруппированные",
+    "barLayoutStacked": "Сложенные",
+    "barLayoutOverlaid": "Наложенные",
+    "traceCustomLabel": "Ярлык",
+    "showAverage": "Показать среднее",
+    "download": "Скачать"
   },
   "yatras": {
     "empty": "Ятры не найдены",

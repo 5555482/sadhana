@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { chartsApi } from '../../api/charts'
-import type { Report, ReportDefinition, TraceType, PracticeTrace, ReportDuration } from '../../api/charts'
+import type { Report, ReportDefinition, TraceType, PracticeTrace, ReportDuration, GraphReport, BarLayout } from '../../api/charts'
 import { practicesApi } from '../../api/practices'
 import { Spinner } from '../../components/ui/Spinner'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
@@ -374,6 +374,39 @@ function ReportCard({
   const [addTraceType, setAddTraceType] = useState<'Line' | 'Bar' | 'Dot'>('Line')
   const isGridType = isGrid(report.definition)
 
+  const [localName, setLocalName] = useState(report.name)
+  useEffect(() => { setLocalName(report.name) }, [report.name])
+
+  const renameMutation = useMutation({
+    mutationFn: (name: string) => chartsApi.updateReport(report.id, name, report.definition),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['reports'] }),
+  })
+
+  function changeTrace(practice: string, patch: Partial<PracticeTrace>) {
+    if (isGrid(report.definition)) return
+    const traces = report.definition.Graph.traces.map(t =>
+      t.practice === practice ? { ...t, ...patch } : t
+    )
+    updateMutation.mutate({ Graph: { ...report.definition.Graph, traces } })
+  }
+
+  function changeBarLayout(bar_layout: BarLayout) {
+    if (isGrid(report.definition)) return
+    updateMutation.mutate({ Graph: { ...report.definition.Graph, bar_layout } })
+  }
+
+  function traceTypeValue(type_: TraceType): 'Line' | 'Bar' | 'Dot' {
+    if (type_ === 'Bar') return 'Bar'
+    if (type_ === 'Dot') return 'Dot'
+    return 'Line'
+  }
+
+  function typeFromSelect(v: string): TraceType {
+    if (v === 'Bar') return 'Bar'
+    if (v === 'Dot') return 'Dot'
+    return { Line: { style: 'Regular' } }
+  }
+
   const updateMutation = useMutation({
     mutationFn: (def: ReportDefinition) => chartsApi.updateReport(report.id, report.name, def),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['reports'] }),
@@ -448,8 +481,40 @@ function ReportCard({
 
       {open && (
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+
+          {/* Report name input */}
+          <div className="px-4 pt-3 pb-1">
+            <label className="text-xs text-gray-400 block mb-1">{t('charts.reportName')}</label>
+            <input
+              type="text"
+              value={localName}
+              onChange={e => setLocalName(e.target.value)}
+              onBlur={() => { if (localName.trim() && localName !== report.name) renameMutation.mutate(localName.trim()) }}
+              className="w-full text-sm font-semibold text-gray-800 rounded-xl px-3 h-9 outline-none"
+              style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)' }}
+            />
+          </div>
+
+          {/* Bar layout (Graph only) */}
+          {!isGridType && (
+            <div className="px-4 pb-2">
+              <label className="text-xs text-gray-400 block mb-1">{t('charts.barLayout')}</label>
+              <select
+                value={(report.definition as { Graph: GraphReport }).Graph.bar_layout}
+                onChange={e => changeBarLayout(e.target.value as BarLayout)}
+                className="w-full text-sm text-gray-800 rounded-xl px-3 h-9 outline-none"
+                style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)' }}
+              >
+                <option value="Grouped">{t('charts.barLayoutGrouped')}</option>
+                <option value="Stacked">{t('charts.barLayoutStacked')}</option>
+                <option value="Overlaid">{t('charts.barLayoutOverlaid')}</option>
+              </select>
+            </div>
+          )}
+
+          {/* Trace / practice list */}
           {currentIds.length > 0 ? (
-            <div className="px-4 py-2 flex flex-col gap-1">
+            <div className="px-4 py-2 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}>
               {isGrid(report.definition)
                 ? report.definition.Grid.practices.map(pid => (
                     <div key={pid} className="flex items-center gap-2 py-0.5">
@@ -460,12 +525,47 @@ function ReportCard({
                     </div>
                   ))
                 : currentTraces.map(trace => (
-                    <div key={trace.practice} className="flex items-center gap-2 py-0.5">
-                      <TraceTypeBadge type_={trace.type_} />
-                      <span className="flex-1 text-xs text-gray-600">{practiceMap[trace.practice] ?? trace.practice}</span>
-                      <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}>
-                        <LuX className="w-3 h-3" />
-                      </button>
+                    <div key={trace.practice} className="flex flex-col gap-1 py-1" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                      <div className="flex items-center gap-2">
+                        {/* Type select */}
+                        <select
+                          value={traceTypeValue(trace.type_)}
+                          onChange={e => changeTrace(trace.practice, { type_: typeFromSelect(e.target.value) })}
+                          className="text-xs rounded-lg px-2 h-6 outline-none flex-shrink-0"
+                          style={{ background: 'rgba(0,0,0,0.05)', border: 'none', color: '#374151' }}
+                        >
+                          <option value="Line">{t('charts.traceLine')}</option>
+                          <option value="Bar">{t('charts.traceBar')}</option>
+                          <option value="Dot">{t('charts.traceDot')}</option>
+                        </select>
+                        <span className="flex-1 text-xs font-semibold text-gray-700">{practiceMap[trace.practice] ?? trace.practice}</span>
+                        <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg flex-shrink-0" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}>
+                          <LuX className="w-3 h-3" />
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2 pl-1">
+                        {/* Custom label */}
+                        <input
+                          key={trace.practice + '-label'}
+                          type="text"
+                          defaultValue={trace.label ?? ''}
+                          onBlur={e => changeTrace(trace.practice, { label: e.target.value.trim() || null })}
+                          placeholder={t('charts.traceCustomLabel')}
+                          className="flex-1 text-xs rounded-lg px-2 h-6 outline-none"
+                          style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.06)', color: '#374151' }}
+                        />
+                        {/* Show average */}
+                        <label className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={trace.show_average}
+                            onChange={e => changeTrace(trace.practice, { show_average: e.target.checked })}
+                            className="w-3 h-3 rounded"
+                            style={{ accentColor: '#01a386' }}
+                          />
+                          {t('charts.showAverage')}
+                        </label>
+                      </div>
                     </div>
                   ))
               }
@@ -474,6 +574,7 @@ function ReportCard({
             <p className="px-4 py-2 text-xs text-gray-400">{t('charts.noPracticesAdded')}</p>
           )}
 
+          {/* Add practice row — unchanged */}
           <div className="px-4 pb-3 flex items-center gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.625rem' }}>
             <select
               value={addPracticeId}

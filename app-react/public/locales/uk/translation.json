@@ -104,7 +104,14 @@
     "practiceCount_one": "{{count}} практика",
     "practiceCount_few": "{{count}} практики",
     "practiceCount_many": "{{count}} практик",
-    "practiceCount_other": "{{count}} практик"
+    "practiceCount_other": "{{count}} практик",
+    "barLayout": "Макет стовпців",
+    "barLayoutGrouped": "Згруповані",
+    "barLayoutStacked": "Складені",
+    "barLayoutOverlaid": "Накладені",
+    "traceCustomLabel": "Мітка",
+    "showAverage": "Показати середнє",
+    "download": "Завантажити"
   },
   "yatras": {
     "empty": "Ятри не знайдено",
