@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { MonthCalendar } from './MonthCalendar'
 
 interface WeekCalendarProps {
   date: Date
@@ -39,6 +40,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
   const touchStartY = useRef<number | null>(null)
   const [translateX, setTranslateX] = useState(0)
   const [animating, setAnimating] = useState(false)
+  const [calendarOpen, setCalendarOpen] = useState(false)
 
   const goToPrevWeek = () => {
     onDateChange(date.getDay() === 1 ? addDays(date, -1) : addDays(date, -7))
@@ -129,9 +131,14 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-4 pb-2">
-        <span className="text-xs font-semibold tracking-wide uppercase" style={{ color: '#9ca3af' }}>
+        <button
+          type="button"
+          onClick={() => setCalendarOpen(true)}
+          className="text-xs font-semibold tracking-wide uppercase focus:outline-none"
+          style={{ color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+        >
           {monthYear}
-        </span>
+        </button>
         <span className="text-xs font-semibold" style={{ color: '#374151' }}>
           {shortDate}
         </span>
@@ -159,6 +166,14 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
           </div>
         </div>
       </div>
+
+      {calendarOpen && (
+        <MonthCalendar
+          selectedDate={date}
+          onSelect={onDateChange}
+          onClose={() => setCalendarOpen(false)}
+        />
+      )}
     </div>
   )
 }
