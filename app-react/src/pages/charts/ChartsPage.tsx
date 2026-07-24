@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaPlus, FaChartLine, FaTrash, FaTh } from 'react-icons/fa'
-import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX, LuChartLine } from 'react-icons/lu'
+import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX, LuChartLine, LuDownload } from 'lucide-react'
 import {
   ComposedChart,
   Line,
@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { chartsApi } from '../../api/charts'
-import type { Report, ReportDefinition, TraceType, PracticeTrace, ReportDuration, GraphReport, BarLayout } from '../../api/charts'
+import type { Report, ReportDefinition, TraceType, PracticeTrace, ReportDuration, GraphReport, BarLayout, ReportDataEntry } from '../../api/charts'
 import { practicesApi } from '../../api/practices'
 import { Spinner } from '../../components/ui/Spinner'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
@@ -44,6 +44,30 @@ const DURATIONS: { label: string; value: ReportDuration }[] = [
 ]
 
 const ALL_PRACTICES_ID = '__all__'
+
+export function toCSV(entries: ReportDataEntry[], practiceMap: Record<string, string>): string {
+  const header = ['date', 'practice', 'value'].join(',')
+  const rows = entries.map(e => {
+    const name = (practiceMap[e.practice] ?? e.practice).replace(/,/g, ' ')
+    const val = valueToNumber(e.value)
+    return [e.cob_date, name, val === null ? '' : String(val)].join(',')
+  })
+  return [header, ...rows].join('\n')
+}
+
+export function triggerCSVDownload(csv: string) {
+  const bom = '﻿'
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'data.csv'
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}
 
 function isGrid(def: ReportDefinition): def is { Grid: { practices: string[] } } {
   return 'Grid' in def
@@ -152,6 +176,11 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
   const chartData = buildChartData(rawValues, practiceNames, locale)
   const isGridReport = report !== null && isGrid(report.definition)
 
+  async function handleDownload() {
+    const entries = await chartsApi.getReportData(todayCob, duration)
+    triggerCSVDownload(toCSV(entries, practiceMap))
+  }
+
   return (
     <div className="rounded-2xl overflow-hidden" style={glass}>
       {/* Duration strip */}
@@ -171,6 +200,17 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
             {d.label}
           </button>
         ))}
+        {report !== null && (
+          <button
+            onClick={handleDownload}
+            title={t('charts.download')}
+            className="ml-auto h-7 px-2.5 flex items-center gap-1 rounded-lg text-xs font-semibold flex-shrink-0"
+            style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
+          >
+            <LuDownload className="w-3.5 h-3.5" />
+            {t('charts.download')}
+          </button>
+        )}
       </div>
 
       {/* Chart body */}
