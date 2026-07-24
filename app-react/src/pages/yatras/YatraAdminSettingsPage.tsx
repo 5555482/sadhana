@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import {
   FaEdit, FaTrash, FaPlus, FaShieldAlt, FaChevronDown, FaChevronRight, FaGripVertical,
 } from 'react-icons/fa'
@@ -120,6 +121,7 @@ function SectionToggle({
 }
 
 export function YatraAdminSettingsPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const qc = useQueryClient()
   const navigate = useNavigate()
@@ -259,7 +261,7 @@ export function YatraAdminSettingsPage() {
           <h1 className="text-base font-bold text-gray-800 leading-tight truncate">
             {yatraQuery.data.name}
           </h1>
-          <p className="text-xs text-gray-400 mt-0.5">Admin settings</p>
+          <p className="text-xs text-gray-400 mt-0.5">{t('yatras.adminSettings')}</p>
         </div>
         <Link
           to={`/yatra/${id}/settings`}
@@ -570,7 +572,7 @@ export function YatraAdminSettingsPage() {
       >
         {saveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
         <LuCheck className="w-4 h-4" />
-        Save
+        {t('common.save')}
       </button>
 
       {/* Delete yatra */}

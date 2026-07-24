@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { FaChartLine, FaTh } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { practicesApi } from '../../api/practices'
@@ -47,6 +48,7 @@ const TRACE_TYPES: { value: GraphTraceType; label: string; desc: string }[] = [
 ]
 
 export function NewChartPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const qc = useQueryClient()
 
@@ -89,7 +91,7 @@ export function NewChartPage() {
   if (isLoading) return <Spinner />
 
   const activePractices = practices.filter(p => p.is_active)
-  const STEP_LABELS = ['Setup', 'Practices']
+  const STEP_LABELS = [t('charts.reportName'), t('charts.selectPractices')]
   const canNext0 = name.trim().length > 0
   const canSave = selected.length > 0
 
@@ -114,7 +116,7 @@ export function NewChartPage() {
           <FaChartLine className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800 leading-tight">New report</h1>
+          <h1 className="text-base font-bold text-gray-800 leading-tight">{t('charts.newReport')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">Step {step + 1} of {STEP_LABELS.length}</p>
         </div>
         <Link
@@ -147,11 +149,11 @@ export function NewChartPage() {
         <div className="flex flex-col gap-3">
           {/* Name */}
           <div className="rounded-2xl px-5 py-4 flex flex-col gap-2" style={glass}>
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Report name</label>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('charts.reportName')}</label>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="My weekly report"
+              placeholder={t('charts.reportNamePlaceholder')}
               style={inputStyle}
               onFocus={onFocus}
               onBlur={onBlur}
@@ -162,7 +164,7 @@ export function NewChartPage() {
 
           {/* Kind: Graph vs Grid */}
           <div className="rounded-2xl p-4 flex flex-col gap-3" style={glass}>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Report type</span>
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('charts.reportType')}</span>
             <div className="flex gap-3">
               {([['Graph', 'Line chart or bar chart', FaChartLine], ['Grid', 'Activity heatmap grid', FaTh]] as const).map(
                 ([k, desc, Icon]) => {
@@ -201,7 +203,7 @@ export function NewChartPage() {
               opacity: canNext0 ? 1 : 0.45,
             }}
           >
-            Next →
+            {t('charts.next')}
           </button>
         </div>
       )}
@@ -211,7 +213,7 @@ export function NewChartPage() {
         <div className="flex flex-col gap-2">
           <div className="rounded-2xl px-4 py-3 flex flex-col gap-1.5" style={glass}>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest pb-1">
-              {kind === 'Grid' ? 'Select practices' : 'Select practices & trace type'}
+              {kind === 'Grid' ? t('charts.selectPractices') : t('charts.selectWithType')}
             </p>
 
             {activePractices.map(p => {
@@ -268,7 +270,7 @@ export function NewChartPage() {
             })}
 
             {activePractices.length === 0 && (
-              <p className="text-sm text-gray-400 py-4 text-center">No active practices</p>
+              <p className="text-sm text-gray-400 py-4 text-center">{t('charts.noPractices')}</p>
             )}
           </div>
 
@@ -278,7 +280,7 @@ export function NewChartPage() {
               className="flex-1 h-12 rounded-full text-sm font-semibold"
               style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
             >
-              ← Back
+              {t('common.back')}
             </button>
             <button
               onClick={() => mutation.mutate()}
@@ -293,7 +295,7 @@ export function NewChartPage() {
               }}
             >
               {mutation.isPending && <span className="loading loading-spinner loading-xs" />}
-              Save report
+              {t('charts.saveReport')}
             </button>
           </div>
         </div>

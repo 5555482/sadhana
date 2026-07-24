@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { FaUsers } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { yatrasApi } from '../../api/yatras'
@@ -16,6 +17,7 @@ const glass: React.CSSProperties = {
 const ACCENT = '#01a386'
 
 export function YatraJoinPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const qc = useQueryClient()
@@ -39,13 +41,13 @@ export function YatraJoinPage() {
     return (
       <div className="px-4 py-6 max-w-lg mx-auto">
         <div className="rounded-2xl px-5 py-12 flex flex-col items-center gap-4 text-center" style={glass}>
-          <p className="text-sm font-semibold text-gray-500">Yatra not found or link has expired.</p>
+          <p className="text-sm font-semibold text-gray-500">{t('yatras.notFound')}</p>
           <button
             onClick={() => navigate('/yatras')}
             className="text-sm font-medium"
             style={{ color: ACCENT, background: 'none', border: 'none', cursor: 'pointer' }}
           >
-            Go to Yatras →
+            {t('yatras.goToYatras')}
           </button>
         </div>
       </div>
@@ -68,8 +70,8 @@ export function YatraJoinPage() {
           <FaUsers className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">Join Yatra</h1>
-          <p className="text-xs text-gray-400 mt-0.5">You've been invited</p>
+          <h1 className="text-base font-bold text-gray-800">{t('yatras.join')}</h1>
+          <p className="text-xs text-gray-400 mt-0.5">{t('yatras.invited')}</p>
         </div>
         <button
           onClick={() => navigate(-1)}
@@ -101,7 +103,7 @@ export function YatraJoinPage() {
           )}
         </div>
         <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
-          Join this group practice circle and track your practices together.
+          {t('yatras.joinCircle')}
         </p>
       </div>
 
@@ -120,7 +122,7 @@ export function YatraJoinPage() {
         }}
       >
         {join.isPending && <span className="loading loading-spinner loading-xs" />}
-        Join Yatra
+        {t('yatras.join')}
       </button>
 
       <button
@@ -135,11 +137,11 @@ export function YatraJoinPage() {
           cursor: 'pointer',
         }}
       >
-        Cancel
+        {t('common.cancel')}
       </button>
 
       {join.isError && (
-        <p className="text-sm text-red-600 text-center">Failed to join. Please try again.</p>
+        <p className="text-sm text-red-600 text-center">{t('yatras.joinFailed')}</p>
       )}
     </div>
   )

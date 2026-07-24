@@ -1,5 +1,6 @@
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { FaEdit } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { practicesApi } from '../../api/practices'
@@ -15,6 +16,7 @@ const cardStyle: React.CSSProperties = {
 }
 
 export function PracticeEditPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { data, isLoading } = useQuery({
@@ -25,7 +27,7 @@ export function PracticeEditPage() {
   const practice = data?.find((p) => p.id === id)
 
   if (isLoading) return <Spinner />
-  if (!practice) return <p className="p-4 text-error">Not found</p>
+  if (!practice) return <p className="p-4 text-error">{t('practice.notFound')}</p>
 
   return (
     <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4">
@@ -42,7 +44,7 @@ export function PracticeEditPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-gray-800 leading-tight truncate">{practice.practice}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Edit practice</p>
+          <p className="text-xs text-gray-400 mt-0.5">{t('practice.edit')}</p>
         </div>
         <Link
           to="/user/practices"

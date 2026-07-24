@@ -38,6 +38,11 @@
     "delete": "Delete",
     "offline": "You are offline"
   },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you're looking for doesn't exist.",
+    "goHome": "Go home"
+  },
   "home": {
     "noPractices": "No practices yet",
     "addStarters": "Add starter practices",
@@ -56,7 +61,9 @@
     "isRequiredHint": "If a practice is required and hasn't been filled in for a past date, a red dot will appear next to that date in the calendar.",
     "delete": "Delete practice",
     "deleteConfirm": "Delete",
-    "empty": "No practices yet"
+    "empty": "No practices yet",
+    "edit": "Edit practice",
+    "notFound": "Not found"
   },
   "charts": {
     "empty": "No reports yet",
@@ -70,7 +77,20 @@
     "manage": "Manage reports",
     "duration": "Duration",
     "share": "Share",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "shared": "Shared reports",
+    "notFound": "Reports not found",
+    "noShared": "No reports shared yet",
+    "madeWith": "Made with Sadhana",
+    "newReport": "New report",
+    "reportName": "Report name",
+    "reportNamePlaceholder": "My weekly report",
+    "reportType": "Report type",
+    "noPractices": "No active practices",
+    "selectPractices": "Select practices",
+    "selectWithType": "Select practices & trace type",
+    "saveReport": "Save report",
+    "next": "Next →"
   },
   "yatras": {
     "empty": "No yatras found",
@@ -82,7 +102,23 @@
     "namePlaceholder": "Yatra name…",
     "noEntries": "No entries for this date yet",
     "stability": "Stability (7-day avg %)",
-    "statistics": "Statistics"
+    "statistics": "Statistics",
+    "groupPractice": "Group practice",
+    "noPracticesYatra": "No practices configured for this yatra yet.",
+    "addPracticesLink": "Add practices in admin settings →",
+    "adminSettings": "Admin settings",
+    "createNewYatra": "Create new yatra",
+    "leaveYatra": "Leave yatra",
+    "leaveConfirm": "Leave this yatra? You can rejoin later.",
+    "notMapped": "— not mapped —",
+    "mapHint": "Link each group practice to your personal practice so your diary entries count toward the group.",
+    "notFound": "Yatra not found or link has expired.",
+    "goToYatras": "Go to Yatras →",
+    "join": "Join Yatra",
+    "invited": "You've been invited",
+    "joinCircle": "Join this group practice circle and track your practices together.",
+    "joinFailed": "Failed to join. Please try again.",
+    "addToGroup": "Add to group"
   },
   "settings": {
     "account": "Account",

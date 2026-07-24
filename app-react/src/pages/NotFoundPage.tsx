@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { LuCompass } from 'react-icons/lu'
 
 const glass: React.CSSProperties = {
@@ -10,6 +11,8 @@ const glass: React.CSSProperties = {
 }
 
 export function NotFoundPage() {
+  const { t } = useTranslation()
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-3xl px-8 py-12 flex flex-col items-center gap-5 text-center" style={glass}>
@@ -21,8 +24,8 @@ export function NotFoundPage() {
         </div>
         <div>
           <p className="text-5xl font-bold text-gray-200">404</p>
-          <p className="text-base font-semibold text-gray-700 mt-2">Page not found</p>
-          <p className="text-sm text-gray-400 mt-1">The page you're looking for doesn't exist.</p>
+          <p className="text-base font-semibold text-gray-700 mt-2">{t('notFound.title')}</p>
+          <p className="text-sm text-gray-400 mt-1">{t('notFound.message')}</p>
         </div>
         <Link
           to="/"
@@ -33,7 +36,7 @@ export function NotFoundPage() {
             boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
           }}
         >
-          Go home
+          {t('notFound.goHome')}
         </Link>
       </div>
     </div>

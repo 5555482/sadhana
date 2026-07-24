@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { LuHash, LuTimer, LuClock, LuType, LuToggleRight, LuX } from 'react-icons/lu'
 import { FaCog, FaPlus, FaUsers } from 'react-icons/fa'
 import { yatrasApi } from '../../api/yatras'
@@ -32,6 +33,7 @@ const TYPE_META: Record<PracticeDataType, {
 const ACCENT = '#01a386'
 
 export function YatraSettingsPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const qc = useQueryClient()
@@ -135,7 +137,7 @@ export function YatraSettingsPage() {
         {!isLoading && (
           <div className="rounded-2xl px-4 py-3" style={glass}>
             <p className="text-xs text-gray-500">
-              Link each group practice to your personal practice so your diary entries count toward the group.
+              {t('yatras.mapHint')}
             </p>
           </div>
         )}
@@ -166,7 +168,7 @@ export function YatraSettingsPage() {
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-gray-400 leading-none mb-0.5">Group practice</p>
+                <p className="text-xs text-gray-400 leading-none mb-0.5">{t('yatras.groupPractice')}</p>
                 <p className="text-sm font-semibold text-gray-800 truncate">
                   {item.yatra_practice.practice}
                 </p>
@@ -187,7 +189,7 @@ export function YatraSettingsPage() {
                   fontWeight: currentValue ? 600 : 400,
                 }}
               >
-                <option value="">— not mapped —</option>
+                <option value="">{t('yatras.notMapped')}</option>
                 {options.map(up => (
                   <option key={up.id} value={up.practice}>{up.practice}</option>
                 ))}
@@ -198,14 +200,14 @@ export function YatraSettingsPage() {
 
         {!isLoading && mappingsQuery.data?.length === 0 && (
           <div className="rounded-2xl px-4 py-8 text-center" style={glass}>
-            <p className="text-sm text-gray-400">No practices configured for this yatra yet.</p>
+            <p className="text-sm text-gray-400">{t('yatras.noPracticesYatra')}</p>
             {isAdminQuery.data && (
               <Link
                 to={`/yatra/${id}/admin/settings`}
                 className="mt-3 inline-block text-sm font-medium"
                 style={{ color: ACCENT }}
               >
-                Add practices in admin settings →
+                {t('yatras.addPracticesLink')}
               </Link>
             )}
           </div>
@@ -226,7 +228,7 @@ export function YatraSettingsPage() {
             }}
           >
             {saveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
-            Save
+            {t('common.save')}
           </button>
         )}
 
@@ -243,7 +245,7 @@ export function YatraSettingsPage() {
             >
               <FaCog className="w-4 h-4" style={{ color: '#6366f1' }} />
             </div>
-            <span className="flex-1 text-sm font-semibold text-gray-800">Admin settings</span>
+            <span className="flex-1 text-sm font-semibold text-gray-800">{t('yatras.adminSettings')}</span>
             <span className="text-xs" style={{ color: '#d1d5db' }}>›</span>
           </Link>
         )}
@@ -261,7 +263,7 @@ export function YatraSettingsPage() {
             >
               <FaPlus className="w-3.5 h-3.5" style={{ color: ACCENT }} />
             </div>
-            <span className="flex-1 text-sm font-medium text-gray-700">Create new yatra</span>
+            <span className="flex-1 text-sm font-medium text-gray-700">{t('yatras.createNewYatra')}</span>
           </button>
         )}
 
@@ -269,7 +271,7 @@ export function YatraSettingsPage() {
         {!isLoading && (
           <button
             onClick={() => {
-              if (window.confirm('Leave this yatra? You can rejoin later.')) {
+              if (window.confirm(t('yatras.leaveConfirm'))) {
                 leaveMutation.mutate()
               }
             }}
@@ -285,7 +287,7 @@ export function YatraSettingsPage() {
             }}
           >
             {leaveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
-            Leave yatra
+            {t('yatras.leaveYatra')}
           </button>
         )}
 
@@ -320,7 +322,7 @@ export function YatraSettingsPage() {
               >
                 <FaUsers className="w-4.5 h-4.5 text-white" />
               </div>
-              <h2 className="text-base font-bold text-gray-800">New Yatra</h2>
+              <h2 className="text-base font-bold text-gray-800">{t('yatras.newTitle')}</h2>
               <button
                 type="button"
                 onClick={() => { setShowCreate(false); setNewName('') }}
@@ -334,7 +336,7 @@ export function YatraSettingsPage() {
             <input
               ref={nameInputRef}
               type="text"
-              placeholder="Yatra name…"
+              placeholder={t('yatras.namePlaceholder')}
               aria-label="Yatra name"
               value={newName}
               onChange={e => setNewName(e.target.value)}
@@ -351,7 +353,7 @@ export function YatraSettingsPage() {
                 className="flex-1 h-11 rounded-full text-sm font-semibold"
                 style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#6b7280', cursor: 'pointer' }}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 onClick={submitCreate}
@@ -364,7 +366,7 @@ export function YatraSettingsPage() {
                   opacity: !newName.trim() || createMutation.isPending ? 0.6 : 1,
                 }}
               >
-                {createMutation.isPending ? '…' : 'Create'}
+                {createMutation.isPending ? '…' : t('yatras.createButton')}
               </button>
             </div>
           </div>

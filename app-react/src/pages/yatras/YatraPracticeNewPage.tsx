@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { FaPlus } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { PracticeForm } from '../../components/PracticeForm'
@@ -12,6 +13,7 @@ const glass: React.CSSProperties = {
 }
 
 export function YatraPracticeNewPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const back = () => navigate(`/yatra/${id}/admin/settings`)
@@ -30,8 +32,8 @@ export function YatraPracticeNewPage() {
           <FaPlus className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800 leading-tight">New Practice</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Add to group</p>
+          <h1 className="text-base font-bold text-gray-800 leading-tight">{t('practice.new')}</h1>
+          <p className="text-xs text-gray-400 mt-0.5">{t('yatras.addToGroup')}</p>
         </div>
         <button
           onClick={back}
