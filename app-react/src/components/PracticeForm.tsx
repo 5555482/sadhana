@@ -133,7 +133,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
                   }
                 >
                   <Icon className="w-5 h-5" style={{ color: active ? '#01a386' : '#9ca3af' }} />
-                  <span className="text-xs font-semibold leading-tight text-center" style={{ color: active ? '#01a386' : '#6b7280' }}>
+                  <span className="text-[10px] font-semibold leading-tight text-center break-words" style={{ color: active ? '#01a386' : '#6b7280' }}>
                     {label}
                   </span>
                 </button>
