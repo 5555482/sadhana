@@ -285,7 +285,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           {showQuickAdd && (
             <DurationQuickAddModal
               onAdd={(minutes) => {
-                const newVal = durVal + minutes
+                const newVal = durRef.current + minutes
                 save({ Duration: newVal })
               }}
               onClose={() => setShowQuickAdd(false)}
