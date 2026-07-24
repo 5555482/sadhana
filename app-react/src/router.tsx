@@ -1,8 +1,26 @@
 import { lazy } from 'react'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, isRouteErrorResponse, useRouteError } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
 import { ProtectedRoute } from './components/layout/ProtectedRoute'
 import { GuestRoute } from './components/layout/GuestRoute'
+
+function RootError() {
+  const error = useRouteError()
+  const message = isRouteErrorResponse(error)
+    ? error.statusText
+    : error instanceof Error
+    ? error.message
+    : 'Something went wrong'
+  return (
+    <div className="min-h-screen flex items-center justify-center p-8 text-center">
+      <div>
+        <p className="text-lg font-semibold text-error mb-2">Something went wrong</p>
+        <p className="text-sm text-base-content/50">{message}</p>
+        <button className="btn btn-sm mt-4" onClick={() => window.location.href = '/'}>Go home</button>
+      </div>
+    </div>
+  )
+}
 
 // Auth pages
 const LoginPage = lazy(() => import('./pages/auth/LoginPage').then(m => ({ default: m.LoginPage })))
@@ -47,6 +65,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ defa
 export const router = createBrowserRouter([
   // Guest-only routes
   {
+    errorElement: <RootError />,
     element: <GuestRoute />,
     children: [
       { path: '/login', element: <LoginPage /> },

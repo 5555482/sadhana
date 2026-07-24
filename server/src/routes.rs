@@ -90,6 +90,11 @@ fn api_scope() -> impl HttpServiceFactory {
             web::scope("/password-reset").route("", web::put().to(app::user::api::reset_password)),
         )
         .service(
+            web::scope("/oauth")
+                .route("/google", web::post().to(app::oauth::google_signin))
+                .route("/apple", web::post().to(app::oauth::apple_signin)),
+        )
+        .service(
             web::scope("/user")
                 .service(
                     web::scope("/practices")

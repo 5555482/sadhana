@@ -63,4 +63,19 @@ export const authApi = {
       new_password: newPassword,
     })
   },
+
+  async googleSignin(accessToken: string): Promise<UserInfo> {
+    const res = await apiClient.post<{ user: UserInfo }>('/oauth/google', {
+      access_token: accessToken,
+    })
+    return res.data.user
+  },
+
+  async appleSignin(idToken: string, name?: string): Promise<UserInfo> {
+    const res = await apiClient.post<{ user: UserInfo }>('/oauth/apple', {
+      id_token: idToken,
+      name,
+    })
+    return res.data.user
+  },
 }
