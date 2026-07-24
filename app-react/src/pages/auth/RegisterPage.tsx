@@ -48,7 +48,7 @@ export function RegisterPage() {
         {sent ? (
           <div className="flex flex-col gap-4 text-center">
             <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
-              Check your inbox.
+              {t('auth.inboxCheck')}
             </h1>
             <p className="text-sm text-base-content/60">{t('auth.checkEmail')}</p>
             <Link
@@ -62,8 +62,8 @@ export function RegisterPage() {
         ) : (
           <>
             <div className="mb-1 text-center">
-              <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
-                Start your daily<br />practice.
+              <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide" style={{ whiteSpace: 'pre-line' }}>
+                {t('auth.headlineRegister')}
               </h1>
               <p className="text-xs text-base-content/50 mt-2">
                 {t('auth.hasAccount')}{' '}

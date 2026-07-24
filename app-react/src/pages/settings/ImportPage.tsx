@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDropzone } from 'react-dropzone'
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { LuUpload, LuFileText, LuCheck } from 'react-icons/lu'
 import { importApi } from '../../api/import'
 import type { ImportPreview, ImportResult } from '../../types/api'
@@ -26,15 +27,16 @@ const inputStyle: React.CSSProperties = {
   transition: 'border-color 0.15s',
 }
 
-const STEP_LABELS = ['Upload', 'Map columns', 'Done']
-
 export function ImportPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<ImportPreview | null>(null)
   const [mapping, setMapping] = useState<Record<string, string>>({})
   const [result, setResult] = useState<ImportResult | null>(null)
+
+  const STEP_LABELS = [t('import.stepUpload'), t('import.stepMap'), t('import.stepDone')]
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'text/csv': ['.csv'] },
@@ -66,8 +68,8 @@ export function ImportPage() {
           <LuUpload className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold text-gray-800">Import data</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Upload a CSV file to import practices</p>
+          <h1 className="text-base font-bold text-gray-800">{t('import.title')}</h1>
+          <p className="text-xs text-gray-400 mt-0.5">{t('import.subtitle')}</p>
         </div>
       </div>
 
@@ -113,17 +115,23 @@ export function ImportPage() {
             {file ? (
               <div className="text-center">
                 <p className="text-sm font-semibold" style={{ color: '#01a386' }}>{file.name}</p>
-                <p className="text-xs text-gray-400 mt-0.5">Click to change file</p>
+                <p className="text-xs text-gray-400 mt-0.5">{t('import.clickToChange')}</p>
               </div>
             ) : (
               <div className="text-center">
                 <p className="text-sm font-semibold text-gray-700">
-                  {isDragActive ? 'Drop the file here' : 'Drop a CSV file or click to browse'}
+                  {isDragActive ? t('import.drop') : t('import.dropOrClick')}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">Only .csv files accepted</p>
+                <p className="text-xs text-gray-400 mt-0.5">{t('import.csvOnly')}</p>
               </div>
             )}
           </div>
+
+          {previewMutation.isError && (
+            <p className="text-sm rounded-xl px-3 py-2.5" style={{ background: 'rgba(225,29,72,0.07)', color: '#e11d48' }}>
+              {t('import.sendError')}
+            </p>
+          )}
 
           <button
             onClick={() => previewMutation.mutate()}
@@ -138,7 +146,7 @@ export function ImportPage() {
             }}
           >
             {previewMutation.isPending && <span className="loading loading-spinner loading-xs" />}
-            Next →
+            {t('import.next')}
           </button>
         </div>
       )}
@@ -148,7 +156,7 @@ export function ImportPage() {
         <div className="flex flex-col gap-3">
           <div className="rounded-2xl overflow-hidden" style={glass}>
             <div className="px-4 py-3 border-b" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Map CSV columns to practices</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('import.mapColumns')}</p>
             </div>
             {preview.columns.map((col, i) => (
               <div
@@ -165,7 +173,7 @@ export function ImportPage() {
                   style={inputStyle}
                   value={mapping[col] ?? ''}
                   onChange={e => setMapping({ ...mapping, [col]: e.target.value })}
-                  placeholder="Practice name…"
+                  placeholder={t('import.practicePlaceholder')}
                   onFocus={e => { e.target.style.borderColor = '#01a386' }}
                   onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.10)' }}
                 />
@@ -173,13 +181,19 @@ export function ImportPage() {
             ))}
           </div>
 
+          {confirmMutation.isError && (
+            <p className="text-sm rounded-xl px-3 py-2.5" style={{ background: 'rgba(225,29,72,0.07)', color: '#e11d48' }}>
+              {t('import.sendError')}
+            </p>
+          )}
+
           <div className="flex gap-2">
             <button
               onClick={() => setStep(0)}
               className="flex-1 h-12 rounded-full text-sm font-semibold"
               style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
             >
-              ← Back
+              ← {t('common.back')}
             </button>
             <button
               onClick={() => confirmMutation.mutate()}
@@ -194,7 +208,7 @@ export function ImportPage() {
               }}
             >
               {confirmMutation.isPending && <span className="loading loading-spinner loading-xs" />}
-              Import
+              {t('import.importBtn')}
             </button>
           </div>
         </div>
@@ -210,8 +224,8 @@ export function ImportPage() {
             <LuCheck className="w-7 h-7" style={{ color: '#01a386' }} />
           </div>
           <div className="text-center">
-            <p className="text-base font-bold text-gray-800">Import complete</p>
-            <p className="text-sm text-gray-400 mt-1">{result.imported_count} rows imported</p>
+            <p className="text-base font-bold text-gray-800">{t('import.complete')}</p>
+            <p className="text-sm text-gray-400 mt-1">{t('import.rowsImported', { count: result.imported_count })}</p>
           </div>
           <button
             onClick={() => navigate('/settings')}
@@ -223,7 +237,7 @@ export function ImportPage() {
               boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
             }}
           >
-            Done
+            {t('import.done')}
           </button>
         </div>
       )}

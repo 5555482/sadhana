@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { LuMessageSquare, LuCheck, LuX } from 'react-icons/lu'
 import { supportApi } from '../../api/support'
 import { useAuthStore } from '../../store/authStore'
@@ -36,6 +37,7 @@ function onBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
 }
 
 export function SupportPage() {
+  const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
   const [name, setName] = useState(user?.name ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
@@ -59,13 +61,13 @@ export function SupportPage() {
         >
           <LuCheck className="w-7 h-7" style={{ color: '#01a386' }} />
         </div>
-        <p className="font-semibold text-gray-800 text-lg text-center">Thank you — we'll be in touch</p>
+        <p className="font-semibold text-gray-800 text-lg text-center">{t('support.thankYou')}</p>
         <Link
           to="/help"
           className="text-sm font-medium no-underline"
           style={{ color: '#01a386' }}
         >
-          Back to help
+          {t('support.backToHelp')}
         </Link>
       </div>
     )
@@ -87,8 +89,8 @@ export function SupportPage() {
           <LuMessageSquare className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">Contact support</h1>
-          <p className="text-xs text-gray-400 mt-0.5">We'll reply to your email</p>
+          <h1 className="text-base font-bold text-gray-800">{t('support.title')}</h1>
+          <p className="text-xs text-gray-400 mt-0.5">{t('support.subtitle')}</p>
         </div>
         <Link
           to="/help"
@@ -107,7 +109,7 @@ export function SupportPage() {
       >
         <div className="rounded-2xl px-5 py-5 flex flex-col gap-4" style={glass}>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Name</label>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('support.name')}</label>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
@@ -118,7 +120,7 @@ export function SupportPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Email</label>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.email')}</label>
             <input
               type="email"
               value={email}
@@ -130,11 +132,11 @@ export function SupportPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Message</label>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('support.message')}</label>
             <textarea
               value={message}
               onChange={e => setMessage(e.target.value)}
-              placeholder="How can we help?"
+              placeholder={t('support.messagePlaceholder')}
               style={{ ...inputStyle, height: '7rem', resize: 'none' }}
               onFocus={onFocus}
               onBlur={onBlur}
@@ -143,7 +145,7 @@ export function SupportPage() {
 
           {mutation.isError && (
             <p className="text-sm rounded-xl px-3 py-2.5" style={{ background: 'rgba(225,29,72,0.07)', color: '#e11d48' }}>
-              Failed to send — opening your email client instead
+              {t('support.sendFailed')}
             </p>
           )}
         </div>
@@ -162,7 +164,7 @@ export function SupportPage() {
           }}
         >
           {mutation.isPending && <span className="loading loading-spinner loading-xs" />}
-          Send message
+          {t('support.send')}
         </button>
       </form>
     </div>

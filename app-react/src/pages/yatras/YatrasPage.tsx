@@ -227,7 +227,7 @@ export function YatrasPage() {
               ))}
             </select>
           ) : (
-            <span className="flex-1 text-sm text-gray-400">No yatras yet</span>
+            <span className="flex-1 text-sm text-gray-400">{t('yatras.noYet')}</span>
           )}
 
           {selectedYatra && (
@@ -267,10 +267,8 @@ export function YatrasPage() {
               <FaUsers className="w-7 h-7" style={{ color: '#01a386' }} />
             </div>
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700">
-                {t('yatras.empty') || 'No yatras yet'}
-              </p>
-              <p className="text-xs text-gray-400 mt-1">Join or create a group practice circle</p>
+              <p className="text-sm font-medium text-gray-700">{t('yatras.noYet')}</p>
+              <p className="text-xs text-gray-400 mt-1">{t('yatras.createCircle')}</p>
             </div>
             <button
               onClick={handleCreate}
@@ -281,7 +279,7 @@ export function YatrasPage() {
                 boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
               }}
             >
-              Create a Yatra
+              {t('yatras.createButton')}
             </button>
           </div>
         )}
@@ -305,7 +303,7 @@ export function YatrasPage() {
                     </th>
                     {showStability && (
                       <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
-                        7d trend
+                        7d
                       </th>
                     )}
                     {data.practices.map(p => (
@@ -326,7 +324,7 @@ export function YatrasPage() {
                         colSpan={data.practices.length + (showStability ? 2 : 1)}
                         className="px-4 py-10 text-center text-sm text-gray-400"
                       >
-                        No entries for this date yet
+                        {t('yatras.noEntries')}
                       </td>
                     </tr>
                   )}
@@ -374,7 +372,7 @@ export function YatrasPage() {
               style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}
             >
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
-                Stability (7-day average %)
+                {t('yatras.stability')}
               </span>
             </div>
             <div className="overflow-x-auto">
@@ -425,7 +423,7 @@ export function YatrasPage() {
         {data && data.statistics.length > 0 && (
           <div className="rounded-2xl px-4 py-4 flex flex-col gap-1" style={glass}>
             <span className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>
-              Statistics
+              {t('yatras.statistics')}
             </span>
             {data.statistics.map((stat, i) => (
               <div
@@ -483,8 +481,8 @@ export function YatrasPage() {
                 <FaUsers className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-base font-bold text-gray-800 leading-tight">New Yatra</p>
-                <p className="text-xs text-gray-400">Create a group practice circle</p>
+                <p className="text-base font-bold text-gray-800 leading-tight">{t('yatras.newTitle')}</p>
+                <p className="text-xs text-gray-400">{t('yatras.newSubtitle')}</p>
               </div>
             </div>
 
@@ -495,8 +493,8 @@ export function YatrasPage() {
               value={newName}
               onChange={e => setNewName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') submitCreate(); if (e.key === 'Escape') setShowCreate(false) }}
-              placeholder="Yatra name…"
-              aria-label="Yatra name"
+              placeholder={t('yatras.namePlaceholder')}
+              aria-label={t('yatras.namePlaceholder')}
               className="w-full rounded-2xl px-4 h-12 text-sm font-semibold text-gray-800 outline-none"
               style={{
                 background: 'rgba(0,0,0,0.04)',
@@ -512,7 +510,7 @@ export function YatrasPage() {
                 className="flex-1 h-11 rounded-full text-sm font-semibold"
                 style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 type="button"
@@ -527,7 +525,7 @@ export function YatrasPage() {
                 }}
               >
                 {createMutation.isPending && <span className="loading loading-spinner loading-xs" />}
-                Create
+                {t('yatras.createButton')}
               </button>
             </div>
           </div>

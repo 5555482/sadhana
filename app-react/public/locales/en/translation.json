@@ -24,7 +24,10 @@
     "passwordMismatch": "Passwords do not match",
     "resetSent": "Reset link sent — check your email.",
     "confirmationExpired": "This link has expired.",
-    "logout": "Log out"
+    "logout": "Log out",
+    "headline": "Welcome to your\ndaily practice.",
+    "headlineRegister": "Start your\ndaily practice.",
+    "inboxCheck": "Check your inbox."
   },
   "common": {
     "loading": "Loading…",
@@ -60,10 +63,26 @@
     "create": "Create report",
     "pickMetrics": "Metrics",
     "dateRange": "Date range",
-    "chartType": "Chart type"
+    "chartType": "Chart type",
+    "title": "Charts",
+    "allPractices": "All practices",
+    "noData": "No data for this period",
+    "manage": "Manage reports",
+    "duration": "Duration",
+    "share": "Share",
+    "copied": "Copied!"
   },
   "yatras": {
-    "empty": "No yatras found"
+    "empty": "No yatras found",
+    "noYet": "No yatras yet",
+    "createCircle": "Join or create a group practice circle",
+    "createButton": "Create a Yatra",
+    "newTitle": "New Yatra",
+    "newSubtitle": "Create a group practice circle",
+    "namePlaceholder": "Yatra name…",
+    "noEntries": "No entries for this date yet",
+    "stability": "Stability (7-day avg %)",
+    "statistics": "Statistics"
   },
   "settings": {
     "account": "Account",
@@ -77,6 +96,42 @@
     "language": "Language",
     "help": "Help & FAQ",
     "saved": "Changes saved",
-    "currentPassword": "Current password"
+    "currentPassword": "Current password",
+    "subtitle": "Account & preferences"
+  },
+  "help": {
+    "title": "Help",
+    "subtitle": "Frequently asked questions",
+    "contactSupport": "Contact support"
+  },
+  "support": {
+    "title": "Contact support",
+    "subtitle": "We'll reply to your email",
+    "name": "Name",
+    "message": "Message",
+    "messagePlaceholder": "How can we help?",
+    "sendFailed": "Failed to send — opening your email client instead",
+    "send": "Send message",
+    "thankYou": "Thank you — we'll be in touch",
+    "backToHelp": "Back to help"
+  },
+  "import": {
+    "title": "Import data",
+    "subtitle": "Upload a CSV file to import practices",
+    "stepUpload": "Upload",
+    "stepMap": "Map columns",
+    "stepDone": "Done",
+    "dropOrClick": "Drop a CSV file or click to browse",
+    "drop": "Drop the file here",
+    "clickToChange": "Click to change file",
+    "csvOnly": "Only .csv files accepted",
+    "next": "Next →",
+    "mapColumns": "Map CSV columns to practices",
+    "practicePlaceholder": "Practice name…",
+    "importBtn": "Import",
+    "complete": "Import complete",
+    "rowsImported": "{{count}} rows imported",
+    "done": "Done",
+    "sendError": "Failed to import — check your file format"
   }
 }

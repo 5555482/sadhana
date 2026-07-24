@@ -55,8 +55,8 @@ export function LoginPage() {
       >
         {/* Headline */}
         <div className="mb-1 text-center">
-          <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
-            Welcome to your<br />daily practice.
+          <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide" style={{ whiteSpace: 'pre-line' }}>
+            {t('auth.headline')}
           </h1>
           <p className="text-xs text-base-content/50 mt-2">
             {t('auth.noAccount')}{' '}

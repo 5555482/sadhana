@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { LuCircleHelp, LuChevronDown, LuChevronUp, LuMessageSquare, LuX } from 'react-icons/lu'
 
 const glass: React.CSSProperties = {
@@ -10,6 +11,7 @@ const glass: React.CSSProperties = {
   boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
 }
 
+// FAQ items stay in English — they are help content, not UI chrome
 const FAQS = [
   { q: 'How do I log a practice?', a: 'Go to the Home tab and find your practice card. Each card shows the input for that day. Changes save automatically.' },
   { q: 'What is a Yatra?', a: 'A Yatra is a group practice circle. Members track practices together and hold each other accountable.' },
@@ -49,6 +51,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 }
 
 export function HelpPage() {
+  const { t } = useTranslation()
+
   return (
     <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
       {/* Header */}
@@ -63,8 +67,8 @@ export function HelpPage() {
           <LuCircleHelp className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">Help</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Frequently asked questions</p>
+          <h1 className="text-base font-bold text-gray-800">{t('help.title')}</h1>
+          <p className="text-xs text-gray-400 mt-0.5">{t('help.subtitle')}</p>
         </div>
         <Link
           to="/settings"
@@ -90,7 +94,7 @@ export function HelpPage() {
         >
           <LuMessageSquare className="w-4 h-4" style={{ color: '#6366f1' }} />
         </div>
-        <span className="flex-1 text-sm font-semibold text-gray-800">Contact support</span>
+        <span className="flex-1 text-sm font-semibold text-gray-800">{t('help.contactSupport')}</span>
       </Link>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { FaPlus, FaChartLine, FaTrash, FaTh } from 'react-icons/fa'
 import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX, LuChartLine } from 'react-icons/lu'
 import {
@@ -114,6 +115,7 @@ interface ChartPanelProps {
 }
 
 function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
+  const { t } = useTranslation()
   const [duration, setDuration] = useState<ReportDuration>('Month')
   const todayCob = new Date().toISOString().slice(0, 10)
 
@@ -151,7 +153,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
     <div className="rounded-2xl overflow-hidden" style={glass}>
       {/* Duration strip */}
       <div className="px-4 pt-3 pb-2 flex gap-1.5 flex-wrap items-center" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-        <span className="text-xs font-semibold text-gray-400 mr-1">Duration</span>
+        <span className="text-xs font-semibold text-gray-400 mr-1">{t('charts.duration')}</span>
         {DURATIONS.map(d => (
           <button
             key={d.value}
@@ -174,7 +176,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
           <div className="flex justify-center py-12"><Spinner /></div>
         ) : chartData.length === 0 || practiceNames.length === 0 ? (
           <div className="flex flex-col items-center py-12 gap-2">
-            <p className="text-sm text-gray-400">No data for this period</p>
+            <p className="text-sm text-gray-400">{t('charts.noData')}</p>
           </div>
         ) : isGridReport ? (
           <GridTable chartData={chartData} practiceNames={practiceNames} />
@@ -278,6 +280,7 @@ function ReportPicker({
   selectedId: string
   onSelect: (id: string) => void
 }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -290,11 +293,11 @@ function ReportPicker({
   }, [])
 
   const selectedLabel = selectedId === ALL_PRACTICES_ID
-    ? 'All practices'
-    : reports.find(r => r.id === selectedId)?.name ?? 'All practices'
+    ? t('charts.allPractices')
+    : reports.find(r => r.id === selectedId)?.name ?? t('charts.allPractices')
 
   const options = [
-    { id: ALL_PRACTICES_ID, label: 'All practices', icon: <FaChartLine className="w-3.5 h-3.5" /> },
+    { id: ALL_PRACTICES_ID, label: t('charts.allPractices'), icon: <FaChartLine className="w-3.5 h-3.5" /> },
     ...reports.map(r => ({
       id: r.id,
       label: r.name,
@@ -516,6 +519,7 @@ function ReportCard({
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export function ChartsPage() {
+  const { t } = useTranslation()
   const user = useAuthStore(s => s.user)
   const { data: reports = [], isLoading: reportsLoading } = useQuery({ queryKey: ['reports'], queryFn: chartsApi.getReports })
   const { data: practices = [] } = useQuery({ queryKey: ['practices'], queryFn: practicesApi.getUserPractices })
@@ -547,7 +551,7 @@ export function ChartsPage() {
             <FaChartLine className="w-4 h-4 text-white" />
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="text-base font-bold text-gray-800 leading-tight">Charts</h1>
+            <h1 className="text-base font-bold text-gray-800 leading-tight">{t('charts.title')}</h1>
           </div>
           {/* Report picker */}
           <ReportPicker reports={reports} selectedId={selectedId} onSelect={setSelectedId} />
@@ -558,7 +562,7 @@ export function ChartsPage() {
             style={{ background: shareCopied ? 'rgba(1,163,134,0.12)' : 'rgba(0,0,0,0.05)', color: shareCopied ? ACCENT : '#6b7280', border: 'none' }}
           >
             {shareCopied ? <LuCheck className="w-3.5 h-3.5" /> : <LuCopy className="w-3.5 h-3.5" />}
-            {shareCopied ? 'Copied!' : 'Share'}
+            {shareCopied ? t('charts.copied') : t('charts.share')}
           </button>
         </div>
 
@@ -577,7 +581,7 @@ export function ChartsPage() {
               className="w-full px-4 py-3 flex items-center gap-2 text-left"
               style={{ background: 'transparent', border: 'none' }}
             >
-              <span className="text-xs font-semibold text-gray-500 flex-1">Manage reports ({reports.length})</span>
+              <span className="text-xs font-semibold text-gray-500 flex-1">{t('charts.manage')} ({reports.length})</span>
               {manageOpen ? <LuChevronUp className="w-4 h-4 text-gray-400" /> : <LuChevronDown className="w-4 h-4 text-gray-400" />}
             </button>
             {manageOpen && (
@@ -592,8 +596,8 @@ export function ChartsPage() {
 
         {reports.length === 0 && (
           <p className="text-xs text-center" style={{ color: '#9ca3af' }}>
-            No custom reports yet —{' '}
-            <Link to="/charts/new" style={{ color: ACCENT }}>create one</Link>
+            {t('charts.empty')} —{' '}
+            <Link to="/charts/new" style={{ color: ACCENT }}>{t('charts.create').toLowerCase()}</Link>
           </p>
         )}
       </div>
