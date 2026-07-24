@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { yatrasApi } from '../../api/yatras'
 import { TopBar } from '../../components/layout/TopBar'
 import { Spinner } from '../../components/ui/Spinner'
@@ -23,17 +24,13 @@ const ZONE_BG: Record<ZoneColour, string> = {
   DarkGreen: 'rgba(15,118,55,0.45)',
 }
 
-const ZONE_LABEL: Record<ZoneColour, string> = {
-  Neutral:   'Neutral',
-  MutedRed:  'Muted Red',
-  Red:       'Red',
-  Yellow:    'Yellow',
-  Green:     'Green',
-  DarkGreen: 'Dark Green',
-}
-
-const TYPE_LABEL: Record<PracticeDataType, string> = {
-  Bool: 'Yes / No', Int: 'Number', Duration: 'Duration', Time: 'Time', Text: 'Text',
+const ZONE_T_KEY: Record<ZoneColour, string> = {
+  Neutral:   'yatras.zoneNeutral',
+  MutedRed:  'yatras.zoneMutedRed',
+  Red:       'yatras.zoneRed',
+  Yellow:    'yatras.zoneYellow',
+  Green:     'yatras.zoneGreen',
+  DarkGreen: 'yatras.zoneDarkGreen',
 }
 
 const ACCENT = '#01a386'
@@ -148,6 +145,7 @@ function placeholder(dt: PracticeDataType): string {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function YatraPracticeEditPage() {
+  const { t } = useTranslation()
   const { id: yatraId, practice_id } = useParams<{ id: string; practice_id: string }>()
   const navigate = useNavigate()
   const qc = useQueryClient()
@@ -237,14 +235,14 @@ export function YatraPracticeEditPage() {
 
   if (practiceQuery.isLoading) return (
     <>
-      <TopBar showBack title="Edit Practice" />
+      <TopBar showBack title={t('practice.edit')} />
       <div className="flex justify-center pt-20"><Spinner /></div>
     </>
   )
 
   return (
     <>
-      <TopBar showBack title={p?.practice ?? 'Edit Practice'} />
+      <TopBar showBack title={p?.practice ?? t('practice.edit')} />
 
       <form
         onSubmit={e => { e.preventDefault(); saveMutation.mutate() }}
@@ -253,7 +251,7 @@ export function YatraPracticeEditPage() {
 
         {/* Name */}
         <div className="rounded-2xl px-4 py-3.5" style={glass}>
-          <label htmlFor="practice-name" className="text-xs text-gray-400 block mb-1">Name</label>
+          <label htmlFor="practice-name" className="text-xs text-gray-400 block mb-1">{t('practice.name')}</label>
           <input
             id="practice-name"
             type="text"
@@ -261,14 +259,14 @@ export function YatraPracticeEditPage() {
             onChange={e => setName(e.target.value)}
             required
             className="w-full text-sm font-semibold text-gray-800 bg-transparent outline-none"
-            placeholder="Practice name"
+            placeholder={t('practice.name')}
           />
         </div>
 
         {/* Data type (read-only) */}
         <div className="rounded-2xl px-4 py-3.5" style={glass}>
-          <label className="text-xs text-gray-400 block mb-1">Type</label>
-          <p className="text-sm font-semibold text-gray-800">{TYPE_LABEL[dt] ?? dt}</p>
+          <label className="text-xs text-gray-400 block mb-1">{t('practice.type')}</label>
+          <p className="text-sm font-semibold text-gray-800">{t(`practice.type${dt}`)}</p>
         </div>
 
         {/* Colour zones section */}
@@ -276,15 +274,15 @@ export function YatraPracticeEditPage() {
           <div className="rounded-2xl overflow-hidden" style={glass}>
             {/* Header */}
             <div className="px-4 py-3 border-b border-black/[0.06]">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Colour Zones</p>
-              <p className="text-xs text-gray-400 mt-0.5">Colour-code this practice based on value ranges</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('yatras.colourZones')}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{t('yatras.colourZonesDesc')}</p>
             </div>
 
             <div className="px-4 py-3 flex flex-col gap-3">
 
               {/* Number of zones */}
               <div>
-                <label htmlFor="zone-count" className="text-xs text-gray-400 block mb-1">Number of zones</label>
+                <label htmlFor="zone-count" className="text-xs text-gray-400 block mb-1">{t('yatras.numZones')}</label>
                 <select
                   id="zone-count"
                   value={zonesEnabled ? numZones : 0}
@@ -292,9 +290,9 @@ export function YatraPracticeEditPage() {
                   className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none cursor-pointer"
                   style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
                 >
-                  <option value={0}>Disabled</option>
-                  <option value={2}>2 zones</option>
-                  <option value={3}>3 zones</option>
+                  <option value={0}>{t('yatras.zonesDisabled')}</option>
+                  <option value={2}>{t('yatras.zones2')}</option>
+                  <option value={3}>{t('yatras.zones3')}</option>
                 </select>
               </div>
 
@@ -302,7 +300,7 @@ export function YatraPracticeEditPage() {
                 <>
                   {/* Better direction */}
                   <div>
-                    <label htmlFor="better-direction" className="text-xs text-gray-400 block mb-1">Better when</label>
+                    <label htmlFor="better-direction" className="text-xs text-gray-400 block mb-1">{t('yatras.betterWhen')}</label>
                     <select
                       id="better-direction"
                       value={zones.better_direction}
@@ -310,8 +308,8 @@ export function YatraPracticeEditPage() {
                       className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none cursor-pointer"
                       style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
                     >
-                      <option value="Higher">Higher is better</option>
-                      <option value="Lower">Lower is better</option>
+                      <option value="Higher">{t('yatras.higherBetter')}</option>
+                      <option value="Lower">{t('yatras.lowerBetter')}</option>
                     </select>
                   </div>
 
@@ -319,7 +317,7 @@ export function YatraPracticeEditPage() {
                   {zones.bounds.map((bound, idx) => (
                     <div key={idx}>
                       <label htmlFor={`zone-bound-${idx}`} className="text-xs block mb-1" style={{ color: ACCENT }}>
-                        Up to ({ZONE_LABEL[bound.colour]})
+                        {t('yatras.upTo', { colour: t(ZONE_T_KEY[bound.colour]) })}
                       </label>
                       <input
                         id={`zone-bound-${idx}`}
@@ -339,7 +337,7 @@ export function YatraPracticeEditPage() {
 
                   {/* No value colour */}
                   <div>
-                    <label htmlFor="no-value-colour" className="text-xs text-gray-400 block mb-1">When no value</label>
+                    <label htmlFor="no-value-colour" className="text-xs text-gray-400 block mb-1">{t('yatras.whenNoValue')}</label>
                     <select
                       id="no-value-colour"
                       value={zones.no_value_colour}
@@ -348,7 +346,7 @@ export function YatraPracticeEditPage() {
                       style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
                     >
                       {ZONE_COLOURS.map(zc => (
-                        <option key={zc} value={zc}>{ZONE_LABEL[zc]}</option>
+                        <option key={zc} value={zc}>{t(ZONE_T_KEY[zc])}</option>
                       ))}
                     </select>
                   </div>
@@ -356,7 +354,7 @@ export function YatraPracticeEditPage() {
                   {/* Preview */}
                   {preview.length > 0 && (
                     <div>
-                      <label className="text-xs text-gray-400 block mb-1.5">Preview</label>
+                      <label className="text-xs text-gray-400 block mb-1.5">{t('yatras.zonePreview')}</label>
                       <div className="flex gap-1.5">
                         {preview.map((cell, i) => (
                           <div
@@ -368,7 +366,7 @@ export function YatraPracticeEditPage() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">Sample values showing zone colours</p>
+                      <p className="text-xs text-gray-400 mt-1">{t('yatras.sampleValues')}</p>
                     </div>
                   )}
                 </>
@@ -391,12 +389,12 @@ export function YatraPracticeEditPage() {
           }}
         >
           {saveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
-          Save
+          {t('common.save')}
         </button>
 
         {saveMutation.isError && (
           <p className="text-sm text-red-600 text-center">
-            {(saveMutation.error as Error)?.message ?? 'Failed to save'}
+            {(saveMutation.error as Error)?.message ?? t('common.failedSave')}
           </p>
         )}
       </form>

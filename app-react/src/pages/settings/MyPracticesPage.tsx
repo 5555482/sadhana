@@ -178,8 +178,8 @@ export function MyPracticesPage() {
             <h1 className="text-base font-bold text-gray-800 leading-tight">{t('settings.myPractices')}</h1>
             <p className="text-xs text-gray-400 mt-0.5">
               {items.length > 0
-                ? `${items.length} practice${items.length === 1 ? '' : 's'} · drag to reorder`
-                : 'No practices yet'}
+                ? t('practice.listSubtitle', { count: items.length })
+                : t('practice.empty')}
             </p>
           </div>
           <Link

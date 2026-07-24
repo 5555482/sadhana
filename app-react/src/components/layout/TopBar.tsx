@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate, NavLink, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { FaChevronLeft, FaHome, FaChartBar, FaUsers, FaCog } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 
@@ -11,14 +12,15 @@ interface TopBarProps {
 }
 
 const navItems = [
-  { to: '/', label: 'Home', icon: FaHome, exact: true },
-  { to: '/charts', label: 'Charts', icon: FaChartBar, exact: false },
-  { to: '/yatras', label: 'Yatras', icon: FaUsers, exact: false },
-  { to: '/settings', label: 'Settings', icon: FaCog, exact: false },
+  { to: '/', navKey: 'home', icon: FaHome, exact: true },
+  { to: '/charts', navKey: 'charts', icon: FaChartBar, exact: false },
+  { to: '/yatras', navKey: 'yatras', icon: FaUsers, exact: false },
+  { to: '/settings', navKey: 'settings', icon: FaCog, exact: false },
 ]
 
 export const TopBar = React.memo(function TopBar({ title, showBack, showClose, right }: TopBarProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   return (
     <header
@@ -62,12 +64,12 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
 
       {!showBack && !showClose && (
         <nav className="ml-auto flex items-center gap-1" aria-label="Main navigation">
-          {navItems.map(({ to, label, icon: Icon, exact }) => (
+          {navItems.map(({ to, navKey, icon: Icon, exact }) => (
             <NavLink
               key={to}
               to={to}
               end={exact}
-              aria-label={label}
+              aria-label={t(`nav.${navKey}`)}
               className="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium"
             >
               {({ isActive }) => (
@@ -85,7 +87,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
                       fontWeight: isActive ? 600 : 500,
                     }}
                   >
-                    {label}
+                    {t(`nav.${navKey}`)}
                   </span>
                   {/* Active dot */}
                   <span

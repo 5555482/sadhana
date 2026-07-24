@@ -41,10 +41,10 @@ function onBlur(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.boxShadow = 'none'
 }
 
-const TRACE_TYPES: { value: GraphTraceType; label: string; desc: string }[] = [
-  { value: 'Line', label: 'Line', desc: 'Trend over time' },
-  { value: 'Bar',  label: 'Bar',  desc: 'Compare by day' },
-  { value: 'Dot',  label: 'Dot',  desc: 'Scatter points' },
+const TRACE_TYPES: { value: GraphTraceType; tKey: string }[] = [
+  { value: 'Line', tKey: 'traceLine' },
+  { value: 'Bar',  tKey: 'traceBar'  },
+  { value: 'Dot',  tKey: 'traceDot'  },
 ]
 
 export function NewChartPage() {
@@ -166,8 +166,10 @@ export function NewChartPage() {
           <div className="rounded-2xl p-4 flex flex-col gap-3" style={glass}>
             <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('charts.reportType')}</span>
             <div className="flex gap-3">
-              {([['Graph', 'Line chart or bar chart', FaChartLine], ['Grid', 'Activity heatmap grid', FaTh]] as const).map(
-                ([k, desc, Icon]) => {
+              {([
+                ['Graph', 'kindGraph', 'kindGraphDesc', FaChartLine],
+                ['Grid',  'kindGrid',  'kindGridDesc',  FaTh],
+              ] as const).map(([k, labelKey, descKey, Icon]) => {
                   const active = kind === k
                   return (
                     <button
@@ -181,8 +183,8 @@ export function NewChartPage() {
                     >
                       <Icon className="w-5 h-5" style={{ color: active ? '#01a386' : '#9ca3af' }} />
                       <div>
-                        <div className="text-sm font-semibold" style={{ color: active ? '#01a386' : '#374151' }}>{k}</div>
-                        <div className="text-xs text-center" style={{ color: '#9ca3af' }}>{desc}</div>
+                        <div className="text-sm font-semibold" style={{ color: active ? '#01a386' : '#374151' }}>{t(`charts.${labelKey}`)}</div>
+                        <div className="text-xs text-center" style={{ color: '#9ca3af' }}>{t(`charts.${descKey}`)}</div>
                       </div>
                     </button>
                   )
@@ -260,7 +262,7 @@ export function NewChartPage() {
                               ? '1px solid rgba(1,163,134,0.30)' : '1px solid transparent',
                           }}
                         >
-                          {tt.value}
+                          {t(`charts.${tt.tKey}`)}
                         </button>
                       ))}
                     </div>

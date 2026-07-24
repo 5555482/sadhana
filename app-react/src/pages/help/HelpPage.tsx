@@ -11,17 +11,7 @@ const glass: React.CSSProperties = {
   boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
 }
 
-// FAQ items stay in English — they are help content, not UI chrome
-const FAQS = [
-  { q: 'How do I log a practice?', a: 'Go to the Home tab and find your practice card. Each card shows the input for that day. Changes save automatically.' },
-  { q: 'What is a Yatra?', a: 'A Yatra is a group practice circle. Members track practices together and hold each other accountable.' },
-  { q: 'How do I share a chart?', a: 'Go to Charts and tap the Share button in the page header. A public link is copied to your clipboard.' },
-  { q: 'Can I use the app offline?', a: 'Yes. The app loads cached data when offline. Changes queue automatically and sync when connectivity returns.' },
-  { q: 'How do I import data?', a: 'Go to Settings → Import data. Upload a CSV file, map the columns to your practices, then confirm.' },
-  { q: 'How do I change my language?', a: 'Go to Settings → Language and select English, Русский, or Українська.' },
-  { q: 'How do I add a new practice?', a: 'Go to Settings → My practices and tap the + button, or tap the + FAB on the Home tab.' },
-  { q: 'How do I reorder my practices?', a: 'Go to Settings → My practices and drag the handle on the left of each row.' },
-]
+const FAQ_COUNT = 8
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
@@ -53,6 +43,11 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 export function HelpPage() {
   const { t } = useTranslation()
 
+  const faqs = Array.from({ length: FAQ_COUNT }, (_, i) => ({
+    q: t(`help.faq${i + 1}q`),
+    a: t(`help.faq${i + 1}a`),
+  }))
+
   return (
     <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
       {/* Header */}
@@ -80,7 +75,7 @@ export function HelpPage() {
         </Link>
       </div>
 
-      {FAQS.map(faq => <FaqItem key={faq.q} {...faq} />)}
+      {faqs.map((faq, i) => <FaqItem key={i} {...faq} />)}
 
       {/* Contact support */}
       <Link

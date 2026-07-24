@@ -295,12 +295,12 @@ export function YatraSettingsPage() {
         {/* Errors */}
         {saveMutation.isError && (
           <p className="text-sm text-red-600 text-center">
-            {(saveMutation.error as Error)?.message ?? 'Failed to save'}
+            {(saveMutation.error as Error)?.message ?? t('common.failedSave')}
           </p>
         )}
         {leaveMutation.isError && (
           <p className="text-sm text-red-600 text-center">
-            {(leaveMutation.error as Error)?.message ?? 'Failed to leave'}
+            {(leaveMutation.error as Error)?.message ?? t('common.failedLeave')}
           </p>
         )}
       </div>

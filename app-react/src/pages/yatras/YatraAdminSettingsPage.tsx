@@ -274,11 +274,11 @@ export function YatraAdminSettingsPage() {
       </div>
 
       {/* General */}
-      <SectionLabel>General</SectionLabel>
+      <SectionLabel>{t('yatras.sectionGeneral')}</SectionLabel>
       <div className="rounded-2xl px-4 py-4 flex flex-col gap-3" style={glass}>
         {/* Name */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="yatra-name" className="text-xs font-medium text-gray-500">Yatra name</label>
+          <label htmlFor="yatra-name" className="text-xs font-medium text-gray-500">{t('yatras.yatraName')}</label>
           <input
             id="yatra-name"
             style={inputStyle}
@@ -292,7 +292,7 @@ export function YatraAdminSettingsPage() {
 
         {/* Show stability metrics */}
         <label className="flex items-center gap-3 cursor-pointer select-none py-1">
-          <span className="flex-1 text-sm font-medium text-gray-700">Show stability metrics</span>
+          <span className="flex-1 text-sm font-medium text-gray-700">{t('yatras.showStability')}</span>
           <div
             onClick={() => setShowStability(v => !v)}
             className="relative w-10 h-6 rounded-full transition-colors flex-shrink-0"
@@ -311,12 +311,12 @@ export function YatraAdminSettingsPage() {
           </div>
         </label>
         <p className="text-xs text-gray-400 -mt-1">
-          Show heatmap and trend arrows for each member's practice consistency.
+          {t('yatras.stabilityDesc')}
         </p>
       </div>
 
       {/* Invite link */}
-      <SectionLabel>Invite</SectionLabel>
+      <SectionLabel>{t('yatras.sectionInvite')}</SectionLabel>
       <button
         type="button"
         onClick={copyInvite}
@@ -330,7 +330,7 @@ export function YatraAdminSettingsPage() {
           <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : '#6b7280' }} />
         </div>
         <span className="flex-1 text-sm font-semibold text-gray-800">
-          {copied ? 'Invite link copied!' : 'Copy invite link'}
+          {copied ? t('yatras.inviteCopied') : t('yatras.copyInvite')}
         </span>
         {copied
           ? <LuCheck className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />
@@ -339,7 +339,7 @@ export function YatraAdminSettingsPage() {
       </button>
 
       {/* Practices */}
-      <SectionToggle label={`Practices (${practices.length})`} open={showPractices} onToggle={() => setShowPractices(v => !v)} />
+      <SectionToggle label={`${t('yatras.sectionPractices')} (${practices.length})`} open={showPractices} onToggle={() => setShowPractices(v => !v)} />
       {showPractices && (
         <div className="flex flex-col gap-2">
           {practices.map((p: YatraPractice) => {
@@ -375,9 +375,9 @@ export function YatraAdminSettingsPage() {
                 </button>
                 <ConfirmModal
                   id={`del-practice-${p.id}`}
-                  title="Delete practice?"
-                  message={`Delete "${p.practice}"? This cannot be undone.`}
-                  confirmLabel="Delete"
+                  title={t('yatras.deletePracticeTitle')}
+                  message={t('yatras.deletePracticeMsg', { name: p.practice })}
+                  confirmLabel={t('common.delete')}
                   onConfirm={() => deletePractice.mutate(p.id)}
                 />
               </div>
@@ -393,13 +393,13 @@ export function YatraAdminSettingsPage() {
             }}
           >
             <FaPlus className="w-3.5 h-3.5" />
-            Add new practice
+            {t('yatras.addNewPractice')}
           </Link>
         </div>
       )}
 
       {/* Members */}
-      <SectionToggle label={`Members (${members.length})`} open={showMembers} onToggle={() => setShowMembers(v => !v)} />
+      <SectionToggle label={`${t('yatras.sectionMembers')} (${members.length})`} open={showMembers} onToggle={() => setShowMembers(v => !v)} />
       {showMembers && (
         <div className="flex flex-col gap-2">
           {members.map(m => (
@@ -423,7 +423,7 @@ export function YatraAdminSettingsPage() {
                   cursor: 'pointer',
                 }}
               >
-                Admin
+                {t('yatras.admin')}
               </button>
               <button
                 type="button"
@@ -435,34 +435,34 @@ export function YatraAdminSettingsPage() {
               </button>
               <ConfirmModal
                 id={`del-member-${m.user_id}`}
-                title="Remove member?"
-                message={`Remove ${m.user_name} from the yatra?`}
-                confirmLabel="Remove"
+                title={t('yatras.removeMemberTitle')}
+                message={t('yatras.removeMemberMsg', { name: m.user_name })}
+                confirmLabel={t('yatras.removeMember')}
                 onConfirm={() => removeMember.mutate(m.user_id)}
               />
             </div>
           ))}
           {members.length === 0 && (
-            <p className="text-center text-sm text-gray-400 py-4">No members yet</p>
+            <p className="text-center text-sm text-gray-400 py-4">{t('yatras.noMembers')}</p>
           )}
         </div>
       )}
 
       {/* Statistics */}
-      <SectionToggle label="Statistics" open={showStats} onToggle={() => setShowStats(v => !v)} />
+      <SectionToggle label={t('yatras.statistics')} open={showStats} onToggle={() => setShowStats(v => !v)} />
       {showStats && (
         <div className="flex flex-col gap-3">
           {/* Visibility */}
           <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
             <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#6366f1' }} />
-            <span className="flex-1 text-sm font-medium text-gray-700">Visible to</span>
+            <span className="flex-1 text-sm font-medium text-gray-700">{t('yatras.visibleTo')}</span>
             <select
               value={statsVisibleToAll ? 'Everyone' : 'Admins'}
               onChange={e => setStatsVisibleToAll(e.target.value === 'Everyone')}
               style={{ ...selectStyle, width: 'auto', flex: 'none', paddingRight: '1.5rem' }}
             >
-              <option value="Admins">Admins only</option>
-              <option value="Everyone">Everyone</option>
+              <option value="Admins">{t('yatras.adminsOnly')}</option>
+              <option value="Everyone">{t('yatras.everyone')}</option>
             </select>
           </div>
 
@@ -486,10 +486,10 @@ export function YatraAdminSettingsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-medium text-gray-500">Label</label>
+                  <label className="text-xs font-medium text-gray-500">{t('yatras.statLabel')}</label>
                   <input
                     style={inputStyle}
-                    placeholder="e.g. Average meditation time"
+                    placeholder={t('yatras.statLabelPlaceholder')}
                     value={stat.label}
                     required
                     onChange={e => updateStat(idx, { label: e.target.value })}
@@ -499,14 +499,14 @@ export function YatraAdminSettingsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-medium text-gray-500">Practice</label>
+                  <label className="text-xs font-medium text-gray-500">{t('yatras.statPractice')}</label>
                   <select
                     style={selectStyle}
                     value={stat.practice_id}
                     required
                     onChange={e => updateStat(idx, { practice_id: e.target.value, aggregation: 'Count' })}
                   >
-                    <option value="" disabled>Select practice…</option>
+                    <option value="" disabled>{t('yatras.selectPractice')}</option>
                     {practices.map(p => (
                       <option key={p.id} value={p.id}>{p.practice}</option>
                     ))}
@@ -515,7 +515,7 @@ export function YatraAdminSettingsPage() {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-gray-500">Aggregation</label>
+                    <label className="text-xs font-medium text-gray-500">{t('yatras.statAggregation')}</label>
                     <select
                       style={selectStyle}
                       value={stat.aggregation}
@@ -527,7 +527,7 @@ export function YatraAdminSettingsPage() {
                     </select>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-gray-500">Time range</label>
+                    <label className="text-xs font-medium text-gray-500">{t('yatras.statTimeRange')}</label>
                     <select
                       style={selectStyle}
                       value={stat.time_range}
@@ -552,7 +552,7 @@ export function YatraAdminSettingsPage() {
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.10)' }}>
               <FaPlus className="w-3 h-3" style={{ color: '#6366f1' }} />
             </div>
-            <span className="text-sm font-semibold" style={{ color: '#6366f1' }}>Add statistic</span>
+            <span className="text-sm font-semibold" style={{ color: '#6366f1' }}>{t('yatras.addStatistic')}</span>
           </button>
         </div>
       )}
@@ -590,20 +590,20 @@ export function YatraAdminSettingsPage() {
         }}
       >
         <FaTrash className="w-3.5 h-3.5" />
-        Delete yatra
+        {t('yatras.deleteYatra')}
       </button>
       <ConfirmModal
         id="del-yatra"
-        title="Delete yatra?"
-        message="This will permanently delete the yatra and all its data. This cannot be undone."
-        confirmLabel="Delete"
+        title={t('yatras.deleteYatraTitle')}
+        message={t('yatras.deleteYatraMsg')}
+        confirmLabel={t('common.delete')}
         onConfirm={() => deleteYatra.mutate()}
       />
 
       {/* Error */}
       {saveMutation.isError && (
         <p className="text-sm text-red-600 text-center">
-          {(saveMutation.error as Error)?.message ?? 'Failed to save'}
+          {(saveMutation.error as Error)?.message ?? t('common.failedSave')}
         </p>
       )}
     </form>

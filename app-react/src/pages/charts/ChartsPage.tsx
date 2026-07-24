@@ -57,11 +57,12 @@ function traceLabel(type_: TraceType): string {
 }
 
 function TraceTypeBadge({ type_ }: { type_: TraceType }) {
-  const label = traceLabel(type_)
-  const color = label === 'Bar' ? '#6366f1' : label === 'Dot' ? '#d97706' : ACCENT
+  const { t } = useTranslation()
+  const key = traceLabel(type_)
+  const color = key === 'Bar' ? '#6366f1' : key === 'Dot' ? '#d97706' : ACCENT
   return (
     <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md flex-shrink-0" style={{ background: `${color}18`, color }}>
-      {label}
+      {t(`charts.trace${key}`)}
     </span>
   )
 }
@@ -83,9 +84,9 @@ function valueToNumber(raw: unknown): number | null {
   return null
 }
 
-function shortDate(iso: string): string {
+function shortDate(iso: string, locale: string): string {
   const d = new Date(iso + 'T00:00:00')
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
 }
 
 type ChartDataRow = { date: string; [key: string]: number | null | string }
@@ -93,10 +94,11 @@ type ChartDataRow = { date: string; [key: string]: number | null | string }
 function buildChartData(
   rawValues: { cob_date: string; practice: string; value: unknown }[],
   practiceNames: string[],
+  locale: string,
 ): ChartDataRow[] {
   const dateMap = new Map<string, ChartDataRow>()
   for (const entry of rawValues) {
-    const date = shortDate(entry.cob_date)
+    const date = shortDate(entry.cob_date, locale)
     if (!dateMap.has(date)) dateMap.set(date, { date })
     const row = dateMap.get(date)!
     if (practiceNames.includes(entry.practice)) {
@@ -115,7 +117,8 @@ interface ChartPanelProps {
 }
 
 function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const locale = i18n.language || 'en'
   const [duration, setDuration] = useState<ReportDuration>('Month')
   const todayCob = new Date().toISOString().slice(0, 10)
 
@@ -146,7 +149,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         }))
 
   const practiceNames = traces.map(t => t.name)
-  const chartData = buildChartData(rawValues, practiceNames)
+  const chartData = buildChartData(rawValues, practiceNames, locale)
   const isGridReport = report !== null && isGrid(report.definition)
 
   return (
@@ -239,12 +242,13 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
 }
 
 function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; practiceNames: string[] }) {
+  const { t } = useTranslation()
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>Date</th>
+            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>{t('charts.date')}</th>
             {practiceNames.map(name => (
               <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                 {name}
@@ -363,6 +367,7 @@ function ReportCard({
   practiceMap: Record<string, string>
   practices: UserPractice[]
 }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [open, setOpen] = useState(false)
   const [addPracticeId, setAddPracticeId] = useState('')
@@ -422,7 +427,7 @@ function ReportCard({
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-gray-800 truncate">{report.name}</p>
           <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
-            {isGridType ? 'Grid' : 'Graph'} · {currentIds.length} practice{currentIds.length === 1 ? '' : 's'}
+            {t(isGridType ? 'charts.kindGrid' : 'charts.kindGraph')} · {t('charts.practiceCount', { count: currentIds.length })}
           </p>
         </div>
         <button
@@ -466,7 +471,7 @@ function ReportCard({
               }
             </div>
           ) : (
-            <p className="px-4 py-2 text-xs text-gray-400">No practices added yet</p>
+            <p className="px-4 py-2 text-xs text-gray-400">{t('charts.noPracticesAdded')}</p>
           )}
 
           <div className="px-4 pb-3 flex items-center gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.625rem' }}>
@@ -476,7 +481,7 @@ function ReportCard({
               className="flex-1 text-sm rounded-xl px-3 h-9 focus:outline-none"
               style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: addPracticeId ? '#1f2937' : '#9ca3af' }}
             >
-              <option value="">+ Practice…</option>
+              <option value="">{t('charts.addPractice')}</option>
               {practices.filter(p => p.is_active && !currentIds.includes(p.id)).map(p => (
                 <option key={p.id} value={p.id}>{p.practice}</option>
               ))}
@@ -488,9 +493,9 @@ function ReportCard({
                 className="text-sm rounded-xl px-2 h-9 focus:outline-none flex-shrink-0"
                 style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#374151' }}
               >
-                <option value="Line">Line</option>
-                <option value="Bar">Bar</option>
-                <option value="Dot">Dot</option>
+                <option value="Line">{t('charts.traceLine')}</option>
+                <option value="Bar">{t('charts.traceBar')}</option>
+                <option value="Dot">{t('charts.traceDot')}</option>
               </select>
             )}
             <button
@@ -499,7 +504,7 @@ function ReportCard({
               className="h-9 px-4 rounded-xl text-sm font-semibold flex-shrink-0"
               style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', color: 'white', border: 'none', opacity: addPracticeId ? 1 : 0.4 }}
             >
-              Add
+              {t('charts.add')}
             </button>
           </div>
         </div>
@@ -507,9 +512,9 @@ function ReportCard({
 
       <ConfirmModal
         id={`del-report-${report.id}`}
-        title="Delete report?"
-        message={`Delete "${report.name}"? This cannot be undone.`}
-        confirmLabel="Delete"
+        title={t('charts.deleteTitle')}
+        message={t('charts.deleteMsg', { name: report.name })}
+        confirmLabel={t('common.delete')}
         onConfirm={() => chartsApi.deleteReport(report.id).then(() => qc.invalidateQueries({ queryKey: ['reports'] }))}
       />
     </div>
