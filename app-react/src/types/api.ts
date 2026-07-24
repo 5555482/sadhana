@@ -96,11 +96,23 @@ export interface ColourZonesConfig {
   best_colour?: ZoneColour | null
 }
 
+export interface BonusRule {
+  threshold: PracticeValue
+  points: number
+}
+
+export interface DailyScoreConfig {
+  better_direction: BetterDirection
+  mandatory_threshold: PracticeValue | null
+  bonus_rules: BonusRule[]
+}
+
 export interface YatraPractice {
   id: string
   practice: string
   data_type: PracticeDataType
   colour_zones?: ColourZonesConfig | null
+  daily_score_config?: DailyScoreConfig | null
 }
 
 export interface UserYatraDataRow {

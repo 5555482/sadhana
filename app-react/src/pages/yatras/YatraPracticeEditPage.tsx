@@ -8,11 +8,13 @@ import { Spinner } from '../../components/ui/Spinner'
 import type {
   YatraPractice, PracticeDataType,
   ColourZonesConfig, ColourBound, ZoneColour, PracticeValue,
+  DailyScoreConfig, BonusRule,
 } from '../../types/api'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const COLOUR_ZONE_TYPES: PracticeDataType[] = ['Int', 'Duration', 'Time']
+const DAILY_SCORE_TYPES: PracticeDataType[] = ['Int', 'Duration', 'Time']
 const ZONE_COLOURS: ZoneColour[] = ['Neutral', 'Red', 'Yellow', 'Green']
 
 const ZONE_BG: Record<ZoneColour, string> = {
@@ -156,6 +158,11 @@ export function YatraPracticeEditPage() {
     bounds: [],
     no_value_colour: 'Neutral',
   })
+  const [dailyScore, setDailyScore] = useState<DailyScoreConfig>({
+    better_direction: 'Higher',
+    mandatory_threshold: null,
+    bonus_rules: [],
+  })
 
   // ── Load ──────────────────────────────────────────────────────────────────
 
@@ -171,6 +178,7 @@ export function YatraPracticeEditPage() {
     if (p.colour_zones) {
       setZones(p.colour_zones)
     }
+    if (p.daily_score_config) setDailyScore(p.daily_score_config)
   }, [practiceQuery.data])
 
   // ── Save ──────────────────────────────────────────────────────────────────
@@ -181,6 +189,7 @@ export function YatraPracticeEditPage() {
         ...practiceQuery.data!,
         practice: name,
         colour_zones: zones.bounds.length > 0 ? zones : null,
+        daily_score_config: dailyScore.mandatory_threshold !== null ? dailyScore : null,
       }
       return yatrasApi.updateYatraPractice(yatraId!, p)
     },
@@ -198,6 +207,7 @@ export function YatraPracticeEditPage() {
   const zonesEnabled = zones.bounds.length > 0
   const numZones = zones.bounds.length + 1  // bounds = n-1 dividers
   const preview = zonesEnabled ? buildPreview(zones, dt) : []
+  const bonusThreshold = dailyScore.bonus_rules[0]?.threshold ?? null
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -229,6 +239,18 @@ export function YatraPracticeEditPage() {
       )
       return { ...prev, bounds }
     })
+  }
+
+  function handleDailyScoreMandatory(raw: string) {
+    setDailyScore(prev => ({ ...prev, mandatory_threshold: fromStr(raw, dt) }))
+  }
+
+  function handleDailyScoreBonus(raw: string) {
+    const v = fromStr(raw, dt)
+    setDailyScore(prev => ({
+      ...prev,
+      bonus_rules: v ? [{ threshold: v, points: 1 }] : [],
+    }))
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -371,6 +393,68 @@ export function YatraPracticeEditPage() {
                   )}
                 </>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Daily Score section */}
+        {DAILY_SCORE_TYPES.includes(dt) && (
+          <div className="rounded-2xl overflow-hidden" style={glass}>
+            <div className="px-4 py-3 border-b border-black/[0.06]">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('yatras.dailyScore')}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{t('yatras.dailyScoreDesc')}</p>
+            </div>
+            <div className="px-4 py-3 flex flex-col gap-3">
+
+              {/* Better direction */}
+              <div>
+                <label htmlFor="ds-better" className="text-xs text-gray-400 block mb-1">{t('yatras.betterWhen')}</label>
+                <select
+                  id="ds-better"
+                  value={dailyScore.better_direction}
+                  onChange={e => setDailyScore(prev => ({ ...prev, better_direction: e.target.value as 'Higher' | 'Lower' }))}
+                  className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none cursor-pointer"
+                  style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                >
+                  <option value="Higher">{t('yatras.higherBetter')}</option>
+                  <option value="Lower">{t('yatras.lowerBetter')}</option>
+                </select>
+              </div>
+
+              {/* Mandatory threshold */}
+              <div>
+                <label htmlFor="ds-mandatory" className="text-xs text-gray-400 block mb-1">{t('yatras.mandatoryValue')}</label>
+                <input
+                  id="ds-mandatory"
+                  type={dt === 'Int' ? 'number' : 'text'}
+                  inputMode="numeric"
+                  value={toStr(dailyScore.mandatory_threshold, dt)}
+                  onChange={e => handleDailyScoreMandatory(e.target.value)}
+                  placeholder={placeholder(dt)}
+                  className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none"
+                  style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                  min={dt === 'Int' ? 0 : undefined}
+                />
+                <p className="text-xs text-gray-400 mt-1">{t('yatras.mandatoryDesc')}</p>
+              </div>
+
+              {/* Bonus threshold */}
+              <div>
+                <label htmlFor="ds-bonus" className="text-xs text-gray-400 block mb-1">{t('yatras.bonusValue')}</label>
+                <input
+                  id="ds-bonus"
+                  type={dt === 'Int' ? 'number' : 'text'}
+                  inputMode="numeric"
+                  value={toStr(bonusThreshold, dt)}
+                  onChange={e => handleDailyScoreBonus(e.target.value)}
+                  placeholder={placeholder(dt)}
+                  className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none"
+                  style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                  min={dt === 'Int' ? 0 : undefined}
+                />
+                <p className="text-xs text-gray-400 mt-1">{t('yatras.bonusDesc')}</p>
+              </div>
+
             </div>
           </div>
         )}

@@ -184,7 +184,13 @@
     "zoneRed": "Red",
     "zoneYellow": "Yellow",
     "zoneGreen": "Green",
-    "zoneDarkGreen": "Dark Green"
+    "zoneDarkGreen": "Dark Green",
+    "dailyScore": "Daily Score",
+    "dailyScoreDesc": "Configure mandatory and bonus thresholds for the scoring system.",
+    "mandatoryValue": "Mandatory threshold",
+    "mandatoryDesc": "Reaching this value earns the mandatory point for the day.",
+    "bonusValue": "Bonus threshold",
+    "bonusDesc": "Reaching this value earns an extra bonus point. Leave empty to disable."
   },
   "settings": {
     "account": "Account",
