@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import LandingView from './components/LandingView'
 import ParallaxSection from './components/ParallaxSection'
 import FloatingCTA from './components/FloatingCTA'
@@ -19,7 +20,13 @@ import { useTranslation } from 'react-i18next'
 import ParallaxCarouselSection from './components/ParallaxCarouselSection'
 
 export default function App() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  useEffect(() => {
+    document.title = t('meta.title')
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t('meta.description'))
+    document.querySelector('meta[name="keywords"]')?.setAttribute('content', t('meta.keywords'))
+  }, [t, i18n.resolvedLanguage])
   return (
     <div className="relative font-sans bg-neutral-100 text-gray-900">
       <FloatingHeaderButtons />

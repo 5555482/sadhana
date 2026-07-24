@@ -61,6 +61,7 @@ export default function Carousel({ slides, className }: CarouselProps) {
               src={slide.image}
               className="max-h-[65vh] rounded-xl shadow-2xl select-none"
               draggable={false}
+              loading="lazy"
             />
           </div>
         ))}

@@ -6,7 +6,7 @@ export default function LandingView() {
   const { t } = useTranslation()
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <motion.div
         style={{ backgroundImage: `url(${landingBg})` }}
