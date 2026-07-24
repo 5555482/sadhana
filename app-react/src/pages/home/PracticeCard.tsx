@@ -1,6 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { LuToggleRight, LuHash, LuTimer, LuClock, LuType } from 'react-icons/lu'
+import { LuToggleRight, LuHash, LuTimer, LuClock, LuType, LuZap } from 'react-icons/lu'
+import { useTranslation } from 'react-i18next'
 import { practicesApi } from '../../api/practices'
 import type { UserPractice, PracticeValue } from '../../types/api'
 
@@ -66,6 +67,60 @@ function Step({ label, onClick, ariaLabel }: { label: string; onClick: () => voi
   )
 }
 
+export function DurationQuickAddModal({ onAdd, onClose }: { onAdd: (minutes: number) => void; onClose: () => void }) {
+  const { t } = useTranslation()
+  const [value, setValue] = useState('')
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const n = parseInt(value, 10)
+    if (!isNaN(n) && n > 0) onAdd(n)
+    onClose()
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black/30" onClick={onClose} />
+      <form
+        onSubmit={handleSubmit}
+        className="relative rounded-2xl p-5 w-72 flex flex-col gap-4"
+        style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)', border: '1px solid rgba(255,255,255,0.85)' }}
+      >
+        <h3 className="text-sm font-semibold text-gray-800">{t('home.addMinutes')}</h3>
+        <input
+          type="number"
+          inputMode="numeric"
+          min="1"
+          autoFocus
+          aria-label="minutes"
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          placeholder={t('home.addMinutesPlaceholder')}
+          className="w-full text-center text-lg font-bold rounded-xl h-12 outline-none"
+          style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+        />
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 h-10 rounded-xl text-sm font-semibold"
+            style={{ background: 'rgba(0,0,0,0.06)', color: '#6b7280', border: 'none' }}
+          >
+            {t('common.cancel')}
+          </button>
+          <button
+            type="submit"
+            className="flex-1 h-10 rounded-xl text-sm font-semibold"
+            style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', color: 'white', border: 'none' }}
+          >
+            {t('common.add')}
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
 export const PracticeCard = memo(function PracticeCard({ practice, date, currentValue }: PracticeCardProps) {
   const qc = useQueryClient()
   const hasValue = currentValue !== undefined
@@ -82,8 +137,9 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
     ? (currentValue as { Time: { h: number; m: number } }).Time.m : 0
 
   /* ── Local state ── */
-  const [localBool, setLocalBool] = useState(boolVal)
-  const [flash, setFlash]         = useState(false)
+  const [localBool, setLocalBool]     = useState(boolVal)
+  const [flash, setFlash]             = useState(false)
+  const [showQuickAdd, setShowQuickAdd] = useState(false)
 
   /* ── Value refs ── */
   const durRef   = useRef(durVal)
@@ -165,55 +221,77 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
 
       {/* ── Duration — smart input: shows "45 min" / "1h 30m" when idle ── */}
       {practice.data_type === 'Duration' && (
-        <div className="flex items-center gap-1.5 flex-shrink-0">
-          <Step label="−" ariaLabel="Decrease by 5 minutes" onClick={() => {
-            durRef.current = Math.max(0, durRef.current - 5)
-            if (durEl.current) {
-              const focused = document.activeElement === durEl.current
-              durEl.current.value = focused ? String(durRef.current) : fmtDur(durRef.current)
-              durEl.current.style.color = durRef.current > 0 ? ACCENT : '#9ca3af'
-            }
-            save({ Duration: durRef.current })
-          }} />
-
-          <input
-            ref={durEl}
-            type="text"
-            inputMode="numeric"
-            defaultValue={fmtDur(durVal)}
-            aria-label={`${practice.practice} duration`}
-            className="focus:outline-none text-sm"
-            style={{ ...field, width: '5rem', height: '2rem', color: durVal > 0 ? ACCENT : '#9ca3af' }}
-            onFocus={(e) => {
-              fieldFocus(e)
-              e.target.value = durRef.current > 0 ? String(durRef.current) : ''
-              setTimeout(() => e.target.select(), 0)
-            }}
-            onBlur={(e) => {
-              fieldBlur(e)
-              const v = parseInt(e.target.value, 10)
-              durRef.current = isNaN(v) || v < 0 ? 0 : v
-              e.target.value = fmtDur(durRef.current)
-              e.target.style.color = durRef.current > 0 ? ACCENT : '#9ca3af'
+        <>
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <Step label="−" ariaLabel="Decrease by 5 minutes" onClick={() => {
+              durRef.current = Math.max(0, durRef.current - 5)
+              if (durEl.current) {
+                const focused = document.activeElement === durEl.current
+                durEl.current.value = focused ? String(durRef.current) : fmtDur(durRef.current)
+                durEl.current.style.color = durRef.current > 0 ? ACCENT : '#9ca3af'
+              }
               save({ Duration: durRef.current })
-            }}
-            onChange={(e) => {
-              const v = parseInt(e.target.value, 10)
-              if (!isNaN(v) && v >= 0) durRef.current = v
-            }}
-            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
-          />
+            }} />
 
-          <Step label="+" ariaLabel="Increase by 5 minutes" onClick={() => {
-            durRef.current = durRef.current + 5
-            if (durEl.current) {
-              const focused = document.activeElement === durEl.current
-              durEl.current.value = focused ? String(durRef.current) : fmtDur(durRef.current)
-              durEl.current.style.color = ACCENT
-            }
-            save({ Duration: durRef.current })
-          }} />
-        </div>
+            <input
+              ref={durEl}
+              type="text"
+              inputMode="numeric"
+              defaultValue={fmtDur(durVal)}
+              aria-label={`${practice.practice} duration`}
+              className="focus:outline-none text-sm"
+              style={{ ...field, width: '5rem', height: '2rem', color: durVal > 0 ? ACCENT : '#9ca3af' }}
+              onFocus={(e) => {
+                fieldFocus(e)
+                e.target.value = durRef.current > 0 ? String(durRef.current) : ''
+                setTimeout(() => e.target.select(), 0)
+              }}
+              onBlur={(e) => {
+                fieldBlur(e)
+                const v = parseInt(e.target.value, 10)
+                durRef.current = isNaN(v) || v < 0 ? 0 : v
+                e.target.value = fmtDur(durRef.current)
+                e.target.style.color = durRef.current > 0 ? ACCENT : '#9ca3af'
+                save({ Duration: durRef.current })
+              }}
+              onChange={(e) => {
+                const v = parseInt(e.target.value, 10)
+                if (!isNaN(v) && v >= 0) durRef.current = v
+              }}
+              onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
+            />
+
+            <Step label="+" ariaLabel="Increase by 5 minutes" onClick={() => {
+              durRef.current = durRef.current + 5
+              if (durEl.current) {
+                const focused = document.activeElement === durEl.current
+                durEl.current.value = focused ? String(durRef.current) : fmtDur(durRef.current)
+                durEl.current.style.color = ACCENT
+              }
+              save({ Duration: durRef.current })
+            }} />
+
+            <button
+              type="button"
+              aria-label="Quick add minutes"
+              onClick={() => setShowQuickAdd(true)}
+              className="w-7 h-7 rounded-lg flex items-center justify-center select-none flex-shrink-0"
+              style={{ background: 'rgba(1,163,134,0.12)', border: '1px solid rgba(1,163,134,0.25)', color: '#01a386' }}
+            >
+              <LuZap className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {showQuickAdd && (
+            <DurationQuickAddModal
+              onAdd={(minutes) => {
+                const newVal = durVal + minutes
+                save({ Duration: newVal })
+              }}
+              onClose={() => setShowQuickAdd(false)}
+            />
+          )}
+        </>
       )}
 
       {/* ── Int ── */}

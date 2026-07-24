@@ -32,7 +32,9 @@
     "addStarters": "Add starter practices",
     "addCustom": "or create a custom one",
     "addFirst": "Add your first practice",
-    "offline": "You're offline — changes will sync when reconnected"
+    "offline": "You're offline — changes will sync when reconnected",
+    "addMinutes": "Add minutes",
+    "addMinutesPlaceholder": "e.g. 30"
   },
   "practice": {
     "new": "New Practice",
