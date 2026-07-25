@@ -6,7 +6,6 @@ import { LuHash, LuTimer, LuClock, LuType, LuToggleRight, LuX } from 'react-icon
 import { FaCog, FaPlus, FaUsers } from 'react-icons/fa'
 import { yatrasApi } from '../../api/yatras'
 import { practicesApi } from '../../api/practices'
-import { TopBar } from '../../components/layout/TopBar'
 import { Spinner } from '../../components/ui/Spinner'
 import type { PracticeDataType } from '../../types/api'
 
@@ -128,10 +127,31 @@ export function YatraSettingsPage() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <>
-      <TopBar showBack title={yatraQuery.data?.name ?? '…'} />
+    <div className="px-4 py-6 pb-28 max-w-lg mx-auto flex flex-col gap-3">
+        {/* Page header */}
+        <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 16px rgba(1,163,134,0.30)' }}
+          >
+            <FaCog className="w-5 h-5 text-white" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-base font-bold text-gray-800 leading-tight truncate">
+              {yatraQuery.data?.name ?? '…'}
+            </h1>
+            <p className="text-xs text-gray-400 mt-0.5">{t('nav.settings')}</p>
+          </div>
+          <Link
+            to="/yatras"
+            aria-label="Close"
+            className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
+            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          >
+            <LuX className="w-4 h-4" />
+          </Link>
+        </div>
 
-      <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
         {isLoading && <Spinner />}
 
         {/* Info text */}
@@ -373,6 +393,6 @@ export function YatraSettingsPage() {
           </div>
         </div>
       )}
-    </>
+      </div>
   )
 }

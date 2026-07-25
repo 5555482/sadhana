@@ -71,7 +71,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
       if (mode.type === 'user') {
         if (initialValues?.id) await practicesApi.updateUserPractice(initialValues.id, data)
         else await practicesApi.createUserPractice(data)
-        qc.invalidateQueries({ queryKey: ['practices'] })
+        await qc.invalidateQueries({ queryKey: ['practices'] })
       } else {
         if (initialValues?.id) {
           await yatrasApi.updateYatraPractice(mode.yatraId, {
@@ -82,7 +82,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         } else {
           await yatrasApi.createYatraPractice(mode.yatraId, { practice: name, data_type: dataType })
         }
-        qc.invalidateQueries({ queryKey: ['yatra-practices', mode.yatraId] })
+        await qc.invalidateQueries({ queryKey: ['yatra-practices', mode.yatraId] })
       }
     },
     onSuccess,

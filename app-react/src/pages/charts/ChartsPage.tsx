@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaPlus, FaChartLine, FaTrash, FaTh } from 'react-icons/fa'
-import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX, LuChartLine, LuDownload } from 'lucide-react'
+import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX, LuChartLine, LuDownload } from 'react-icons/lu'
 import {
   ComposedChart,
   Line,
