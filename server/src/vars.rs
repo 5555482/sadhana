@@ -38,3 +38,31 @@ pub fn support_email_address() -> String {
 pub fn git_sha() -> String {
     var("GIT_SHA").expect("GIT_SHA is not set")
 }
+
+pub fn release_channel() -> String {
+    var("RELEASE_CHANNEL").unwrap_or_else(|_| "stable".to_owned())
+}
+
+pub fn run_db_migrations_on_startup() -> bool {
+    var("RUN_DB_MIGRATIONS").is_ok_and(|v| v == "1")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn run_db_migrations_defaults_to_false() {
+        unsafe { std::env::remove_var("RUN_DB_MIGRATIONS") };
+        assert!(!run_db_migrations_on_startup());
+    }
+
+    #[test]
+    fn run_db_migrations_reads_flag() {
+        unsafe { std::env::set_var("RUN_DB_MIGRATIONS", "1") };
+        assert!(run_db_migrations_on_startup());
+
+        unsafe { std::env::set_var("RUN_DB_MIGRATIONS", "0") };
+        assert!(!run_db_migrations_on_startup());
+    }
+}

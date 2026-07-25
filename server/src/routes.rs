@@ -1,11 +1,12 @@
 use crate::{
-    app::{self},
-    vars::git_sha,
+    app::{self, shared::version::VersionResponse},
 };
 use actix_files::{Files, NamedFile};
 use actix_web::{
+    HttpRequest,
     HttpResponse,
     dev::{HttpServiceFactory, ServiceRequest, ServiceResponse},
+    http::header::{CACHE_CONTROL, HeaderValue},
     get, web,
 };
 use std::fs;
@@ -13,6 +14,8 @@ use std::path::Path;
 
 pub fn routes(cfg: &mut web::ServiceConfig) {
     cfg.service(precache_manifest)
+        .service(index_file)
+        .service(service_worker)
         .service(api_scope())
         .service(dist_files());
 }
@@ -37,11 +40,30 @@ async fn precache_manifest() -> HttpResponse {
 
 #[get("/version")]
 async fn version() -> HttpResponse {
-    let short_sha = &git_sha()[..8];
-    let body = format!(r#"{{"git_sha":"{}"}}"#, short_sha);
-    HttpResponse::Ok()
-        .content_type("application/json")
-        .body(body)
+    HttpResponse::Ok().json(VersionResponse::current())
+}
+
+#[get("/")]
+async fn index_file(req: HttpRequest) -> std::io::Result<HttpResponse> {
+    let file = NamedFile::open_async("./dist/index.html").await?;
+    let mut response = file.into_response(&req);
+    set_no_cache_headers(&mut response);
+    Ok(response)
+}
+
+#[get("/service_worker.js")]
+async fn service_worker(req: HttpRequest) -> std::io::Result<HttpResponse> {
+    let file = NamedFile::open_async("./dist/service_worker.js").await?;
+    let mut response = file.into_response(&req);
+    set_no_cache_headers(&mut response);
+    Ok(response)
+}
+
+fn set_no_cache_headers(response: &mut HttpResponse) {
+    response.headers_mut().insert(
+        CACHE_CONTROL,
+        HeaderValue::from_static("no-cache, must-revalidate"),
+    );
 }
 
 fn collect_precache_assets(dir: &Path, base: &Path, out: &mut Vec<String>) {
@@ -221,8 +243,89 @@ fn dist_files() -> actix_files::Files {
             let (http_req, _payload) = req.into_parts();
             async move {
                 let response_file = NamedFile::open_async("./dist/index.html").await?;
-                let response = response_file.into_response(&http_req);
+                let mut response = response_file.into_response(&http_req);
+                set_no_cache_headers(&mut response);
                 Ok(ServiceResponse::new(http_req, response))
             }
         })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use actix_web::{App, body::to_bytes, http::StatusCode, test};
+
+    struct EnvGuard {
+        git_sha: Option<String>,
+        release_channel: Option<String>,
+    }
+
+    impl EnvGuard {
+        fn set(git_sha: &str, release_channel: &str) -> Self {
+            let guard = Self {
+                git_sha: std::env::var("GIT_SHA").ok(),
+                release_channel: std::env::var("RELEASE_CHANNEL").ok(),
+            };
+
+            unsafe {
+                std::env::set_var("GIT_SHA", git_sha);
+                std::env::set_var("RELEASE_CHANNEL", release_channel);
+            }
+
+            guard
+        }
+    }
+
+    impl Drop for EnvGuard {
+        fn drop(&mut self) {
+            unsafe {
+                match &self.git_sha {
+                    Some(value) => std::env::set_var("GIT_SHA", value),
+                    None => std::env::remove_var("GIT_SHA"),
+                }
+
+                match &self.release_channel {
+                    Some(value) => std::env::set_var("RELEASE_CHANNEL", value),
+                    None => std::env::remove_var("RELEASE_CHANNEL"),
+                }
+            }
+        }
+    }
+
+    #[actix_rt::test]
+    async fn version_routes_include_release_channel_metadata() {
+        let _env = EnvGuard::set("deadbeefcafebabe", "preview");
+        let app = test::init_service(
+            App::new()
+                .service(version)
+                .service(web::scope("/api").service(version)),
+        )
+        .await;
+
+        for route in ["/version", "/api/version"] {
+            let response = test::call_service(&app, test::TestRequest::get().uri(route).to_request()).await;
+
+            assert_eq!(response.status(), StatusCode::OK);
+
+            let body = to_bytes(response.into_body()).await.unwrap();
+            assert_eq!(
+                std::str::from_utf8(&body).unwrap(),
+                r#"{"git_sha":"deadbeef","release_channel":"preview"}"#
+            );
+        }
+    }
+
+    #[actix_rt::test]
+    async fn no_cache_header_value_is_set() {
+        let mut response = HttpResponse::Ok().finish();
+        set_no_cache_headers(&mut response);
+
+        let value = response
+            .headers()
+            .get(CACHE_CONTROL)
+            .and_then(|v| v.to_str().ok())
+            .unwrap();
+
+        assert_eq!(value, "no-cache, must-revalidate");
+    }
 }
