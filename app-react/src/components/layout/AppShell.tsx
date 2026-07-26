@@ -16,7 +16,7 @@ export function AppShell() {
       {/* Light white overlay — airy watercolor wash over the photo */}
       <div
         className="fixed inset-0 -z-10 pointer-events-none"
-        style={{ background: 'rgba(255,255,255,0.55)' }}
+        style={{ background: 'rgba(255,255,255,0.25)' }}
       />
       <TopBar />
       <main className="pt-14">
