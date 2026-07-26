@@ -143,16 +143,19 @@ export function YatraAdminSettingsPage() {
   const yatraQuery = useQuery({
     queryKey: ['yatra', id],
     queryFn: () => yatrasApi.getYatra(id!),
+    refetchOnWindowFocus: true,
   })
 
   const usersQuery = useQuery({
     queryKey: ['yatra-users', id],
     queryFn: () => yatrasApi.getYatraUsers(id!),
+    refetchOnWindowFocus: true,
   })
 
   const practicesQuery = useQuery({
     queryKey: ['yatra-practices', id],
     queryFn: () => yatrasApi.getYatraPractices(id!),
+    refetchOnWindowFocus: true,
   })
 
   // Populate form state when yatra loads
