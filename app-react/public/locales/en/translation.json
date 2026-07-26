@@ -34,7 +34,8 @@
     "addFirst": "Add your first practice",
     "offline": "You're offline — changes will sync when reconnected",
     "addMinutes": "Add minutes",
-    "addMinutesPlaceholder": "e.g. 30"
+    "addMinutesPlaceholder": "e.g. 30",
+    "optional": "Optional"
   },
   "practice": {
     "new": "New Practice",

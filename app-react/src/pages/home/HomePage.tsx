@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { FaPlus, FaSlidersH } from 'react-icons/fa'
@@ -7,6 +7,7 @@ import { practicesApi } from '../../api/practices'
 import { PracticeCard } from './PracticeCard'
 import { WeekCalendar } from './WeekCalendar'
 import { TopBar } from '../../components/layout/TopBar'
+import { ErrorBanner } from '../../components/ui/ErrorBanner'
 import useNetworkStatus from '../../hooks/useNetworkStatus'
 import type { PracticeDataType } from '../../types/api'
 
@@ -53,6 +54,19 @@ export function HomePage() {
     (diaryQuery.data ?? []).map((e) => [e.practice, e.value]),
   )
 
+  useEffect(() => {
+    function onVisible() {
+      if (document.visibilityState === 'visible') {
+        qc.invalidateQueries({ queryKey: ['diary', dateStr] })
+      }
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [qc, dateStr])
+
+  const required = activePractices.filter((p) => p.is_required)
+  const optional = activePractices.filter((p) => !p.is_required)
+
   return (
     <>
       <TopBar />
@@ -94,15 +108,24 @@ export function HomePage() {
                 <div className="w-12 h-6 rounded-full flex-shrink-0" style={{ background: 'rgba(0,0,0,0.07)' }} />
               </div>
             ))
+          ) : (diaryQuery.isError || practicesQuery.isError) ? (
+            <ErrorBanner message={t('common.error')} />
           ) : (
             <>
-              {activePractices.map((p) => (
-                <PracticeCard
-                  key={p.id + '-' + dateStr}
-                  practice={p}
-                  date={dateStr}
-                  currentValue={valueMap[p.practice]}
-                />
+              {required.map((p) => (
+                <PracticeCard key={p.id + '-' + dateStr} practice={p} date={dateStr} currentValue={valueMap[p.practice]} />
+              ))}
+              {required.length > 0 && optional.length > 0 && (
+                <div className="flex items-center gap-2 px-1 py-1">
+                  <div className="flex-1 h-px" style={{ background: 'rgba(0,0,0,0.08)' }} />
+                  <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#9ca3af' }}>
+                    {t('home.optional')}
+                  </span>
+                  <div className="flex-1 h-px" style={{ background: 'rgba(0,0,0,0.08)' }} />
+                </div>
+              )}
+              {optional.map((p) => (
+                <PracticeCard key={p.id + '-' + dateStr} practice={p} date={dateStr} currentValue={valueMap[p.practice]} />
               ))}
             </>
           )}

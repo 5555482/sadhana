@@ -49,6 +49,7 @@ if (!i18n.isInitialized) {
             offline: "You're offline — changes will sync when reconnected",
             addMinutes: 'Add minutes',
             addMinutesPlaceholder: 'e.g. 30',
+            optional: 'Optional',
           },
         },
       },

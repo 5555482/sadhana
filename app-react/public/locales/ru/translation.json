@@ -34,7 +34,8 @@
     "addFirst": "Добавить первую практику",
     "offline": "Нет сети — изменения синхронизируются при подключении",
     "addMinutes": "Добавить минуты",
-    "addMinutesPlaceholder": "напр. 30"
+    "addMinutesPlaceholder": "напр. 30",
+    "optional": "Необязательно"
   },
   "practice": {
     "new": "Новая практика",
