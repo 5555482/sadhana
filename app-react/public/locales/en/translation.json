@@ -20,7 +20,8 @@
     "loading": "Loading…", "error": "Something went wrong",
     "save": "Save", "cancel": "Cancel", "back": "Back",
     "delete": "Delete", "offline": "You are offline",
-    "add": "Add", "failedSave": "Failed to save", "failedLeave": "Failed to leave"
+    "add": "Add", "failedSave": "Failed to save", "failedLeave": "Failed to leave",
+    "saved": "Saved"
   },
   "notFound": {
     "title": "Page not found",

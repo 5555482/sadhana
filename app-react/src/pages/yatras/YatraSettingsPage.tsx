@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { LuHash, LuTimer, LuClock, LuType, LuToggleRight, LuX } from 'react-icons/lu'
+import { LuHash, LuTimer, LuClock, LuType, LuToggleRight, LuX, LuCheck } from 'react-icons/lu'
 import { FaCog, FaPlus, FaUsers } from 'react-icons/fa'
 import { yatrasApi } from '../../api/yatras'
 import { practicesApi } from '../../api/practices'
@@ -64,6 +64,7 @@ export function YatraSettingsPage() {
   // keyed by yatra practice name → user practice name (or null)
   const [mappings, setMappings] = useState<Record<string, string | null>>({})
   const [showCreate, setShowCreate] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [newName, setNewName] = useState('')
   const nameInputRef = useRef<HTMLInputElement>(null)
 
@@ -87,7 +88,10 @@ export function YatraSettingsPage() {
       }))
       return yatrasApi.updateYatraUserPractices(id!, practices)
     },
-    onSuccess: () => navigate('/yatras'),
+    onSuccess: () => {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 1500)
+    },
   })
 
   const leaveMutation = useMutation({
@@ -238,18 +242,22 @@ export function YatraSettingsPage() {
         {!isLoading && (mappingsQuery.data?.length ?? 0) > 0 && (
           <button
             onClick={() => saveMutation.mutate()}
-            disabled={saveMutation.isPending}
+            disabled={saveMutation.isPending || saved}
             className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              color: 'white',
-              border: 'none',
-              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              background: saved
+                ? 'rgba(1,163,134,0.12)'
+                : 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              color: saved ? '#01a386' : 'white',
+              border: saved ? '1.5px solid rgba(1,163,134,0.30)' : 'none',
+              boxShadow: saved ? 'none' : '0 4px 20px rgba(45,212,191,0.35)',
               opacity: saveMutation.isPending ? 0.7 : 1,
+              transition: 'all 0.25s',
             }}
           >
             {saveMutation.isPending && <span className="loading loading-spinner loading-xs" />}
-            {t('common.save')}
+            {saved ? <LuCheck className="w-4 h-4" /> : null}
+            {saved ? t('common.saved') : t('common.save')}
           </button>
         )}
 
