@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { authApi } from '../../api/auth'
 import { useAuthStore } from '../../store/authStore'
+import { AuthBackground } from '../../components/layout/AuthBackground'
 
 export function LoginPage() {
   const { t } = useTranslation()
@@ -31,14 +32,8 @@ export function LoginPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
-      style={{
-        backgroundImage: 'url(/login-bg.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
+      <AuthBackground />
       {/* Dark overlay to improve readability */}
       <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 

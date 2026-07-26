@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { authApi } from '../../api/auth'
+import { AuthBackground } from '../../components/layout/AuthBackground'
 
 const inputStyle: React.CSSProperties = {
   background: 'rgba(255,255,255,0.6)',
@@ -11,10 +12,8 @@ const inputStyle: React.CSSProperties = {
 
 function GlassShell({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
-      style={{ backgroundImage: 'url(/login-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-    >
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
+      <AuthBackground />
       <div className="absolute inset-0 bg-black/30 pointer-events-none" />
       <div
         className="relative w-full max-w-sm rounded-3xl px-8 py-10 flex flex-col gap-5"

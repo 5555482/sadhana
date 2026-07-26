@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { authApi } from '../../api/auth'
+import { AuthBackground } from '../../components/layout/AuthBackground'
 
 export function RegisterPage() {
   const { t } = useTranslation()
@@ -25,14 +26,8 @@ export function RegisterPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
-      style={{
-        backgroundImage: 'url(/login-bg.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
+      <AuthBackground />
       <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 
       <div
