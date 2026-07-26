@@ -29,4 +29,9 @@ describe('DurationQuickAddModal', () => {
     await userEvent.click(screen.getByText('Cancel'))
     expect(onClose).toHaveBeenCalled()
   })
+
+  it('disables Add button while isPending', () => {
+    render(<DurationQuickAddModal onAdd={vi.fn()} onClose={vi.fn()} isPending={true} />)
+    expect(screen.getByRole('button', { name: /add/i })).toBeDisabled()
+  })
 })

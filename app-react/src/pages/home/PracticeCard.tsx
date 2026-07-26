@@ -67,7 +67,7 @@ function Step({ label, onClick, ariaLabel }: { label: string; onClick: () => voi
   )
 }
 
-export function DurationQuickAddModal({ onAdd, onClose }: { onAdd: (minutes: number) => void; onClose: () => void }) {
+export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (minutes: number) => void; onClose: () => void; isPending?: boolean }) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
 
@@ -110,9 +110,11 @@ export function DurationQuickAddModal({ onAdd, onClose }: { onAdd: (minutes: num
           </button>
           <button
             type="submit"
-            className="flex-1 h-10 rounded-xl text-sm font-semibold"
-            style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', color: 'white', border: 'none' }}
+            disabled={isPending}
+            className="flex-1 h-10 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
+            style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', color: 'white', border: 'none', opacity: isPending ? 0.7 : 1 }}
           >
+            {isPending && <span className="loading loading-spinner loading-xs" />}
             {t('common.add')}
           </button>
         </div>
@@ -289,6 +291,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
                 save({ Duration: newVal })
               }}
               onClose={() => setShowQuickAdd(false)}
+              isPending={mutation.isPending}
             />
           )}
         </>
