@@ -257,14 +257,14 @@ export function YatraPracticeEditPage() {
 
   if (practiceQuery.isLoading) return (
     <>
-      <TopBar showBack title={t('practice.edit')} />
+      <TopBar showClose title={t('practice.edit')} />
       <div className="flex justify-center pt-20"><Spinner /></div>
     </>
   )
 
   return (
     <>
-      <TopBar showBack title={p?.practice ?? t('practice.edit')} />
+      <TopBar showClose title={p?.practice ?? t('practice.edit')} />
 
       <form
         onSubmit={e => { e.preventDefault(); saveMutation.mutate() }}
