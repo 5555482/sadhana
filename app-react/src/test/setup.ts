@@ -37,6 +37,7 @@ if (!i18n.isInitialized) {
             loading: 'Loading…',
             error: 'Something went wrong',
             save: 'Save',
+            saved: 'Saved',
             cancel: 'Cancel',
             back: 'Back',
             add: 'Add',

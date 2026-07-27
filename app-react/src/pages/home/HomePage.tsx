@@ -131,7 +131,7 @@ export function HomePage() {
           )}
 
           {/* Empty state */}
-          {!practicesQuery.isLoading && activePractices.length === 0 && (
+          {!practicesQuery.isLoading && !practicesQuery.isError && activePractices.length === 0 && (
             <div className="text-center py-12 flex flex-col items-center gap-4">
               <p className="text-gray-500 text-sm">{t('home.noPractices')}</p>
 

@@ -73,6 +73,7 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (isPending) return
     const n = parseInt(value, 10)
     if (!isNaN(n) && n > 0) onAdd(n)
     onClose()
@@ -80,7 +81,7 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/30" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/30" onClick={isPending ? undefined : onClose} />
       <form
         onSubmit={handleSubmit}
         className="relative rounded-2xl p-5 w-72 flex flex-col gap-4"
