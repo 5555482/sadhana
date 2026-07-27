@@ -331,7 +331,6 @@ export function YatraSettingsPage() {
             {(leaveMutation.error as Error)?.message ?? t('common.failedLeave')}
           </p>
         )}
-      </div>
 
       {/* Create yatra modal */}
       {showCreate && (
