@@ -1,12 +1,25 @@
 {
-  "nav": { "home": "Home", "charts": "Charts", "yatras": "Yatras", "settings": "Settings" },
+  "nav": {
+    "home": "Home",
+    "charts": "Charts",
+    "yatras": "Yatras",
+    "settings": "Settings"
+  },
   "auth": {
-    "login": "Sign In", "register": "Create Account", "email": "Email",
-    "password": "Password", "name": "Your name", "forgotPassword": "Forgot password?",
-    "noAccount": "Don't have an account?", "hasAccount": "Already have an account?",
-    "signUp": "Sign up", "signIn": "Sign in",
-    "sendLink": "Send link", "newPassword": "New password",
-    "confirmPassword": "Confirm password", "setPassword": "Set new password",
+    "login": "Sign In",
+    "register": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "name": "Your name",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "signIn": "Sign in",
+    "sendLink": "Send link",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "setPassword": "Set new password",
     "checkEmail": "Check your email for a confirmation link.",
     "passwordMismatch": "Passwords do not match",
     "resetSent": "Reset link sent — check your email.",
@@ -17,10 +30,16 @@
     "inboxCheck": "Check your inbox."
   },
   "common": {
-    "loading": "Loading…", "error": "Something went wrong",
-    "save": "Save", "cancel": "Cancel", "back": "Back",
-    "delete": "Delete", "offline": "You are offline",
-    "add": "Add", "failedSave": "Failed to save", "failedLeave": "Failed to leave",
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "delete": "Delete",
+    "offline": "You are offline",
+    "add": "Add",
+    "failedSave": "Failed to save",
+    "failedLeave": "Failed to leave",
     "saved": "Saved"
   },
   "notFound": {
@@ -260,6 +279,8 @@
     "complete": "Import complete",
     "rowsImported": "{{count}} rows imported",
     "done": "Done",
-    "sendError": "Failed to import — check your file format"
+    "sendError": "Failed to import — check your file format",
+    "unmatchedColumns": "Unmatched columns",
+    "unmatchedMemo": "These columns have no practice mapped and will be skipped"
   }
 }

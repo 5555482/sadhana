@@ -181,6 +181,23 @@ export function ImportPage() {
             ))}
           </div>
 
+          {(() => {
+            const unmapped = preview.columns.filter(col => !mapping[col]?.trim())
+            return unmapped.length > 0 ? (
+              <div className="rounded-xl px-4 py-3 flex flex-col gap-1" style={{ background: 'rgba(251,191,36,0.10)', border: '1px solid rgba(251,191,36,0.25)' }}>
+                <p className="text-xs font-semibold" style={{ color: '#b45309' }}>{t('import.unmatchedColumns')}</p>
+                <p className="text-xs" style={{ color: '#92400e' }}>{t('import.unmatchedMemo')}</p>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {unmapped.map(col => (
+                    <span key={col} className="text-[11px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(251,191,36,0.20)', color: '#92400e' }}>
+                      {col}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null
+          })()}
+
           {confirmMutation.isError && (
             <p className="text-sm rounded-xl px-3 py-2.5" style={{ background: 'rgba(225,29,72,0.07)', color: '#e11d48' }}>
               {t('import.sendError')}
