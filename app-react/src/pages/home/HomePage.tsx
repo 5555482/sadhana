@@ -118,7 +118,7 @@ export function HomePage() {
               {optional.length > 0 && required.length > 0 && (
                 <div className="flex items-center gap-2 px-1 py-1">
                   <div className="flex-1 h-px" style={{ background: 'rgba(0,0,0,0.18)' }} />
-                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9ca3af' }}>
+                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#babfc7' }}>
                     {t('home.optional')}
                   </span>
                   <div className="flex-1 h-px" style={{ background: 'rgba(0,0,0,0.18)' }} />
