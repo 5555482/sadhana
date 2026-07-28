@@ -5,6 +5,8 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { authApi } from '../../api/auth'
 import { useAuthStore } from '../../store/authStore'
 import { AuthBackground } from '../../components/layout/AuthBackground'
+import { GoogleLoginButton } from '../../components/ui/GoogleLoginButton'
+import { AppleLoginButton } from '../../components/ui/AppleLoginButton'
 
 export function LoginPage() {
   const { t } = useTranslation()
@@ -136,6 +138,40 @@ export function LoginPage() {
           </button>
         </form>
 
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-px" style={{ background: 'rgba(0,0,0,0.10)' }} />
+          <span className="text-xs text-base-content/40 font-medium">{t('auth.orContinueWith')}</span>
+          <div className="flex-1 h-px" style={{ background: 'rgba(0,0,0,0.10)' }} />
+        </div>
+
+        {/* OAuth buttons */}
+        <div className="flex flex-col gap-3">
+          <GoogleLoginButton
+            onSuccess={async (accessToken) => {
+              try {
+                const user = await authApi.googleSignin(accessToken)
+                setAuth(user)
+                navigate('/', { replace: true })
+              } catch {
+                setError(t('common.error'))
+              }
+            }}
+            onError={() => setError(t('common.error'))}
+          />
+          <AppleLoginButton
+            onSuccess={async (idToken, name) => {
+              try {
+                const user = await authApi.appleSignin(idToken, name)
+                setAuth(user)
+                navigate('/', { replace: true })
+              } catch {
+                setError(t('common.error'))
+              }
+            }}
+            onError={() => setError(t('common.error'))}
+          />
+        </div>
 
       </div>
     </div>

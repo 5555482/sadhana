@@ -27,7 +27,8 @@
     "logout": "Log out",
     "headline": "Welcome to your\ndaily practice.",
     "headlineRegister": "Start your\ndaily practice.",
-    "inboxCheck": "Check your inbox."
+    "inboxCheck": "Check your inbox.",
+    "orContinueWith": "or continue with"
   },
   "common": {
     "loading": "Loading…",

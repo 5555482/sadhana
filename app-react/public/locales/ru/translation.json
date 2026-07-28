@@ -27,7 +27,8 @@
     "logout": "Выйти",
     "headline": "Добро пожаловать\nв ежедневную практику.",
     "headlineRegister": "Начните\nежедневную практику.",
-    "inboxCheck": "Проверьте почту."
+    "inboxCheck": "Проверьте почту.",
+    "orContinueWith": "или войти через"
   },
   "common": {
     "loading": "Загрузка…",
