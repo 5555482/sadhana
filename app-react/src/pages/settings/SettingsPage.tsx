@@ -136,15 +136,14 @@ export function SettingsPage() {
         <FaSignOutAlt className="w-3.5 h-3.5" />
         {t('auth.logout')}
       </button>
-
-      <ConfirmModal
-        id="logout-confirm"
-        title={t('settings.logoutConfirmTitle')}
-        message={t('settings.logoutConfirmMsg')}
-        confirmLabel={t('auth.logout')}
-        onConfirm={() => { logout(); navigate('/login', { replace: true }) }}
-      />
     </div>
+    <ConfirmModal
+      id="logout-confirm"
+      title={t('settings.logoutConfirmTitle')}
+      message={t('settings.logoutConfirmMsg')}
+      confirmLabel={t('auth.logout')}
+      onConfirm={() => { logout(); navigate('/login', { replace: true }) }}
+    />
     </>
   )
 }

@@ -244,7 +244,7 @@
     "currentPassword": "Текущий пароль",
     "subtitle": "Аккаунт и настройки",
     "logoutConfirmTitle": "Выйти?",
-    "logoutConfirmMsg": "Вы уверены, что хочете выйти?",
+    "logoutConfirmMsg": "Вы уверены, что хотите выйти?",
     "reorderFailed": "Не удалось сохранить порядок — попробуйте снова"
   },
   "help": {
