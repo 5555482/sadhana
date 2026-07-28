@@ -579,7 +579,13 @@ export function YatrasPage() {
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => setShowCreate(false)}
+                onClick={() => {
+                  if (newName.trim().length > 0) {
+                    if (!window.confirm(t('yatras.discardName'))) return
+                  }
+                  setShowCreate(false)
+                  setNewName('')
+                }}
                 className="flex-1 h-11 rounded-full text-sm font-semibold"
                 style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
               >
