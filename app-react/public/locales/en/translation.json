@@ -62,7 +62,11 @@
     "offline": "You're offline — changes will sync when reconnected",
     "addMinutes": "Add minutes",
     "addMinutesPlaceholder": "e.g. 30",
-    "optional": "Optional"
+    "optional": "Optional",
+    "saveFailed": "Could not save — please try again",
+    "durationHint": "Enter total minutes (e.g. 90 for 1h 30m)",
+    "required": "Required",
+    "today": "Today"
   },
   "practice": {
     "new": "New Practice",
