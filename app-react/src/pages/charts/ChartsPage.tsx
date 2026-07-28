@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   ComposedChart,
   Line,
-  Area,
   Bar,
   XAxis,
   YAxis,
@@ -134,46 +133,6 @@ function buildChartData(
   return Array.from(dateMap.values())
 }
 
-function formatChartValue(v: number): string {
-  // Heuristic: if the value looks like minutes (>= 60 and whole number), show h:mm
-  if (Number.isInteger(v) && v >= 60) {
-    const h = Math.floor(v / 60)
-    const m = v % 60
-    return m === 0 ? `${h}h` : `${h}h ${m}m`
-  }
-  return String(v)
-}
-
-function CustomTooltip({ active, payload, label }: {
-  active?: boolean
-  payload?: { name: string; value: number; color: string }[]
-  label?: string
-}) {
-  if (!active || !payload?.length) return null
-  return (
-    <div
-      className="rounded-xl px-3 py-2.5 text-xs"
-      style={{
-        background: 'rgba(255,255,255,0.97)',
-        border: '1px solid rgba(0,0,0,0.08)',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-        minWidth: 120,
-      }}
-    >
-      <p className="font-semibold text-gray-500 mb-1.5">{label}</p>
-      {payload.map(p => (
-        <div key={p.name} className="flex items-center gap-2 py-0.5">
-          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: p.color }} />
-          <span className="text-gray-500 truncate max-w-[120px]">{p.name}</span>
-          <span className="ml-auto font-semibold text-gray-800 pl-3">
-            {p.value == null ? '—' : formatChartValue(p.value)}
-          </span>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 // ─── Main chart panel ───────────────────────────────────────────────────────
 
 interface ChartPanelProps {
@@ -284,14 +243,6 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         ) : (
           <ResponsiveContainer width="100%" height={290}>
             <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-              <defs>
-                {visibleTraces.map(({ name, color }) => (
-                  <linearGradient key={name} id={`grad-${name}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={color} stopOpacity={0.18} />
-                    <stop offset="95%" stopColor={color} stopOpacity={0} />
-                  </linearGradient>
-                ))}
-              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
               <XAxis
                 dataKey="date"
@@ -300,13 +251,10 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                 axisLine={false}
                 interval="preserveStartEnd"
               />
-              <YAxis
-                tick={{ fontSize: 10, fill: '#9ca3af' }}
-                tickLine={false}
-                axisLine={false}
-                domain={[0, 'auto']}
+              <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
+              <Tooltip
+                contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
               />
-              <Tooltip content={<CustomTooltip />} />
               <Legend
                 wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default' }}
                 onClick={(data) => {
@@ -329,27 +277,26 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                   return (
                     <Line
                       key={name}
-                      type="natural"
+                      type="monotone"
                       dataKey={name}
                       stroke="none"
                       strokeWidth={0}
                       dot={{ r: 4, fill: color, strokeWidth: 0 }}
-                      activeDot={{ r: 6, fill: color }}
+                      activeDot={{ r: 5, fill: color }}
                       name={name}
                     />
                   )
                 }
                 const isSquare = typeof type_ === 'object' && 'Line' in type_ && type_.Line.style === 'Square'
                 return (
-                  <Area
+                  <Line
                     key={name}
                     type={isSquare ? 'stepAfter' : 'natural'}
                     dataKey={name}
                     stroke={color}
-                    strokeWidth={2.5}
-                    fill={`url(#grad-${name})`}
-                    dot={false}
-                    activeDot={{ r: 5, fill: color, strokeWidth: 0 }}
+                    strokeWidth={2}
+                    dot={{ r: 2.5, fill: color, strokeWidth: 0 }}
+                    activeDot={{ r: 4 }}
                     connectNulls
                     name={name}
                   />
