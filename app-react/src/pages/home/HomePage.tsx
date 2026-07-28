@@ -26,7 +26,7 @@ const STARTER_PRACTICES: { practice: string; data_type: PracticeDataType }[] = [
 
 function SectionLabel({ label }: { label: string }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-widest px-1" style={{ color: '#9ca3af' }}>
+    <p className="text-[10px] font-semibold uppercase tracking-widest px-1" style={{ color: '#374151' }}>
       {label}
     </p>
   )
