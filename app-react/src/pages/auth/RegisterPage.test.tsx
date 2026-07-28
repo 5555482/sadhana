@@ -31,7 +31,7 @@ describe('RegisterPage', () => {
   })
 })
 
-describe('RegisterPage — password strength', () => {
+describe('RegisterPage — email autofocus', () => {
   it('shows strength bar when password field is focused', async () => {
     render(
       <MemoryRouter>

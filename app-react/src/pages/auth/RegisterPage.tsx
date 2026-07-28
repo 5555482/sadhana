@@ -14,6 +14,7 @@ export function RegisterPage() {
   const [sent, setSent] = useState(false)
   const [resendCountdown, setResendCountdown] = useState(0)
   const [resending, setResending] = useState(false)
+  const [resendTrigger, setResendTrigger] = useState(0)
 
   useEffect(() => {
     if (!sent) return
@@ -25,14 +26,14 @@ export function RegisterPage() {
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [sent])
+  }, [sent, resendTrigger])
 
   async function handleResend() {
     setResending(true)
     try {
       await authApi.sendConfirmationLink(email, 'Registration')
       showToast({ message: t('auth.resendSent'), variant: 'success' })
-      setResendCountdown(30)
+      setResendTrigger(c => c + 1)
     } catch {
       showToast({ message: t('common.error'), variant: 'error' })
     } finally {
