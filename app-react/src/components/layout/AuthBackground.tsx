@@ -3,7 +3,7 @@ export function AuthBackground() {
     <div
       className="fixed inset-0 -z-10"
       style={{
-        backgroundImage: 'url(/bg1.png)',
+        backgroundImage: 'url(/bg2.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
