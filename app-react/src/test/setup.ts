@@ -100,7 +100,6 @@ if (!i18n.isInitialized) {
             noPractices: 'No active practices',
             manage: 'Manage',
             allPractices: 'All practices',
-            practice: 'Practice',
             duration: 'Duration',
             noData: 'No data',
             share: 'Share',

@@ -222,38 +222,6 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         )}
       </div>
 
-      {/* Practice filter — only shown when there are multiple traces */}
-      {traces.length > 1 && (
-        <div className="px-4 pt-2 pb-2 flex gap-1.5 flex-wrap items-center" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-          <span className="text-xs font-semibold text-gray-400 mr-1">{t('charts.practice')}</span>
-          <button
-            onClick={() => setSelectedPractice(null)}
-            className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
-            style={{
-              background: selectedPractice === null ? ACCENT : 'rgba(0,0,0,0.05)',
-              color: selectedPractice === null ? 'white' : '#6b7280',
-              border: 'none',
-            }}
-          >
-            {t('charts.allPractices')}
-          </button>
-          {traces.map(tr => (
-            <button
-              key={tr.name}
-              onClick={() => setSelectedPractice(tr.name)}
-              className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
-              style={{
-                background: selectedPractice === tr.name ? tr.color : 'rgba(0,0,0,0.05)',
-                color: selectedPractice === tr.name ? 'white' : '#6b7280',
-                border: 'none',
-              }}
-            >
-              {tr.name}
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Chart body */}
       <div className="px-2 py-4 relative">
         {isFetching && !isLoading && (
@@ -287,7 +255,19 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
               <Tooltip
                 contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
               />
-              <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+              <Legend
+                wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default' }}
+                onClick={(data) => {
+                  if (traces.length <= 1) return
+                  const name = data.value as string
+                  setSelectedPractice(prev => prev === name ? null : name)
+                }}
+                formatter={(value) => (
+                  <span style={{ color: selectedPractice && selectedPractice !== value ? '#d1d5db' : '#374151' }}>
+                    {value}
+                  </span>
+                )}
+              />
               {visibleTraces.map(({ name, type_, color }) => {
                 const label = traceLabel(type_)
                 if (label === 'Bar') {
