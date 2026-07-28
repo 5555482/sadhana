@@ -33,6 +33,12 @@ if (!i18n.isInitialized) {
             resetSent: 'Reset link sent — check your email.',
             confirmationExpired: 'This link has expired.',
             logout: 'Log out',
+            wrongCredentials: 'Incorrect email or password',
+            offline: 'No internet connection',
+            serverError: 'Server error — please try again',
+            resendEmail: 'Resend email',
+            resendSent: 'Confirmation email sent',
+            resendIn: 'Resend in {{seconds}}s',
           },
           common: {
             loading: 'Loading…',

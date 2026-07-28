@@ -1,15 +1,44 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { authApi } from '../../api/auth'
 import { AuthBackground } from '../../components/layout/AuthBackground'
+import { useToast } from '../../hooks/useToast'
 
 export function RegisterPage() {
   const { t } = useTranslation()
+  const { showToast } = useToast()
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const [resendCountdown, setResendCountdown] = useState(0)
+  const [resending, setResending] = useState(false)
+
+  useEffect(() => {
+    if (!sent) return
+    setResendCountdown(30)
+    const interval = setInterval(() => {
+      setResendCountdown(c => {
+        if (c <= 1) { clearInterval(interval); return 0 }
+        return c - 1
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [sent])
+
+  async function handleResend() {
+    setResending(true)
+    try {
+      await authApi.sendConfirmationLink(email, 'Registration')
+      showToast({ message: t('auth.resendSent'), variant: 'success' })
+      setResendCountdown(30)
+    } catch {
+      showToast({ message: t('common.error'), variant: 'error' })
+    } finally {
+      setResending(false)
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -53,6 +82,21 @@ export function RegisterPage() {
             >
               {t('auth.signIn')}
             </Link>
+            {resendCountdown > 0 ? (
+              <p className="text-xs" style={{ color: '#9ca3af' }}>
+                {t('auth.resendIn', { seconds: resendCountdown })}
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resending}
+                className="text-sm font-medium hover:underline"
+                style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                {resending ? '…' : t('auth.resendEmail')}
+              </button>
+            )}
           </div>
         ) : (
           <>
@@ -76,6 +120,7 @@ export function RegisterPage() {
                 <input
                   id="email"
                   type="email"
+                  autoFocus
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"

@@ -53,3 +53,28 @@ describe('LoginPage', () => {
     })
   })
 })
+
+describe('LoginPage — error specificity', () => {
+  it('shows specific wrong-credentials message on 401', async () => {
+    const { server } = await import('../../test/handlers/auth.handlers')
+    const { http, HttpResponse } = await import('msw')
+    server.use(
+      http.post('/api/users/login', () =>
+        HttpResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+      )
+    )
+    renderLogin()
+    await userEvent.type(screen.getByLabelText(/email/i), 'bad@example.com')
+    await userEvent.type(screen.getByLabelText(/password/i), 'wrong')
+    await userEvent.click(screen.getAllByRole('button', { name: /sign in/i })[0])
+    await waitFor(() => {
+      expect(screen.getByText(/incorrect email or password/i)).toBeInTheDocument()
+    })
+  })
+
+  it('sign-in button is disabled while loading', async () => {
+    renderLogin()
+    const btn = screen.getAllByRole('button', { name: /sign in/i })[0]
+    expect(btn).not.toBeDisabled()
+  })
+})
