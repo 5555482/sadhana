@@ -6,7 +6,6 @@ import { authApi } from '../../api/auth'
 import { useAuthStore } from '../../store/authStore'
 import { AuthBackground } from '../../components/layout/AuthBackground'
 import { GoogleLoginButton } from '../../components/ui/GoogleLoginButton'
-import { AppleLoginButton } from '../../components/ui/AppleLoginButton'
 
 export function LoginPage() {
   const { t } = useTranslation()
@@ -146,32 +145,18 @@ export function LoginPage() {
         </div>
 
         {/* OAuth buttons */}
-        <div className="flex flex-col gap-3">
-          <GoogleLoginButton
-            onSuccess={async (accessToken) => {
-              try {
-                const user = await authApi.googleSignin(accessToken)
-                setAuth(user)
-                navigate('/', { replace: true })
-              } catch {
-                setError(t('common.error'))
-              }
-            }}
-            onError={() => setError(t('common.error'))}
-          />
-          <AppleLoginButton
-            onSuccess={async (idToken, name) => {
-              try {
-                const user = await authApi.appleSignin(idToken, name)
-                setAuth(user)
-                navigate('/', { replace: true })
-              } catch {
-                setError(t('common.error'))
-              }
-            }}
-            onError={() => setError(t('common.error'))}
-          />
-        </div>
+        <GoogleLoginButton
+          onSuccess={async (accessToken) => {
+            try {
+              const user = await authApi.googleSignin(accessToken)
+              setAuth(user)
+              navigate('/', { replace: true })
+            } catch {
+              setError(t('common.error'))
+            }
+          }}
+          onError={() => setError(t('common.error'))}
+        />
 
       </div>
     </div>
