@@ -14,6 +14,9 @@ interface ToastStore {
   dismiss: (id: string) => void
 }
 
+// Store timeout IDs to cancel them on manual dismiss
+const timers = new Map<string, ReturnType<typeof setTimeout>>()
+
 export const useToastStore = create<ToastStore>((set) => ({
   toasts: [],
   showToast: ({ message, variant }) => {
@@ -21,12 +24,20 @@ export const useToastStore = create<ToastStore>((set) => ({
     set((s) => ({
       toasts: [...s.toasts.slice(-2), { id, message, variant }],
     }))
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }))
+      timers.delete(id)
     }, 3000)
+    timers.set(id, timer)
   },
-  dismiss: (id) =>
-    set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
+  dismiss: (id) => {
+    const timer = timers.get(id)
+    if (timer) {
+      clearTimeout(timer)
+      timers.delete(id)
+    }
+    set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }))
+  },
 }))
 
 export function useToast() {
