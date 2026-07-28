@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, memo } from 'react'
+import { useState, useRef, memo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LuToggleRight, LuHash, LuTimer, LuClock, LuType, LuZap } from 'react-icons/lu'
 import { useTranslation } from 'react-i18next'
@@ -72,7 +72,6 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
   const { t } = useTranslation()
   const [value, setValue] = useState('')
   const [focused, setFocused] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -93,7 +92,6 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
         <h3 className="text-sm font-semibold text-gray-800">{t('home.addMinutes')}</h3>
         <div className="flex flex-col gap-1">
           <input
-            ref={inputRef}
             type="number"
             inputMode="numeric"
             min="1"

@@ -24,6 +24,14 @@ const STARTER_PRACTICES: { practice: string; data_type: PracticeDataType }[] = [
   { practice: 'Yoga',            data_type: 'Duration' },
 ]
 
+function SectionLabel({ label }: { label: string }) {
+  return (
+    <p className="text-[10px] font-semibold uppercase tracking-widest px-1" style={{ color: '#9ca3af' }}>
+      {label}
+    </p>
+  )
+}
+
 export function HomePage() {
   const { t } = useTranslation()
   const [date, setDate] = useState(new Date())
@@ -67,14 +75,6 @@ export function HomePage() {
 
   const required = activePractices.filter((p) => p.is_required)
   const optional = activePractices.filter((p) => !p.is_required)
-
-  function SectionLabel({ label }: { label: string }) {
-    return (
-      <p className="text-[10px] font-semibold uppercase tracking-widest px-1" style={{ color: '#9ca3af' }}>
-        {label}
-      </p>
-    )
-  }
 
   return (
     <>

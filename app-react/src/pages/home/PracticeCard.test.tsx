@@ -1,8 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DurationQuickAddModal } from './PracticeCard'
-import { useToastStore } from '../../hooks/useToast'
 
 describe('DurationQuickAddModal', () => {
   it('calls onAdd with parsed number and then onClose', async () => {
