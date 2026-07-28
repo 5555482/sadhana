@@ -1,7 +1,8 @@
-import { useState, useRef, memo } from 'react'
+import { useState, useRef, useEffect, memo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LuToggleRight, LuHash, LuTimer, LuClock, LuType, LuZap } from 'react-icons/lu'
 import { useTranslation } from 'react-i18next'
+import { useToast } from '../../hooks/useToast'
 import { practicesApi } from '../../api/practices'
 import type { UserPractice, PracticeValue } from '../../types/api'
 
@@ -70,6 +71,8 @@ function Step({ label, onClick, ariaLabel }: { label: string; onClick: () => voi
 export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (minutes: number) => void; onClose: () => void; isPending?: boolean }) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
+  const [focused, setFocused] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -88,18 +91,27 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
         style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)', border: '1px solid rgba(255,255,255,0.85)' }}
       >
         <h3 className="text-sm font-semibold text-gray-800">{t('home.addMinutes')}</h3>
-        <input
-          type="number"
-          inputMode="numeric"
-          min="1"
-          autoFocus
-          aria-label="minutes"
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          placeholder={t('home.addMinutesPlaceholder')}
-          className="w-full text-center text-lg font-bold rounded-xl h-12 outline-none"
-          style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
-        />
+        <div className="flex flex-col gap-1">
+          <input
+            ref={inputRef}
+            type="number"
+            inputMode="numeric"
+            min="1"
+            aria-label="minutes"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            placeholder={t('home.addMinutesPlaceholder')}
+            className="w-full text-center text-lg font-bold rounded-xl h-12 outline-none"
+            style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+          />
+          {focused && (
+            <p className="text-[10px] text-center" style={{ color: '#9ca3af' }}>
+              {t('home.durationHint')}
+            </p>
+          )}
+        </div>
         <div className="flex gap-2">
           <button
             type="button"
@@ -126,6 +138,8 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
 
 export const PracticeCard = memo(function PracticeCard({ practice, date, currentValue }: PracticeCardProps) {
   const qc = useQueryClient()
+  const { t } = useTranslation()
+  const { showToast } = useToast()
   const hasValue = currentValue !== undefined
   const meta = TYPE_META[practice.data_type]
 
@@ -142,6 +156,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
   /* ── Local state ── */
   const [localBool, setLocalBool]     = useState(boolVal)
   const [flash, setFlash]             = useState(false)
+  const [errorFlash, setErrorFlash]   = useState(false)
   const [showQuickAdd, setShowQuickAdd] = useState(false)
 
   /* ── Value refs ── */
@@ -161,6 +176,11 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
       setFlash(true)
       setTimeout(() => setFlash(false), 1200)
     },
+    onError: () => {
+      setErrorFlash(true)
+      setTimeout(() => setErrorFlash(false), 600)
+      showToast({ message: t('home.saveFailed'), variant: 'error' })
+    },
   })
 
   const save = (v: PracticeValue) => mutation.mutate(v)
@@ -174,12 +194,16 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
         background: 'rgba(255,255,255,0.92)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        border: flash
+        border: errorFlash
+          ? '1px solid rgba(225,29,72,0.55)'
+          : flash
           ? '1px solid rgba(1,163,134,0.50)'
           : hasValue
           ? '1px solid rgba(1,163,134,0.20)'
           : '1px solid rgba(255,255,255,0.85)',
-        boxShadow: flash
+        boxShadow: errorFlash
+          ? '0 2px 12px rgba(225,29,72,0.10)'
+          : flash
           ? '0 2px 12px rgba(1,163,134,0.14)'
           : '0 2px 12px rgba(0,0,0,0.07)',
       }}

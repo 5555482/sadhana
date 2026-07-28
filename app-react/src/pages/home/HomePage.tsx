@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { FaPlus, FaSlidersH } from 'react-icons/fa'
+import { LuWifiOff } from 'react-icons/lu'
 import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
 import { PracticeCard } from './PracticeCard'
@@ -67,6 +68,14 @@ export function HomePage() {
   const required = activePractices.filter((p) => p.is_required)
   const optional = activePractices.filter((p) => !p.is_required)
 
+  function SectionLabel({ label }: { label: string }) {
+    return (
+      <p className="text-[10px] font-semibold uppercase tracking-widest px-1" style={{ color: '#9ca3af' }}>
+        {label}
+      </p>
+    )
+  }
+
   return (
     <>
       <TopBar />
@@ -75,14 +84,14 @@ export function HomePage() {
         {/* Offline banner */}
         {!isOnline && (
           <div
-            className="rounded-xl px-4 py-3 text-sm text-base-content"
+            className="rounded-xl px-4 py-3 text-sm flex items-center gap-2"
             style={{
-              background: 'rgba(255,255,255,0.40)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255,255,255,0.30)',
+              background: 'rgba(251,191,36,0.10)',
+              border: '1px solid rgba(251,191,36,0.25)',
+              color: '#92400e',
             }}
           >
+            <LuWifiOff className="w-4 h-4 flex-shrink-0" style={{ color: '#d97706' }} />
             {t('home.offline')}
           </div>
         )}
@@ -112,9 +121,15 @@ export function HomePage() {
             <ErrorBanner message={t('common.error')} />
           ) : (
             <>
+              {required.length > 0 && optional.length > 0 && (
+                <SectionLabel label={t('home.required')} />
+              )}
               {required.map((p) => (
                 <PracticeCard key={p.id + '-' + dateStr} practice={p} date={dateStr} currentValue={valueMap[p.practice]} />
               ))}
+              {optional.length > 0 && required.length > 0 && (
+                <SectionLabel label={t('home.optional')} />
+              )}
               {optional.map((p) => (
                 <PracticeCard key={p.id + '-' + dateStr} practice={p} date={dateStr} currentValue={valueMap[p.practice]} />
               ))}

@@ -29,7 +29,7 @@ function getWeekDays(date: Date): Date[] {
 }
 
 export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
   const locale = i18n.language || 'en'
   const today = new Date()
   const week = getWeekDays(date)
@@ -139,9 +139,22 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
         >
           {monthYear}
         </button>
-        <span className="text-xs font-semibold" style={{ color: '#374151' }}>
-          {shortDate}
-        </span>
+        <div className="flex items-center gap-2">
+          {!isSameDay(date, today) && (
+            <button
+              type="button"
+              onClick={() => onDateChange(new Date())}
+              aria-label="Go to today"
+              className="text-xs font-semibold px-2 py-0.5 rounded-full focus:outline-none"
+              style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)', border: 'none', cursor: 'pointer' }}
+            >
+              {t('home.today')}
+            </button>
+          )}
+          <span className="text-xs font-semibold" style={{ color: '#374151' }}>
+            {shortDate}
+          </span>
+        </div>
       </div>
 
       {/* Divider */}

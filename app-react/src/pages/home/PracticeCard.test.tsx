@@ -1,7 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DurationQuickAddModal } from './PracticeCard'
+import { useToastStore } from '../../hooks/useToast'
 
 describe('DurationQuickAddModal', () => {
   it('calls onAdd with parsed number and then onClose', async () => {
@@ -33,5 +34,19 @@ describe('DurationQuickAddModal', () => {
   it('disables Add button while isPending', () => {
     render(<DurationQuickAddModal onAdd={vi.fn()} onClose={vi.fn()} isPending={true} />)
     expect(screen.getByRole('button', { name: /add/i })).toBeDisabled()
+  })
+})
+
+describe('DurationQuickAddModal — duration hint', () => {
+  it('shows hint text when input is focused', async () => {
+    render(<DurationQuickAddModal onAdd={vi.fn()} onClose={vi.fn()} />)
+    const input = screen.getByLabelText('minutes')
+    await userEvent.click(input)
+    expect(screen.getByText(/total minutes/i)).toBeInTheDocument()
+  })
+
+  it('hides hint text when input is not focused', () => {
+    render(<DurationQuickAddModal onAdd={vi.fn()} onClose={vi.fn()} />)
+    expect(screen.queryByText(/total minutes/i)).not.toBeInTheDocument()
   })
 })
