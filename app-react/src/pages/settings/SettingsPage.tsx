@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FaCog, FaChevronRight, FaSignOutAlt } from 'react-icons/fa'
 import { LuUser, LuLock, LuLayers, LuUpload, LuGlobe, LuCircleHelp } from 'react-icons/lu'
 import { useAuthStore } from '../../store/authStore'
-import { TopBar } from '../../components/layout/TopBar'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
 
 const glass: React.CSSProperties = {
@@ -78,7 +77,6 @@ export function SettingsPage() {
 
   return (
     <>
-    <TopBar />
     <div className="px-4 py-4 pt-[4.5rem] max-w-lg mx-auto flex flex-col gap-4 pb-24">
       {/* Page header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>

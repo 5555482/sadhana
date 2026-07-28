@@ -5,7 +5,6 @@ import { FaUsers, FaPlus, FaCog } from 'react-icons/fa'
 import { LuX, LuRefreshCw } from 'react-icons/lu'
 import { useTranslation } from 'react-i18next'
 import { yatrasApi } from '../../api/yatras'
-import { TopBar } from '../../components/layout/TopBar'
 import { Spinner } from '../../components/ui/Spinner'
 import type { UserYatraDataRow, ColourZonesConfig, ZoneColour } from '../../types/api'
 
@@ -210,7 +209,6 @@ export function YatrasPage() {
 
   return (
     <>
-      <TopBar />
       <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
 
         {/* Yatra selector header */}

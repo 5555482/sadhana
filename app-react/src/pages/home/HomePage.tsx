@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
 import { PracticeCard } from './PracticeCard'
 import { WeekCalendar } from './WeekCalendar'
-import { TopBar } from '../../components/layout/TopBar'
 import { ErrorBanner } from '../../components/ui/ErrorBanner'
 import useNetworkStatus from '../../hooks/useNetworkStatus'
 import type { PracticeDataType } from '../../types/api'
@@ -78,8 +77,6 @@ export function HomePage() {
 
   return (
     <>
-      <TopBar />
-
       <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
         {/* Offline banner */}
         {!isOnline && (
