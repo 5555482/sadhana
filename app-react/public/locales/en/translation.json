@@ -83,6 +83,8 @@
   },
   "charts": {
     "empty": "No reports yet",
+    "emptyTitle": "No reports yet",
+    "emptySubtitle": "Create your first report to track progress over time",
     "create": "Create report",
     "pickMetrics": "Metrics",
     "dateRange": "Date range",
@@ -105,6 +107,8 @@
     "noPractices": "No active practices",
     "selectPractices": "Select practices",
     "selectWithType": "Select practices & trace type",
+    "selectAll": "Select all",
+    "clearAll": "Clear",
     "saveReport": "Save report",
     "next": "Next →",
     "date": "Date",
