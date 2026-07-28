@@ -1,6 +1,69 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { ChartsPage } from './ChartsPage'
+import { NewChartPage } from './NewChartPage'
 
-// Inline the pure function to test it without rendering the full component
+// ─── API mocks ────────────────────────────────────────────────────────────────
+
+vi.mock('../../api/charts', () => ({
+  chartsApi: {
+    getReports: vi.fn().mockResolvedValue([]),
+    getReportData: vi.fn().mockResolvedValue([]),
+    createReport: vi.fn().mockResolvedValue('new-report-id'),
+    updateReport: vi.fn().mockResolvedValue(undefined),
+    deleteReport: vi.fn().mockResolvedValue(undefined),
+  },
+}))
+
+vi.mock('../../api/practices', () => ({
+  practicesApi: {
+    getUserPractices: vi.fn().mockResolvedValue([
+      { id: 'p1', practice: 'Meditation', data_type: 'Bool', is_active: true, is_required: true },
+      { id: 'p2', practice: 'Reading',    data_type: 'Int',  is_active: true, is_required: false },
+    ]),
+  },
+}))
+
+vi.mock('../../store/authStore', () => ({
+  useAuthStore: vi.fn().mockReturnValue({ id: 'user-1', email: 'test@example.com' }),
+}))
+
+// ─── Helper ──────────────────────────────────────────────────────────────────
+
+function wrap(ui: React.ReactElement) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return render(
+    <QueryClientProvider client={qc}>
+      <MemoryRouter>
+        <Routes>
+          <Route path="/" element={ui} />
+          <Route path="/charts/new" element={<div>New chart page</div>} />
+          <Route path="/charts" element={<ChartsPage />} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>
+  )
+}
+
+function wrapNewChart() {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return render(
+    <QueryClientProvider client={qc}>
+      <MemoryRouter>
+        <Routes>
+          <Route path="/" element={<NewChartPage />} />
+          <Route path="/charts" element={<div>Charts page</div>} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>
+  )
+}
+
+// ─── Inline the pure function to test it without rendering the full component ─
+
 function toCSV(entries: Array<{ cob_date: string; practice: string; value: unknown }>, practiceMap: Record<string, string>): string {
   function valueToNumber(raw: unknown): number | null {
     if (raw === null || raw === undefined) return null
@@ -52,5 +115,41 @@ describe('toCSV', () => {
       { abc: 'Yoga, morning' }
     )
     expect(csv).toContain('Yoga  morning')
+  })
+})
+
+// ─── ChartsPage — empty state ─────────────────────────────────────────────────
+
+describe('ChartsPage — empty state', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('renders empty state card when there are no reports', async () => {
+    wrap(<ChartsPage />)
+    await waitFor(() => {
+      expect(screen.getByText(/no reports yet/i)).toBeInTheDocument()
+    })
+  })
+})
+
+// ─── NewChartPage — select all / clear ────────────────────────────────────────
+
+describe('NewChartPage — select all / clear', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('renders Select all and Clear buttons on step 1', async () => {
+    wrapNewChart()
+    // Wait for loading to complete (spinner disappears, input appears)
+    const input = await screen.findByPlaceholderText(/report name/i)
+    // Advance to step 1
+    await userEvent.type(input, 'My Report')
+    await userEvent.click(screen.getByRole('button', { name: /next/i }))
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /select all/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /clear/i })).toBeInTheDocument()
+    })
   })
 })

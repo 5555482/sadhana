@@ -102,6 +102,15 @@ export function NewChartPage() {
     if (!traceTypes[id]) setTraceTypes(prev => ({ ...prev, [id]: 'Line' }))
   }
 
+  function selectAll() {
+    setSelected(activePractices.map(p => p.id))
+  }
+
+  function clearAll() {
+    setSelected([])
+    setTraceTypes({})
+  }
+
   return (
     <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
       {/* Header */}
@@ -217,6 +226,24 @@ export function NewChartPage() {
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest pb-1">
               {kind === 'Grid' ? t('charts.selectPractices') : t('charts.selectWithType')}
             </p>
+            <div className="flex gap-3 pb-1">
+              <button
+                type="button"
+                onClick={selectAll}
+                className="text-xs font-semibold"
+                style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                {t('charts.selectAll')}
+              </button>
+              <button
+                type="button"
+                onClick={clearAll}
+                className="text-xs font-semibold"
+                style={{ color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                {t('charts.clearAll')}
+              </button>
+            </div>
 
             {activePractices.map(p => {
               const sel = selected.includes(p.id)

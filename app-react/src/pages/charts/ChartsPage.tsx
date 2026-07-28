@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaPlus, FaChartLine, FaTrash, FaTh } from 'react-icons/fa'
 import { LuCopy, LuCheck, LuChevronDown, LuChevronUp, LuX, LuChartLine, LuDownload } from 'react-icons/lu'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   ComposedChart,
   Line,
@@ -146,7 +147,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
   const [duration, setDuration] = useState<ReportDuration>('Month')
   const todayCob = new Date().toISOString().slice(0, 10)
 
-  const { data: rawValues = [], isLoading } = useQuery({
+  const { data: rawValues = [], isLoading, isFetching } = useQuery({
     queryKey: ['report-data', todayCob, duration],
     queryFn: () => chartsApi.getReportData(todayCob, duration),
   })
@@ -214,7 +215,15 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
       </div>
 
       {/* Chart body */}
-      <div className="px-2 py-4">
+      <div className="px-2 py-4 relative">
+        {isFetching && !isLoading && (
+          <div
+            className="absolute inset-0 rounded-2xl flex items-center justify-center z-10"
+            style={{ background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(4px)' }}
+          >
+            <span className="loading loading-spinner loading-md" style={{ color: '#01a386' }} />
+          </div>
+        )}
         {isLoading ? (
           <div className="flex justify-center py-12"><Spinner /></div>
         ) : chartData.length === 0 || practiceNames.length === 0 ? (
@@ -680,7 +689,7 @@ export function ChartsPage() {
     if (!user) return
     navigator.clipboard.writeText(`${window.location.origin}/shared/${user.id}`)
     setShareCopied(true)
-    setTimeout(() => setShareCopied(false), 2000)
+    setTimeout(() => setShareCopied(false), 3000)
   }
 
   if (reportsLoading) return <Spinner />
@@ -730,21 +739,61 @@ export function ChartsPage() {
               <span className="text-xs font-semibold text-gray-500 flex-1">{t('charts.manage')} ({reports.length})</span>
               {manageOpen ? <LuChevronUp className="w-4 h-4 text-gray-400" /> : <LuChevronDown className="w-4 h-4 text-gray-400" />}
             </button>
-            {manageOpen && (
-              <div className="px-3 pb-3 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-                {reports.map(r => (
-                  <ReportCard key={r.id} report={r} practiceMap={practiceMap} practices={practices} />
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {manageOpen && (
+                <motion.div
+                  key="manage-body"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-3 pb-3 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+                    {reports.map(r => (
+                      <ReportCard key={r.id} report={r} practiceMap={practiceMap} practices={practices} />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         )}
 
         {reports.length === 0 && (
-          <p className="text-xs text-center" style={{ color: '#9ca3af' }}>
-            {t('charts.empty')} —{' '}
-            <Link to="/charts/new" style={{ color: ACCENT }}>{t('charts.create').toLowerCase()}</Link>
-          </p>
+          <div
+            className="rounded-2xl px-5 py-12 flex flex-col items-center gap-5"
+            style={{
+              background: 'rgba(255,255,255,0.90)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.80)',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+            }}
+          >
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{ background: 'rgba(1,163,134,0.08)' }}
+            >
+              <LuChartLine className="w-6 h-6" style={{ color: '#01a386' }} />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-semibold text-gray-800">{t('charts.emptyTitle')}</p>
+              <p className="text-xs text-gray-400 mt-1">{t('charts.emptySubtitle')}</p>
+            </div>
+            <Link
+              to="/charts/new"
+              className="px-6 h-11 rounded-full text-sm font-semibold flex items-center gap-2"
+              style={{
+                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                color: 'white',
+                textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              }}
+            >
+              {t('charts.create')}
+            </Link>
+          </div>
         )}
       </div>
 
