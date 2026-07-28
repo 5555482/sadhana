@@ -432,19 +432,15 @@ export function YatrasPage() {
                     <th className="px-4 py-1.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af', width: '35%' }}>
                       {t('yatras.stability')}
                     </th>
-                    {heatmapDays.map((day, i) => {
-                      const d = new Date(day)
-                      const label = d.toLocaleDateString('en', { month: 'short', day: 'numeric' })
-                      return (
-                        <th
-                          key={i}
-                          className="py-1.5 text-center text-[10px] font-medium"
-                          style={{ color: '#9ca3af' }}
-                        >
-                          {label}
-                        </th>
-                      )
-                    })}
+                    {heatmapDays.map((day, i) => (
+                      <th
+                        key={i}
+                        className="py-1.5 text-center text-[10px] font-medium"
+                        style={{ color: '#9ca3af' }}
+                      >
+                        {day}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>

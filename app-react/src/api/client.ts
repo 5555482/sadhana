@@ -16,7 +16,7 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !error.config?.url?.includes('/users/login')) {
       localStorage.removeItem(TOKEN_KEY)
       window.location.href = '/login'
     }
