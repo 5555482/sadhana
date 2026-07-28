@@ -145,12 +145,16 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
   const { t, i18n } = useTranslation()
   const locale = i18n.language || 'en'
   const [duration, setDuration] = useState<ReportDuration>('Month')
+  const [selectedPractice, setSelectedPractice] = useState<string | null>(null)
   const todayCob = new Date().toISOString().slice(0, 10)
 
   const { data: rawValues = [], isLoading, isFetching } = useQuery({
     queryKey: ['report-data', todayCob, duration],
     queryFn: () => chartsApi.getReportData(todayCob, duration),
   })
+
+  // Reset filter when switching reports
+  useEffect(() => { setSelectedPractice(null) }, [report])
 
   // Build traces for "all practices" (every active practice as a Line)
   const activePractices = practices.filter(p => p.is_active)
@@ -173,7 +177,11 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
           color: TRACE_COLORS[i % TRACE_COLORS.length],
         }))
 
-  const practiceNames = traces.map(t => t.name)
+  const visibleTraces = selectedPractice
+    ? traces.filter(t => t.name === selectedPractice)
+    : traces
+
+  const practiceNames = visibleTraces.map(t => t.name)
   const chartData = buildChartData(rawValues, practiceNames, locale)
   const isGridReport = report !== null && isGrid(report.definition)
 
@@ -214,6 +222,38 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         )}
       </div>
 
+      {/* Practice filter — only shown when there are multiple traces */}
+      {traces.length > 1 && (
+        <div className="px-4 pt-2 pb-2 flex gap-1.5 flex-wrap items-center" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+          <span className="text-xs font-semibold text-gray-400 mr-1">{t('charts.practice')}</span>
+          <button
+            onClick={() => setSelectedPractice(null)}
+            className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
+            style={{
+              background: selectedPractice === null ? ACCENT : 'rgba(0,0,0,0.05)',
+              color: selectedPractice === null ? 'white' : '#6b7280',
+              border: 'none',
+            }}
+          >
+            {t('charts.allPractices')}
+          </button>
+          {traces.map(tr => (
+            <button
+              key={tr.name}
+              onClick={() => setSelectedPractice(tr.name)}
+              className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
+              style={{
+                background: selectedPractice === tr.name ? tr.color : 'rgba(0,0,0,0.05)',
+                color: selectedPractice === tr.name ? 'white' : '#6b7280',
+                border: 'none',
+              }}
+            >
+              {tr.name}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Chart body */}
       <div className="px-2 py-4 relative">
         {isFetching && !isLoading && (
@@ -248,7 +288,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                 contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
               />
               <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-              {traces.map(({ name, type_, color }) => {
+              {visibleTraces.map(({ name, type_, color }) => {
                 const label = traceLabel(type_)
                 if (label === 'Bar') {
                   return <Bar key={name} dataKey={name} fill={color} radius={[2, 2, 0, 0]} maxBarSize={20} />
