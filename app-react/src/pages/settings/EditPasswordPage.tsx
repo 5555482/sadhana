@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 import { LuLock, LuCheck, LuX } from 'react-icons/lu'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { authApi } from '../../api/auth'
 
@@ -34,19 +35,31 @@ function onBlurInput(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.boxShadow = 'none'
 }
 
-function Field({ id, label, value, onChange }: { id: string; label: string; value: string; onChange: (v: string) => void }) {
+function PasswordField({ id, label, value, onChange }: { id: string; label: string; value: string; onChange: (v: string) => void }) {
+  const [show, setShow] = useState(false)
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{label}</label>
-      <input
-        id={id}
-        type="password"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        style={inputStyle}
-        onFocus={onFocus}
-        onBlur={onBlurInput}
-      />
+      <div className="relative">
+        <input
+          id={id}
+          type={show ? 'text' : 'password'}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          style={{ ...inputStyle, paddingRight: '2.75rem' }}
+          onFocus={onFocus}
+          onBlur={onBlurInput}
+        />
+        <button
+          type="button"
+          onClick={() => setShow(v => !v)}
+          aria-label={show ? 'Hide password' : 'Show password'}
+          className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+          style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          {show ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+        </button>
+      </div>
     </div>
   )
 }
@@ -78,6 +91,7 @@ export function EditPasswordPage() {
   }
 
   const error = clientError ?? (mutation.isError ? t('common.error') : null)
+  const realtimeMismatch = confirm.length > 0 && next.length > 0 && confirm !== next
 
   return (
     <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
@@ -108,10 +122,15 @@ export function EditPasswordPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="rounded-2xl px-5 py-5 flex flex-col gap-4" style={glass}>
-          <Field id="current-password" label={t('settings.currentPassword')} value={current} onChange={v => { setCurrent(v); setSuccess(false) }} />
-          <Field id="new-password" label={t('auth.newPassword')} value={next} onChange={v => { setNext(v); setSuccess(false) }} />
-          <Field id="confirm-password" label={t('auth.confirmPassword')} value={confirm} onChange={v => { setConfirm(v); setSuccess(false) }} />
+          <PasswordField id="current-password" label={t('settings.currentPassword')} value={current} onChange={v => { setCurrent(v); setSuccess(false) }} />
+          <PasswordField id="new-password" label={t('auth.newPassword')} value={next} onChange={v => { setNext(v); setSuccess(false) }} />
+          <PasswordField id="confirm-password" label={t('auth.confirmPassword')} value={confirm} onChange={v => { setConfirm(v); setSuccess(false) }} />
 
+          {realtimeMismatch && !clientError && (
+            <p className="text-sm rounded-xl px-3 py-2.5" style={{ background: 'rgba(225,29,72,0.07)', color: '#e11d48' }}>
+              {t('auth.passwordMismatch')}
+            </p>
+          )}
           {error && (
             <p className="text-sm rounded-xl px-3 py-2.5" style={{ background: 'rgba(225,29,72,0.07)', color: '#e11d48' }}>
               {error}

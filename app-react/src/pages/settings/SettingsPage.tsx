@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaCog, FaChevronRight, FaSignOutAlt } from 'react-icons/fa'
 import { LuUser, LuLock, LuLayers, LuUpload, LuGlobe, LuCircleHelp } from 'react-icons/lu'
 import { useAuthStore } from '../../store/authStore'
 import { TopBar } from '../../components/layout/TopBar'
+import { ConfirmModal } from '../../components/ui/ConfirmModal'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -65,6 +67,14 @@ export function SettingsPage() {
   const logout = useAuthStore((s) => s.logout)
   const user = useAuthStore((s) => s.user)
   const navigate = useNavigate()
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+
+  useEffect(() => {
+    if (showLogoutConfirm) {
+      (document.getElementById('logout-confirm') as HTMLDialogElement)?.showModal()
+      setShowLogoutConfirm(false)
+    }
+  }, [showLogoutConfirm])
 
   return (
     <>
@@ -111,7 +121,7 @@ export function SettingsPage() {
 
       {/* Logout */}
       <button
-        onClick={() => { logout(); navigate('/login', { replace: true }) }}
+        onClick={() => setShowLogoutConfirm(true)}
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
           background: 'rgba(255,255,255,0.85)',
@@ -126,6 +136,14 @@ export function SettingsPage() {
         <FaSignOutAlt className="w-3.5 h-3.5" />
         {t('auth.logout')}
       </button>
+
+      <ConfirmModal
+        id="logout-confirm"
+        title={t('settings.logoutConfirmTitle')}
+        message={t('settings.logoutConfirmMsg')}
+        confirmLabel={t('auth.logout')}
+        onConfirm={() => { logout(); navigate('/login', { replace: true }) }}
+      />
     </div>
     </>
   )

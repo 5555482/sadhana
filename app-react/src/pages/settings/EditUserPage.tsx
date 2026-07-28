@@ -84,7 +84,14 @@ export function EditUserPage() {
             style={inputStyle}
             onFocus={onFocus}
             onBlur={onBlurInput}
+            maxLength={50}
           />
+          <p
+            className="text-[10px] text-right"
+            style={{ color: name.length >= 50 ? '#e11d48' : name.length >= 45 ? '#d97706' : '#9ca3af' }}
+          >
+            {name.length}/50
+          </p>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="user-email" className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.email')}</label>

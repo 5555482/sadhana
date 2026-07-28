@@ -20,6 +20,7 @@ import { Spinner } from '../../components/ui/Spinner'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import type { UserPractice } from '../../types/api'
 import { useTranslation } from 'react-i18next'
+import { useToast } from '../../hooks/useToast'
 
 const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, tKey: string }> = {
   Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   tKey: 'practice.typeBool'     },
@@ -30,9 +31,13 @@ const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string
 }
 
 function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete: (id: string) => void }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: practice.id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: practice.id })
   const { t } = useTranslation()
-  const style = { transform: CSS.Transform.toString(transform), transition }
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  }
   const modalId = `delete-practice-${practice.id}`
   const meta = TYPE_META[practice.data_type] ?? TYPE_META.Text
   const TypeIcon = meta.icon
@@ -113,6 +118,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
 
 export function MyPracticesPage() {
   const { t } = useTranslation()
+  const { showToast } = useToast()
   const qc = useQueryClient()
   const { data = [], isLoading } = useQuery({
     queryKey: ['practices'],
@@ -129,6 +135,7 @@ export function MyPracticesPage() {
   const reorder = useMutation({
     mutationFn: (ids: string[]) => practicesApi.reorderUserPractices(ids),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['practices'] }),
+    onError: () => showToast({ message: t('settings.reorderFailed'), variant: 'error' }),
   })
 
   const deleteMutation = useMutation({
