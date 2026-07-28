@@ -218,7 +218,12 @@
     "mandatoryValue": "Mandatory threshold",
     "mandatoryDesc": "Reaching this value earns the mandatory point for the day.",
     "bonusValue": "Bonus threshold",
-    "bonusDesc": "Reaching this value earns an extra bonus point. Leave empty to disable."
+    "bonusDesc": "Reaching this value earns an extra bonus point. Leave empty to disable.",
+    "low": "Low",
+    "mid": "Mid",
+    "high": "High",
+    "refresh": "Refresh",
+    "discardName": "Discard the yatra name you typed?"
   },
   "settings": {
     "account": "Account",
