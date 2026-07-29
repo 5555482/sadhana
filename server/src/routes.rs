@@ -87,6 +87,7 @@ fn collect_precache_assets(dir: &Path, base: &Path, out: &mut Vec<String>) {
                     | "svg"
                     | "eot"
                     | "woff"
+                    | "webp"
             ) {
                 let rel = path.strip_prefix(base).unwrap();
                 out.push(format!("/{}", rel.to_string_lossy()));
