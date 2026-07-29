@@ -4,7 +4,7 @@ import { LuToggleRight, LuHash, LuTimer, LuClock, LuType, LuZap } from 'react-ic
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../hooks/useToast'
 import { practicesApi } from '../../api/practices'
-import type { UserPractice, PracticeValue } from '../../types/api'
+import type { UserPractice, PracticeValue, DiaryEntry } from '../../types/api'
 
 interface PracticeCardProps {
   practice: UserPractice
@@ -169,15 +169,29 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
 
   const mutation = useMutation({
     mutationFn: (v: PracticeValue) => practicesApi.saveDiaryEntry(date, practice.practice, v),
+    onMutate: async (newValue) => {
+      await qc.cancelQueries({ queryKey: ['diary', date] })
+      const prev = qc.getQueryData<DiaryEntry[]>(['diary', date])
+      qc.setQueryData<DiaryEntry[]>(['diary', date], (old = []) => {
+        const entry: DiaryEntry = { practice: practice.practice, data_type: practice.data_type, value: newValue }
+        const idx = old.findIndex(e => e.practice === practice.practice)
+        if (idx >= 0) { const next = [...old]; next[idx] = entry; return next }
+        return [...old, entry]
+      })
+      return { prev }
+    },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['diary', date] })
       setFlash(true)
       setTimeout(() => setFlash(false), 1200)
     },
-    onError: () => {
+    onError: (_err, _val, ctx) => {
+      if (ctx?.prev) qc.setQueryData(['diary', date], ctx.prev)
       setErrorFlash(true)
       setTimeout(() => setErrorFlash(false), 600)
       showToast({ message: t('home.saveFailed'), variant: 'error' })
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ['diary', date] })
     },
   })
 

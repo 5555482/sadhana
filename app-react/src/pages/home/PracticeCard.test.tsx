@@ -1,7 +1,15 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { DurationQuickAddModal } from './PracticeCard'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { DurationQuickAddModal, PracticeCard } from './PracticeCard'
+import type { DiaryEntry } from '../../types/api'
+
+vi.mock('../../api/practices', () => ({
+  practicesApi: {
+    saveDiaryEntry: vi.fn(),
+  },
+}))
 
 describe('DurationQuickAddModal', () => {
   it('calls onAdd with parsed number and then onClose', async () => {
@@ -47,5 +55,69 @@ describe('DurationQuickAddModal — duration hint', () => {
   it('hides hint text when input is not focused', () => {
     render(<DurationQuickAddModal onAdd={vi.fn()} onClose={vi.fn()} />)
     expect(screen.queryByText(/total minutes/i)).not.toBeInTheDocument()
+  })
+})
+
+describe('PracticeCard — optimistic update', () => {
+  beforeEach(() => { vi.clearAllMocks() })
+
+  it('updates diary cache immediately before server responds', async () => {
+    const { practicesApi } = await import('../../api/practices')
+    let resolve!: () => void
+    vi.mocked(practicesApi.saveDiaryEntry).mockReturnValue(
+      new Promise<void>(r => { resolve = r })
+    )
+
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    qc.setQueryData<DiaryEntry[]>(['diary', '2026-07-29'], [])
+
+    render(
+      <QueryClientProvider client={qc}>
+        <PracticeCard
+          practice={{ id: '1', practice: 'Meditation', data_type: 'Bool', is_active: true, is_required: false }}
+          date="2026-07-29"
+          currentValue={undefined}
+        />
+      </QueryClientProvider>
+    )
+
+    await userEvent.click(screen.getByRole('switch'))
+
+    // onMutate is async (awaits cancelQueries), so use waitFor
+    await waitFor(() => {
+      const cached = qc.getQueryData<DiaryEntry[]>(['diary', '2026-07-29'])
+      expect(cached).toContainEqual(
+        expect.objectContaining({ practice: 'Meditation', data_type: 'Bool' })
+      )
+    })
+
+    resolve()
+  })
+
+  it('rolls back cache on save error', async () => {
+    const { practicesApi } = await import('../../api/practices')
+    vi.mocked(practicesApi.saveDiaryEntry).mockRejectedValue(new Error('network'))
+
+    const initial: DiaryEntry[] = [{ practice: 'Meditation', data_type: 'Bool', value: { Bool: false } }]
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    qc.setQueryData<DiaryEntry[]>(['diary', '2026-07-29'], initial)
+
+    render(
+      <QueryClientProvider client={qc}>
+        <PracticeCard
+          practice={{ id: '1', practice: 'Meditation', data_type: 'Bool', is_active: true, is_required: false }}
+          date="2026-07-29"
+          currentValue={{ Bool: false }}
+        />
+      </QueryClientProvider>
+    )
+
+    await userEvent.click(screen.getByRole('switch'))
+
+    // Wait for onError rollback to complete after rejected promise settles
+    await waitFor(() => {
+      const cached = qc.getQueryData<DiaryEntry[]>(['diary', '2026-07-29'])
+      expect(cached).toEqual(initial)
+    })
   })
 })
