@@ -34,12 +34,11 @@ async function hydrateAuth() {
   }
 }
 
-hydrateAuth().then(() => {
-  ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <Suspense fallback={<Spinner />}><RouterProvider router={router} /></Suspense>
-      </QueryClientProvider>
-    </React.StrictMode>
-  )
-})
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<Spinner />}><RouterProvider router={router} /></Suspense>
+    </QueryClientProvider>
+  </React.StrictMode>
+)
+hydrateAuth()
