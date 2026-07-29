@@ -49,16 +49,13 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
           <FaChevronLeft className="w-4 h-4" />
         </button>
       ) : (
-        <Link to="/" className="flex items-center gap-2 no-underline">
+        <Link to="/" className="flex items-center no-underline">
           <img
             src="/logo.png"
             className="h-8 w-8 object-contain"
             style={{ filter: 'brightness(0)' }}
             alt="Sadhana"
           />
-          <span style={{ fontSize: '1.6rem', color: '#111', letterSpacing: '0.01em', lineHeight: 1 }}>
-            𝒮𝒶𝒹𝒽𝒶𝓃𝒶
-          </span>
         </Link>
       )}
 
