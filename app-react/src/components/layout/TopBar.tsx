@@ -53,9 +53,10 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
           <img
             src="/logo.png"
             className="h-8 w-8 object-contain"
+            style={{ filter: 'brightness(0) invert(1)' }}
             alt="Sadhana"
           />
-          <span style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 400, fontSize: '1.25rem', color: '#01a386', letterSpacing: '0.01em', lineHeight: 1 }}>
+          <span style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 400, fontSize: '1.25rem', color: 'white', letterSpacing: '0.01em', lineHeight: 1 }}>
             Sadhana
           </span>
         </Link>
