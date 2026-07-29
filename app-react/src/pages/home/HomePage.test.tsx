@@ -44,4 +44,22 @@ describe('HomePage', () => {
     await screen.findByText('Meditation')
     expect(screen.queryByText('Optional')).not.toBeInTheDocument()
   })
+
+  it('prefetches diary entries for the other 6 days of the visible week on mount', async () => {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    const prefetchSpy = vi.spyOn(qc, 'prefetchQuery').mockResolvedValue(undefined)
+
+    render(
+      <QueryClientProvider client={qc}>
+        <MemoryRouter><HomePage /></MemoryRouter>
+      </QueryClientProvider>
+    )
+
+    await screen.findByText('Meditation')
+
+    const diaryPrefetches = prefetchSpy.mock.calls.filter(
+      call => Array.isArray(call[0].queryKey) && call[0].queryKey[0] === 'diary'
+    )
+    expect(diaryPrefetches).toHaveLength(6)
+  })
 })

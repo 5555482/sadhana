@@ -21,7 +21,7 @@ function addDays(d: Date, n: number): Date {
   return result
 }
 
-function getWeekDays(date: Date): Date[] {
+export function getWeekDays(date: Date): Date[] {
   const day = date.getDay()
   const monday = new Date(date)
   monday.setDate(date.getDate() - ((day + 6) % 7))

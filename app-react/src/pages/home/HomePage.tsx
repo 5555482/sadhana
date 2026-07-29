@@ -6,7 +6,7 @@ import { LuWifiOff } from 'react-icons/lu'
 import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
 import { PracticeCard } from './PracticeCard'
-import { WeekCalendar } from './WeekCalendar'
+import { WeekCalendar, getWeekDays } from './WeekCalendar'
 import { ErrorBanner } from '../../components/ui/ErrorBanner'
 import useNetworkStatus from '../../hooks/useNetworkStatus'
 import type { PracticeDataType } from '../../types/api'
@@ -71,6 +71,20 @@ export function HomePage() {
     document.addEventListener('visibilitychange', onVisible)
     return () => document.removeEventListener('visibilitychange', onVisible)
   }, [qc, dateStr])
+
+  useEffect(() => {
+    const week = getWeekDays(date)
+    for (const day of week) {
+      const ds = toDateStr(day)
+      if (ds !== dateStr) {
+        qc.prefetchQuery({
+          queryKey: ['diary', ds],
+          queryFn: () => practicesApi.getDiaryEntries(ds),
+          staleTime: 60_000,
+        })
+      }
+    }
+  }, [date, qc, dateStr])
 
   const required = activePractices.filter((p) => p.is_required)
   const optional = activePractices.filter((p) => !p.is_required)
