@@ -88,6 +88,10 @@ onMutate: async (newValue) => {
   })
   return { prev }
 },
+onSuccess: () => {
+  setFlash(true)
+  setTimeout(() => setFlash(false), 1200)
+},
 onError: (_err, _val, ctx) => {
   if (ctx?.prev) qc.setQueryData(['diary', date], ctx.prev)
   setErrorFlash(true)
@@ -96,12 +100,10 @@ onError: (_err, _val, ctx) => {
 },
 onSettled: () => {
   qc.invalidateQueries({ queryKey: ['diary', date] })
-  setFlash(true)
-  setTimeout(() => setFlash(false), 1200)
 },
 ```
 
-Remove `onSuccess` — `onSettled` handles invalidation and the success flash in both the happy path and after a rolled-back error.
+`onSuccess` handles the green flash (only fires on actual success). `onSettled` handles invalidation on both success and error paths, syncing the cache with the server after the optimistic update settles. The existing `onSuccess` is replaced by this split.
 
 The `DiaryEntry` type is already defined in `app-react/src/types/api.ts` and used in `practicesApi.getDiaryEntries`.
 
