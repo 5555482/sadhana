@@ -328,4 +328,38 @@ mod tests {
 
         assert_eq!(value, "no-cache, must-revalidate");
     }
+
+    #[actix_rt::test]
+    async fn compress_middleware_encodes_gzip_response() {
+        use actix_web::middleware::Compress;
+
+        #[get("/echo")]
+        async fn big_text() -> HttpResponse {
+            HttpResponse::Ok()
+                .content_type("text/plain")
+                .body("x".repeat(1024))
+        }
+
+        let app = test::init_service(
+            App::new()
+                .wrap(Compress::default())
+                .service(big_text),
+        )
+        .await;
+
+        let req = test::TestRequest::get()
+            .uri("/echo")
+            .insert_header(("Accept-Encoding", "gzip"))
+            .to_request();
+
+        let resp = test::call_service(&app, req).await;
+
+        assert_eq!(resp.status(), StatusCode::OK);
+        assert_eq!(
+            resp.headers()
+                .get("content-encoding")
+                .and_then(|v| v.to_str().ok()),
+            Some("gzip")
+        );
+    }
 }
