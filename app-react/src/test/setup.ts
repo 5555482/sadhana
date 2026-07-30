@@ -81,6 +81,9 @@ if (!i18n.isInitialized) {
             durationHint: 'Enter total minutes (e.g. 90 for 1h 30m)',
             required: 'Required',
             today: 'Today',
+            yesterday: 'Yesterday',
+            tomorrow: 'Tomorrow',
+            nothingLogged: 'Nothing was logged on this day',
           },
           charts: {
             title: 'Charts',

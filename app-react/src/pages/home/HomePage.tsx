@@ -35,6 +35,30 @@ export function SectionLabel({ label }: { label: string }) {
   )
 }
 
+export function DateContextLabel({ dateStr }: { dateStr: string }) {
+  const todayStr = toDateStr(new Date())
+  const yesterday = toDateStr(new Date(Date.now() - 86_400_000))
+  const tomorrow  = toDateStr(new Date(Date.now() + 86_400_000))
+  const { t, i18n } = useTranslation()
+  const locale = i18n.language || 'en'
+
+  let label: string
+  if (dateStr === todayStr)        label = t('home.today')
+  else if (dateStr === yesterday)  label = t('home.yesterday')
+  else if (dateStr === tomorrow)   label = t('home.tomorrow')
+  else {
+    const d = new Date(dateStr + 'T00:00:00')
+    label = d.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' })
+  }
+
+  return (
+    <p role="paragraph" className="text-[11px] font-semibold uppercase tracking-widest px-1"
+       style={{ color: 'rgba(255,255,255,0.70)' }}>
+      {label}
+    </p>
+  )
+}
+
 export function HomePage() {
   const { t } = useTranslation()
   const [date, setDate] = useState(new Date())
@@ -42,6 +66,8 @@ export function HomePage() {
   const qc = useQueryClient()
 
   const dateStr = toDateStr(date)
+  const todayStr = toDateStr(new Date())
+  const isPast = dateStr < todayStr
 
   const practicesQuery = useQuery({
     queryKey: ['practices'],
@@ -113,6 +139,23 @@ export function HomePage() {
 
         {/* Week calendar */}
         <WeekCalendar date={date} onDateChange={setDate} />
+
+        {/* Date context */}
+        <DateContextLabel dateStr={dateStr} />
+
+        {/* Past-date nothing-logged banner */}
+        {isPast && (diaryQuery.data ?? []).length === 0 && !diaryQuery.isLoading && !diaryQuery.isError && activePractices.length > 0 && (
+          <div
+            className="rounded-xl px-4 py-3 text-sm flex items-center gap-2"
+            style={{
+              background: 'rgba(251,191,36,0.08)',
+              border: '1px solid rgba(251,191,36,0.18)',
+              color: 'rgba(255,255,255,0.75)',
+            }}
+          >
+            {t('home.nothingLogged')}
+          </div>
+        )}
 
         {/* Practice cards — skeletons hold layout while loading to prevent jump */}
         <div className="flex flex-col gap-3">
