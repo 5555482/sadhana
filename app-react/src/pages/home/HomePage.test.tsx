@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router-dom'
-import { HomePage } from './HomePage'
+import { HomePage, SectionLabel } from './HomePage'
 
 vi.mock('../../api/practices', () => ({
   practicesApi: {
@@ -61,5 +61,14 @@ describe('HomePage', () => {
       call => Array.isArray(call[0].queryKey) && call[0].queryKey[0] === 'diary'
     )
     expect(diaryPrefetches).toHaveLength(6)
+  })
+})
+
+describe('SectionLabel', () => {
+  it('renders label text and a decorative horizontal rule', () => {
+    const { container } = render(<SectionLabel label="Required" />)
+    expect(screen.getByText('Required')).toBeInTheDocument()
+    // outer element must have exactly 2 children: the <p> and the rule <div>
+    expect(container.firstChild?.childNodes).toHaveLength(2)
   })
 })

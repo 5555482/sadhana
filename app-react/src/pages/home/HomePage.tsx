@@ -23,11 +23,15 @@ const STARTER_PRACTICES: { practice: string; data_type: PracticeDataType }[] = [
   { practice: 'Yoga',            data_type: 'Duration' },
 ]
 
-function SectionLabel({ label }: { label: string }) {
+export function SectionLabel({ label }: { label: string }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-widest px-1" style={{ color: '#374151' }}>
-      {label}
-    </p>
+    <div className="flex items-center gap-2 px-1">
+      <p className="text-xs font-semibold uppercase tracking-widest flex-shrink-0"
+         style={{ color: 'rgba(255,255,255,0.85)' }}>
+        {label}
+      </p>
+      <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.20)' }} />
+    </div>
   )
 }
 
