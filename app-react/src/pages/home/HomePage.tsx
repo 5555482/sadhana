@@ -52,7 +52,7 @@ export function DateContextLabel({ dateStr }: { dateStr: string }) {
   }
 
   return (
-    <p role="paragraph" className="text-[11px] font-semibold uppercase tracking-widest px-1"
+    <p className="text-[11px] font-semibold uppercase tracking-widest px-1"
        style={{ color: 'rgba(255,255,255,0.70)' }}>
       {label}
     </p>

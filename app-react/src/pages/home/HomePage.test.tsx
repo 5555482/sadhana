@@ -30,6 +30,10 @@ describe('HomePage', () => {
     vi.clearAllMocks()
   })
 
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it('shows Optional divider when mix of required and optional practices exist', async () => {
     wrap(<HomePage />)
     expect(await screen.findByText('Optional')).toBeInTheDocument()
@@ -89,8 +93,6 @@ describe('HomePage', () => {
     fireEvent.click(btn29!)
 
     expect(await screen.findByText('Nothing was logged on this day')).toBeInTheDocument()
-
-    vi.useRealTimers()
   })
 
   it('does not show nothing-logged banner on today even with no diary entries', async () => {
@@ -139,11 +141,11 @@ describe('DateContextLabel', () => {
   })
 
   it('renders a formatted date for other past dates', () => {
-    render(<DateContextLabel dateStr="2026-07-15" />)
+    const { container } = render(<DateContextLabel dateStr="2026-07-15" />)
     // Should not render "Today", "Yesterday", or "Tomorrow"
     expect(screen.queryByText('Today')).not.toBeInTheDocument()
     expect(screen.queryByText('Yesterday')).not.toBeInTheDocument()
     // Should render some non-empty text (locale-formatted date)
-    expect(screen.getByRole('paragraph').textContent?.length).toBeGreaterThan(0)
+    expect(container.querySelector('p')?.textContent?.length).toBeGreaterThan(0)
   })
 })
