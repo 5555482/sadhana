@@ -66,7 +66,10 @@
     "saveFailed": "Could not save — please try again",
     "durationHint": "Enter total minutes (e.g. 90 for 1h 30m)",
     "required": "Required",
-    "today": "Today"
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "nothingLogged": "Nothing was logged on this day"
   },
   "practice": {
     "new": "New Practice",
