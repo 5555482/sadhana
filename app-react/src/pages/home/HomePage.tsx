@@ -27,7 +27,7 @@ export function SectionLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-2 px-1">
       <p className="text-xs font-semibold uppercase tracking-widest flex-shrink-0"
-         style={{ color: 'rgba(255,255,255,0.85)' }}>
+         style={{ color: '#92400e' }}>
         {label}
       </p>
       <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.20)' }} />
@@ -53,7 +53,7 @@ export function DateContextLabel({ dateStr }: { dateStr: string }) {
 
   return (
     <p className="text-[11px] font-semibold uppercase tracking-widest px-1"
-       style={{ color: 'rgba(255,255,255,0.70)' }}>
+       style={{ color: '#92400e' }}>
       {label}
     </p>
   )
