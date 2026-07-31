@@ -140,23 +140,6 @@ export function HomePage() {
         {/* Week calendar */}
         <WeekCalendar date={date} onDateChange={setDate} />
 
-        {/* Date context */}
-        <DateContextLabel dateStr={dateStr} />
-
-        {/* Past-date nothing-logged banner */}
-        {isPast && (diaryQuery.data ?? []).length === 0 && !diaryQuery.isLoading && !diaryQuery.isError && activePractices.length > 0 && (
-          <div
-            className="rounded-xl px-4 py-3 text-sm flex items-center gap-2"
-            style={{
-              background: 'rgba(251,191,36,0.10)',
-              border: '1px solid rgba(251,191,36,0.25)',
-              color: '#92400e',
-            }}
-          >
-            {t('home.nothingLogged')}
-          </div>
-        )}
-
         {/* Practice cards — skeletons hold layout while loading to prevent jump */}
         <div className="flex flex-col gap-3">
           {(practicesQuery.isLoading || diaryQuery.isLoading) ? (
@@ -179,15 +162,9 @@ export function HomePage() {
             <ErrorBanner message={t('common.error')} />
           ) : (
             <>
-              {required.length > 0 && optional.length > 0 && (
-                <SectionLabel label={t('home.required')} />
-              )}
               {required.map((p) => (
                 <PracticeCard key={p.id + '-' + dateStr} practice={p} date={dateStr} currentValue={valueMap[p.practice]} />
               ))}
-              {optional.length > 0 && required.length > 0 && (
-                <SectionLabel label={t('home.optional')} />
-              )}
               {optional.map((p) => (
                 <PracticeCard key={p.id + '-' + dateStr} practice={p} date={dateStr} currentValue={valueMap[p.practice]} />
               ))}
