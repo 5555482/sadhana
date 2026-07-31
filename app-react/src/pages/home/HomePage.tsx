@@ -148,9 +148,9 @@ export function HomePage() {
           <div
             className="rounded-xl px-4 py-3 text-sm flex items-center gap-2"
             style={{
-              background: 'rgba(251,191,36,0.08)',
-              border: '1px solid rgba(251,191,36,0.18)',
-              color: 'rgba(255,255,255,0.75)',
+              background: 'rgba(251,191,36,0.10)',
+              border: '1px solid rgba(251,191,36,0.25)',
+              color: '#92400e',
             }}
           >
             {t('home.nothingLogged')}
