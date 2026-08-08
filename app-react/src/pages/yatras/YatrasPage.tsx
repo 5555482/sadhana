@@ -498,7 +498,7 @@ export function YatrasPage() {
       <button
         onClick={handleCreate}
         aria-label="Create yatra"
-        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center border-none cursor-pointer"
+        className="fixed bottom-24 sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center border-none cursor-pointer"
         style={{
           background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
           boxShadow: '0 4px 24px rgba(45,212,191,0.45)',

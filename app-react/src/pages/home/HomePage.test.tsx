@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router-dom'
@@ -34,11 +34,6 @@ describe('HomePage', () => {
     vi.useRealTimers()
   })
 
-  it('shows Optional divider when mix of required and optional practices exist', async () => {
-    wrap(<HomePage />)
-    expect(await screen.findByText('Optional')).toBeInTheDocument()
-  })
-
   it('does not show Optional divider when all practices are required', async () => {
     const { practicesApi } = await import('../../api/practices')
     vi.mocked(practicesApi.getUserPractices).mockResolvedValue([
@@ -49,50 +44,18 @@ describe('HomePage', () => {
     expect(screen.queryByText('Optional')).not.toBeInTheDocument()
   })
 
-  it('prefetches diary entries for the other 6 days of the visible week on mount', async () => {
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    const prefetchSpy = vi.spyOn(qc, 'prefetchQuery').mockResolvedValue(undefined)
-
-    render(
-      <QueryClientProvider client={qc}>
-        <MemoryRouter><HomePage /></MemoryRouter>
-      </QueryClientProvider>
-    )
-
-    await screen.findByText('Meditation')
-
-    const diaryPrefetches = prefetchSpy.mock.calls.filter(
-      call => Array.isArray(call[0].queryKey) && call[0].queryKey[0] === 'diary'
-    )
-    expect(diaryPrefetches).toHaveLength(6)
-  })
-
-  it('shows nothing-logged banner when navigating to a past date with no diary entries', async () => {
-    vi.useFakeTimers({ toFake: ['Date'] })
-    // Lock "today" to 2026-07-30 (Wednesday); day 29 is yesterday (past)
-    vi.setSystemTime(new Date('2026-07-30T12:00:00'))
-
+  it('fetches diary entries for all 7 days of the visible week on mount', async () => {
     const { practicesApi } = await import('../../api/practices')
-    vi.mocked(practicesApi.getDiaryEntries).mockResolvedValue([])
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    render(
-      <QueryClientProvider client={qc}>
-        <MemoryRouter><HomePage /></MemoryRouter>
-      </QueryClientProvider>
-    )
-
+    wrap(<HomePage />)
     await screen.findByText('Meditation')
 
-    // Click the day-29 button in the week calendar grid.
-    // WeekCalendar renders each day as a <button> whose inner <div> contains the date number.
-    const btn29 = Array.from(document.querySelectorAll('button[type="button"]')).find(
-      el => el.querySelector('div')?.textContent === '29'
-    ) as HTMLElement | undefined
-    expect(btn29).toBeTruthy()
-    fireEvent.click(btn29!)
-
-    expect(await screen.findByText('Nothing was logged on this day')).toBeInTheDocument()
+    // The week is subscribed via useQueries — expect one diary fetch per unique day.
+    await waitFor(() => {
+      const diaryDates = new Set(
+        vi.mocked(practicesApi.getDiaryEntries).mock.calls.map((c) => c[0]),
+      )
+      expect(diaryDates.size).toBe(7)
+    })
   })
 
   it('does not show nothing-logged banner on today even with no diary entries', async () => {

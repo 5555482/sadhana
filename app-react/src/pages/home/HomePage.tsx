@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { FaPlus, FaSlidersH } from 'react-icons/fa'
 import { LuWifiOff } from 'react-icons/lu'
 import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
@@ -66,8 +65,6 @@ export function HomePage() {
   const qc = useQueryClient()
 
   const dateStr = toDateStr(date)
-  const todayStr = toDateStr(new Date())
-  const isPast = dateStr < todayStr
 
   const practicesQuery = useQuery({
     queryKey: ['practices'],
@@ -121,7 +118,7 @@ export function HomePage() {
 
   return (
     <>
-      <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
+      <div className="px-4 py-4 max-w-lg mx-auto flex flex-col gap-3">
         {/* Offline banner */}
         {!isOnline && (
           <div
@@ -202,36 +199,6 @@ export function HomePage() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* FABs */}
-      <div className="fixed bottom-6 right-4 z-30 flex flex-col gap-3 items-center">
-        <Link
-          to="/user/practices"
-          aria-label="Edit practices"
-          className="w-14 h-14 rounded-full flex items-center justify-center"
-          style={{
-            background: 'rgba(255,255,255,0.90)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.80)',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
-            color: '#01a386',
-          }}
-        >
-          <FaSlidersH className="w-5 h-5" />
-        </Link>
-        <Link
-          to="/user/practice/new"
-          aria-label="Add practice"
-          className="w-14 h-14 rounded-full flex items-center justify-center"
-          style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
-          }}
-        >
-          <FaPlus className="w-5 h-5 text-white" />
-        </Link>
       </div>
     </>
   )

@@ -13,7 +13,7 @@ export function ToastContainer() {
   const { toasts, dismiss } = useToastStore()
   return (
     <div
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:top-4 sm:right-4 sm:bottom-auto sm:translate-x-0 sm:left-auto z-[200] flex flex-col gap-2 pointer-events-none"
+      className="fixed bottom-24 left-1/2 -translate-x-1/2 sm:top-4 sm:right-4 sm:bottom-auto sm:translate-x-0 sm:left-auto z-[200] flex flex-col gap-2 pointer-events-none"
       aria-live="polite"
     >
       <AnimatePresence>
