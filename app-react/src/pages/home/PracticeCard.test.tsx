@@ -58,6 +58,25 @@ describe('DurationQuickAddModal — duration hint', () => {
   })
 })
 
+describe('PracticeCard — Int input', () => {
+  beforeEach(() => { vi.clearAllMocks() })
+
+  it('Int renders a plain number input with no steppers', () => {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    render(
+      <QueryClientProvider client={qc}>
+        <PracticeCard
+          practice={{ id: '1', practice: 'Pages', data_type: 'Int', is_active: true, is_required: false }}
+          date="2026-08-08"
+          currentValue={undefined}
+        />
+      </QueryClientProvider>
+    )
+    expect(screen.getByRole('spinbutton', { name: 'Pages' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Increase by 1' })).toBeNull()
+  })
+})
+
 describe('PracticeCard — optimistic update', () => {
   beforeEach(() => { vi.clearAllMocks() })
 
