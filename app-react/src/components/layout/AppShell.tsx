@@ -22,8 +22,9 @@ export function AppShell() {
       <TopBar />
       <main
         className={
-          'pt-14' +
-          (showBottomNav ? ' pb-[calc(64px+env(safe-area-inset-bottom))] sm:pb-0' : '')
+          showBottomNav
+            ? 'pt-0 sm:pt-14 pb-[calc(64px+env(safe-area-inset-bottom))] sm:pb-0'
+            : 'pt-14'
         }
       >
         <AnimatePresence>

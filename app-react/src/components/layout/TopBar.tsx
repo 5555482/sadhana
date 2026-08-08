@@ -18,7 +18,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 h-14 flex items-center px-4 z-40 gap-3"
+      className={`fixed top-0 left-0 right-0 h-14 items-center px-4 z-40 gap-3 ${showBack || showClose ? 'flex' : 'hidden sm:flex'}`}
       style={{
         background: 'rgba(255, 255, 255, 0.70)',
         backdropFilter: 'blur(24px)',
