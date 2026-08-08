@@ -121,23 +121,28 @@ export function averageForType(
 ): number | null {
   if (dt === 'Bool' || dt === 'Text') return null
   const past = entries.filter((e) => e.cob_date !== todayCob)
-  const nums: number[] = []
+  const hasAny = past.some((e) => e.value !== null && e.value !== undefined)
+  if (!hasAny) return null
   if (dt === 'Time') {
     const hours = past.map((e) => timeHour(e.value)).filter((h): h is number => h !== null)
     if (hours.length === 0) return null
     const overflow = computeTimeOverflow(hours)
+    let sum = 0
+    let count = 0
     for (const e of past) {
       const v = timeMinutesWithOverflow(e.value, overflow)
-      if (v !== null) nums.push(v)
+      if (v !== null) { sum += v; count += 1 }
     }
-  } else {
-    for (const e of past) {
-      const v = valueToNumber(e.value, dt)
-      if (v !== null) nums.push(v)
-    }
+    if (count === 0) return null
+    return Math.floor(sum / count)
   }
-  if (nums.length === 0) return null
-  return Math.round(nums.reduce((a, b) => a + b, 0) / nums.length)
+  // Int / Duration: divide by ALL past days (missing counts as 0 in the sum),
+  // integer floor — matches Rust average_value.
+  let sum = 0
+  for (const e of past) {
+    sum += valueToNumber(e.value, dt) ?? 0
+  }
+  return Math.floor(sum / past.length)
 }
 
 export function formatMinutesAsHHMM(min: number): string {

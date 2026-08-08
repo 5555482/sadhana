@@ -44,6 +44,10 @@ describe('computeTimeOverflow', () => {
   it('mostly-morning with an evening straggler → -1', () => {
     expect(computeTimeOverflow([6, 7, 5, 23])).toBe(-1)
   })
+  it('tie and empty default to +1', () => {
+    expect(computeTimeOverflow([])).toBe(1)
+    expect(computeTimeOverflow([10, 22])).toBe(1)
+  })
 })
 
 describe('buildChartData', () => {
@@ -85,6 +89,22 @@ describe('averageForType', () => {
   it('Bool/Text have no average', () => {
     expect(averageForType([{ cob_date: '2026-08-06', value: { Bool: true } }], 'Bool', today)).toBeNull()
     expect(averageForType([{ cob_date: '2026-08-06', value: { Text: 'x' } }], 'Text', today)).toBeNull()
+  })
+  it('Int mean counts a missing day as 0 in the denominator (Rust parity)', () => {
+    const entries = [
+      { cob_date: '2026-08-05', value: { Int: 4 } },
+      { cob_date: '2026-08-06', value: null },
+      { cob_date: today, value: { Int: 100 } },
+    ]
+    expect(averageForType(entries, 'Int', today)).toBe(2) // (4 + 0) / 2, floored
+  })
+
+  it('Time average is overflow-aware (minutes)', () => {
+    const entries = [
+      { cob_date: '2026-08-05', value: { Time: { h: 23, m: 0 } } },
+      { cob_date: '2026-08-06', value: { Time: { h: 1, m: 0 } } },
+    ]
+    expect(averageForType(entries, 'Time', today)).toBe(1440) // 1380 + 1500, /2
   })
 })
 
