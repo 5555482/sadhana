@@ -1,4 +1,5 @@
 import { useState, useRef, memo } from 'react'
+import { formatTimeInput, parseTime } from './inputFormat'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LuToggleRight, LuHash, LuTimer, LuClock, LuType, LuZap } from 'react-icons/lu'
 import { useTranslation } from 'react-i18next'
@@ -45,11 +46,11 @@ const field: React.CSSProperties = {
   transition: 'border-color 0.15s, background 0.15s',
 }
 
-function fieldFocus(e: React.FocusEvent<HTMLInputElement>) {
+function fieldFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
   e.target.style.borderColor = 'rgba(1,163,134,0.55)'
   e.target.style.background = 'rgba(1,163,134,0.06)'
 }
-function fieldBlur(e: React.FocusEvent<HTMLInputElement>) {
+function fieldBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
   e.target.style.borderColor = 'rgba(0,0,0,0.08)'
   e.target.style.background = 'rgba(0,0,0,0.04)'
 }
@@ -144,10 +145,15 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
   const [errorFlash, setErrorFlash]   = useState(false)
   const [showQuickAdd, setShowQuickAdd] = useState(false)
 
+  const initialTime = (timeH > 0 || timeM > 0)
+    ? `${String(timeH).padStart(2, '0')}:${String(timeM).padStart(2, '0')}`
+    : ''
+  const [timeStr, setTimeStr] = useState(initialTime)
+
+  const isFreeText = practice.data_type === 'Text' && !practice.dropdown_variants
+
   /* ── Value refs ── */
   const durRef   = useRef(durVal)
-  const timeHRef = useRef(timeH)
-  const timeMRef = useRef(timeM)
 
   /* ── DOM refs ── */
   const durEl  = useRef<HTMLInputElement>(null)
@@ -186,7 +192,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
 
   return (
     <div
-      className="rounded-2xl px-4 py-3.5 flex items-center gap-3 min-h-[60px] transition-all duration-300"
+      className={`rounded-2xl px-4 py-3.5 gap-3 min-h-[60px] transition-all duration-300 ${isFreeText ? 'flex flex-col items-stretch' : 'flex items-center'}`}
       style={{
         background: 'rgba(255,255,255,0.92)',
         backdropFilter: 'blur(16px)',
@@ -205,26 +211,49 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           : '0 2px 12px rgba(0,0,0,0.07)',
       }}
     >
-      {/* Type icon */}
-      {TypeIcon && meta && (
-        <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{
-            background: localBool && practice.data_type === 'Bool'
-              ? 'rgba(1,163,134,0.18)' : meta.bg,
-          }}
-        >
-          <TypeIcon className="w-4 h-4" style={{ color: meta.color }} />
+      {isFreeText ? (
+        <div className="flex items-center gap-3">
+          {/* Type icon */}
+          {TypeIcon && meta && (
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: meta.bg }}
+            >
+              <TypeIcon className="w-4 h-4" style={{ color: meta.color }} />
+            </div>
+          )}
+          {/* Name */}
+          <span className="flex-1 min-w-0 text-sm font-semibold text-gray-800 leading-tight truncate">
+            {practice.practice}
+            {practice.is_required && (
+              <span className="ml-1 text-xs font-bold" style={{ color: ACCENT }}>*</span>
+            )}
+          </span>
         </div>
-      )}
+      ) : (
+        <>
+          {/* Type icon */}
+          {TypeIcon && meta && (
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{
+                background: localBool && practice.data_type === 'Bool'
+                  ? 'rgba(1,163,134,0.18)' : meta.bg,
+              }}
+            >
+              <TypeIcon className="w-4 h-4" style={{ color: meta.color }} />
+            </div>
+          )}
 
-      {/* Name */}
-      <span className="flex-1 min-w-0 text-sm font-semibold text-gray-800 leading-tight truncate">
-        {practice.practice}
-        {practice.is_required && (
-          <span className="ml-1 text-xs font-bold" style={{ color: ACCENT }}>*</span>
-        )}
-      </span>
+          {/* Name */}
+          <span className="flex-1 min-w-0 text-sm font-semibold text-gray-800 leading-tight truncate">
+            {practice.practice}
+            {practice.is_required && (
+              <span className="ml-1 text-xs font-bold" style={{ color: ACCENT }}>*</span>
+            )}
+          </span>
+        </>
+      )}
 
       {/* ── Bool ── */}
       {practice.data_type === 'Bool' && (
@@ -319,69 +348,24 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
         )
       )}
 
-      {/* ── Time — HH : MM ── */}
+      {/* ── Time — single HH:MM field ── */}
       {practice.data_type === 'Time' && (
-        <div className="flex items-center gap-1 flex-shrink-0">
-          <input
-            type="number" min={0} max={23}
-            defaultValue={String(timeH).padStart(2, '0')}
-            aria-label={`${practice.practice} hours`}
-            className="focus:outline-none"
-            style={{
-              ...field,
-              width: '2.75rem', height: '2.25rem', fontSize: '0.9rem',
-              color: (timeH > 0 || timeM > 0) ? ACCENT : '#9ca3af',
-            }}
-            onFocus={(e) => { fieldFocus(e); setTimeout(() => e.target.select(), 0) }}
-            onBlur={(e) => {
-              fieldBlur(e)
-              const v = parseInt(e.target.value, 10)
-              timeHRef.current = isNaN(v) ? 0 : Math.max(0, Math.min(23, v))
-              e.target.value = String(timeHRef.current).padStart(2, '0')
-              e.target.style.color = (timeHRef.current > 0 || timeMRef.current > 0) ? ACCENT : '#9ca3af'
-              save({ Time: { h: timeHRef.current, m: timeMRef.current } })
-            }}
-            onChange={(e) => {
-              const v = parseInt(e.target.value, 10)
-              if (!isNaN(v) && v >= 0) {
-                const c = Math.min(23, v)
-                timeHRef.current = c
-                if (c !== v) e.target.value = String(c)
-              }
-            }}
-            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
-          />
-          <span className="text-sm font-bold flex-shrink-0" style={{ color: '#d1d5db' }}>:</span>
-          <input
-            type="number" min={0} max={59}
-            defaultValue={String(timeM).padStart(2, '0')}
-            aria-label={`${practice.practice} minutes`}
-            className="focus:outline-none"
-            style={{
-              ...field,
-              width: '2.75rem', height: '2.25rem', fontSize: '0.9rem',
-              color: (timeH > 0 || timeM > 0) ? ACCENT : '#9ca3af',
-            }}
-            onFocus={(e) => { fieldFocus(e); setTimeout(() => e.target.select(), 0) }}
-            onBlur={(e) => {
-              fieldBlur(e)
-              const v = parseInt(e.target.value, 10)
-              timeMRef.current = isNaN(v) ? 0 : Math.max(0, Math.min(59, v))
-              e.target.value = String(timeMRef.current).padStart(2, '0')
-              e.target.style.color = (timeHRef.current > 0 || timeMRef.current > 0) ? ACCENT : '#9ca3af'
-              save({ Time: { h: timeHRef.current, m: timeMRef.current } })
-            }}
-            onChange={(e) => {
-              const v = parseInt(e.target.value, 10)
-              if (!isNaN(v) && v >= 0) {
-                const c = Math.min(59, v)
-                timeMRef.current = c
-                if (c !== v) e.target.value = String(c)
-              }
-            }}
-            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
-          />
-        </div>
+        <input
+          type="text" inputMode="numeric"
+          value={timeStr}
+          aria-label={practice.practice}
+          placeholder="HH:MM"
+          className="focus:outline-none text-sm"
+          style={{ ...field, width: '5rem', height: '2.25rem', color: timeStr ? ACCENT : '#9ca3af' }}
+          onFocus={fieldFocus}
+          onChange={(e) => setTimeStr(formatTimeInput(e.target.value))}
+          onBlur={(e) => {
+            fieldBlur(e)
+            const parsed = parseTime(timeStr)
+            if (parsed) save({ Time: parsed })   // empty/incomplete → no save (retain prior)
+          }}
+          onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
+        />
       )}
 
       {/* ── Text (dropdown) ── */}
@@ -410,28 +394,18 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
         </select>
       )}
 
-      {/* ── Text (free input) ── */}
+      {/* ── Text (free textarea) ── */}
       {practice.data_type === 'Text' && !practice.dropdown_variants && (
-        <input
-          type="text"
+        <textarea
           defaultValue={textVal}
           placeholder="—"
           aria-label={practice.practice}
-          className="focus:outline-none text-sm"
-          style={{
-            ...field,
-            width: '6.5rem', height: '2.25rem',
-            padding: '0 0.625rem',
-            textAlign: 'left',
-            fontWeight: 500,
-            color: textVal ? ACCENT : '#9ca3af',
-          }}
+          rows={3}
+          maxLength={1024}
+          className="focus:outline-none text-sm w-full resize-none"
+          style={{ ...field, textAlign: 'left', fontWeight: 500, padding: '0.5rem 0.625rem', color: textVal ? ACCENT : '#9ca3af' }}
           onFocus={fieldFocus}
-          onBlur={(e) => {
-            fieldBlur(e)
-            save({ Text: e.target.value })
-          }}
-          onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
+          onBlur={(e) => { fieldBlur(e); save({ Text: e.target.value }) }}
         />
       )}
     </div>

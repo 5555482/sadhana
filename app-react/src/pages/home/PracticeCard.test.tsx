@@ -3,7 +3,16 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { DurationQuickAddModal, PracticeCard } from './PracticeCard'
-import type { DiaryEntry } from '../../types/api'
+import type { DiaryEntry, UserPractice } from '../../types/api'
+
+function renderCard(practice: UserPractice, currentValue?: import('../../types/api').PracticeValue) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return render(
+    <QueryClientProvider client={qc}>
+      <PracticeCard practice={practice} date="2026-08-08" currentValue={currentValue} />
+    </QueryClientProvider>
+  )
+}
 
 vi.mock('../../api/practices', () => ({
   practicesApi: {
@@ -138,5 +147,31 @@ describe('PracticeCard — optimistic update', () => {
       const cached = qc.getQueryData<DiaryEntry[]>(['diary', '2026-07-29'])
       expect(cached).toEqual(initial)
     })
+  })
+})
+
+describe('PracticeCard — Text + Time (Task 3)', () => {
+  beforeEach(() => { vi.clearAllMocks() })
+
+  it('free-text Text renders a textarea and saves on blur', () => {
+    renderCard({ id: '2', practice: 'Journal', data_type: 'Text', is_active: true, is_required: false })
+    const ta = screen.getByRole('textbox', { name: 'Journal' })
+    expect(ta.tagName).toBe('TEXTAREA')
+  })
+
+  it('Text with options renders a select', () => {
+    renderCard({ id: '3', practice: 'Mood', data_type: 'Text', is_active: true, is_required: false, dropdown_variants: 'Good\nOkay\nLow' })
+    expect(screen.getByRole('combobox', { name: 'Mood' })).toBeInTheDocument()
+  })
+
+  it('Time renders one field that formats and saves HH:MM', async () => {
+    const { practicesApi } = await import('../../api/practices')
+    vi.mocked(practicesApi.saveDiaryEntry).mockResolvedValue(undefined)
+    renderCard({ id: '4', practice: 'Wake', data_type: 'Time', is_active: true, is_required: false })
+    const input = screen.getByRole('textbox', { name: 'Wake' })
+    await userEvent.type(input, '0630')
+    expect((input as HTMLInputElement).value).toBe('06:30')
+    input.blur()
+    await waitFor(() => expect(practicesApi.saveDiaryEntry).toHaveBeenCalledWith(expect.any(String), 'Wake', { Time: { h: 6, m: 30 } }))
   })
 })
