@@ -306,6 +306,8 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                 contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
               />
               <Legend
+                verticalAlign="bottom"
+                align="center"
                 wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default' }}
                 onClick={(data) => {
                   if (traces.length <= 1) return
@@ -357,14 +359,17 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
 }
 
 function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; practiceNames: string[] }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const locale = i18n.language || 'en'
+  const fmt = (cob: string) =>
+    new Date(cob + 'T00:00:00').toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'short' })
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
             <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>{t('charts.date')}</th>
-            {practiceNames.map(name => (
+            {practiceNames.map((name) => (
               <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                 {name}
               </th>
@@ -372,10 +377,10 @@ function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; pr
           </tr>
         </thead>
         <tbody>
-          {chartData.slice(-14).map((row, i) => (
-            <tr key={row.date} style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.015)' }}>
-              <td className="px-2 py-1.5 text-gray-500">{row.date}</td>
-              {practiceNames.map(name => (
+          {chartData.map((row, i) => (
+            <tr key={row.cob} style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.015)' }}>
+              <td className="px-2 py-1.5 text-gray-500 whitespace-nowrap">{fmt(row.cob)}</td>
+              {practiceNames.map((name) => (
                 <td key={name} className="px-2 py-1.5 text-right text-gray-700">
                   {row[name] == null ? '—' : String(row[name])}
                 </td>
