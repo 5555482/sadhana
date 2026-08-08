@@ -29,6 +29,7 @@ function Tab({ to, navKey, icon: Icon, exact }: (typeof navItems)[number]) {
  * desktop keeps the top nav.
  */
 export function BottomNav() {
+  const { t } = useTranslation()
   const [home, charts, yatras, settings] = navItems
   const { pathname } = useLocation()
 
@@ -36,7 +37,7 @@ export function BottomNav() {
   // elsewhere it opens practice editing.
   const onCharts = pathname === '/charts'
   const centerTo = onCharts ? '/charts/new' : '/user/practices'
-  const centerLabel = onCharts ? 'New report' : 'Edit practices'
+  const centerLabel = onCharts ? t('charts.newReport') : 'Edit practices'
   const CenterIcon = onCharts ? FaPlus : FaSlidersH
 
   return (

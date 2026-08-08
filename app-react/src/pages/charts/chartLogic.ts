@@ -151,7 +151,3 @@ export function formatMinutesAsHHMM(min: number): string {
   const m = norm % 60
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
-
-export function formatNumericTick(n: number): string {
-  return String(n)
-}
