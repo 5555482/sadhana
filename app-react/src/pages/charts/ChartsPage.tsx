@@ -22,7 +22,11 @@ import { practicesApi } from '../../api/practices'
 import { Spinner } from '../../components/ui/Spinner'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import { useAuthStore } from '../../store/authStore'
-import type { UserPractice } from '../../types/api'
+import type { UserPractice, PracticeDataType } from '../../types/api'
+import {
+  buildChartData,
+  type ChartDataRow,
+} from './chartLogic'
 
 const glass: React.CSSProperties = {
   background: 'rgba(255,255,255,0.90)',
@@ -33,7 +37,22 @@ const glass: React.CSSProperties = {
 }
 
 const ACCENT = '#01a386'
-const TRACE_COLORS = ['#01a386', '#6366f1', '#d97706', '#e11d48', '#0ea5e9', '#8b5cf6', '#f59e0b', '#10b981']
+const TRACE_COLORS = [
+  '#FF8C00', // DarkOrange
+  '#B22222', // FireBrick
+  '#BDB76B', // DarkKhaki
+  '#6A5ACD', // SlateBlue
+  '#9370DB', // MediumPurple
+  '#B0C4DE', // LightSteelBlue
+  '#8B008B', // DarkMagenta
+  '#FFA07A', // LightSalmon
+  '#CD5C5C', // IndianRed
+  '#DB7093', // PaleVioletRed
+  '#FF6347', // Tomato
+  '#808000', // Olive
+  '#20B2AA', // LightSeaGreen
+  '#AFEEEE', // PaleTurquoise
+]
 
 const DURATIONS: { label: string; value: ReportDuration }[] = [
   { label: '1W', value: 'Week' },
@@ -50,7 +69,7 @@ export function toCSV(entries: ReportDataEntry[], practiceMap: Record<string, st
   const header = ['date', 'practice', 'value'].join(',')
   const rows = entries.map(e => {
     const name = (practiceMap[e.practice] ?? e.practice).replace(/,/g, ' ')
-    const val = valueToNumber(e.value)
+    const val = csvValueToNumber(e.value)
     return [e.cob_date, name, val === null ? '' : String(val)].join(',')
   })
   return [header, ...rows].join('\n')
@@ -92,7 +111,8 @@ function TraceTypeBadge({ type_ }: { type_: TraceType }) {
   )
 }
 
-function valueToNumber(raw: unknown): number | null {
+/** Simple type-agnostic value extractor used only by toCSV (no data_type context). */
+function csvValueToNumber(raw: unknown): number | null {
   if (raw === null || raw === undefined) return null
   if (typeof raw === 'number') return raw
   if (typeof raw === 'boolean') return raw ? 1 : 0
@@ -107,30 +127,6 @@ function valueToNumber(raw: unknown): number | null {
     }
   }
   return null
-}
-
-function shortDate(iso: string, locale: string): string {
-  const d = new Date(iso + 'T00:00:00')
-  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
-}
-
-type ChartDataRow = { date: string; [key: string]: number | null | string }
-
-function buildChartData(
-  rawValues: { cob_date: string; practice: string; value: unknown }[],
-  practiceNames: string[],
-  locale: string,
-): ChartDataRow[] {
-  const dateMap = new Map<string, ChartDataRow>()
-  for (const entry of rawValues) {
-    const date = shortDate(entry.cob_date, locale)
-    if (!dateMap.has(date)) dateMap.set(date, { date })
-    const row = dateMap.get(date)!
-    if (practiceNames.includes(entry.practice)) {
-      row[entry.practice] = valueToNumber(entry.value)
-    }
-  }
-  return Array.from(dateMap.values())
 }
 
 // ─── Main chart panel ───────────────────────────────────────────────────────
@@ -159,30 +155,43 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
   // Build traces for "all practices" (every active practice as a Line)
   const activePractices = practices.filter(p => p.is_active)
 
-  const traces: { name: string; type_: TraceType; color: string }[] = report === null
-    ? activePractices.map((p, i) => ({
-        name: p.practice,
-        type_: { Line: { style: 'Regular' as const } },
-        color: TRACE_COLORS[i % TRACE_COLORS.length],
-      }))
-    : isGrid(report.definition)
-      ? report.definition.Grid.practices.map((pid, i) => ({
-          name: practiceMap[pid] ?? pid,
-          type_: { Line: { style: 'Regular' as const } } as TraceType,
+  const byId = new Map(practices.map((p) => [p.id, p]))
+
+  const traces: { name: string; type_: TraceType; color: string; dataType: PracticeDataType; showAverage: boolean }[] =
+    report === null
+      ? activePractices.map((p, i) => ({
+          name: p.practice,
+          type_: { Line: { style: 'Regular' as const } },
           color: TRACE_COLORS[i % TRACE_COLORS.length],
+          dataType: p.data_type,
+          showAverage: false,
         }))
-      : report.definition.Graph.traces.map((t, i) => ({
-          name: practiceMap[t.practice] ?? t.practice,
-          type_: t.type_,
-          color: TRACE_COLORS[i % TRACE_COLORS.length],
-        }))
+      : isGrid(report.definition)
+        ? report.definition.Grid.practices.map((pid, i) => ({
+            name: practiceMap[pid] ?? pid,
+            type_: { Line: { style: 'Regular' as const } } as TraceType,
+            color: TRACE_COLORS[i % TRACE_COLORS.length],
+            dataType: byId.get(pid)?.data_type ?? 'Int',
+            showAverage: false,
+          }))
+        : report.definition.Graph.traces.map((t, i) => ({
+            name: practiceMap[t.practice] ?? t.practice,
+            type_: t.type_,
+            color: TRACE_COLORS[i % TRACE_COLORS.length],
+            dataType: byId.get(t.practice)?.data_type ?? 'Int',
+            showAverage: t.show_average,
+          }))
 
   const visibleTraces = selectedPractice
     ? traces.filter(t => t.name === selectedPractice)
     : traces
 
   const practiceNames = visibleTraces.map(t => t.name)
-  const chartData = buildChartData(rawValues, practiceNames, locale)
+  const chartData = buildChartData(
+    rawValues as { cob_date: string; practice: string; value: unknown }[],
+    visibleTraces.map((t) => ({ name: t.name, dataType: t.dataType })),
+    locale,
+  )
   const isGridReport = report !== null && isGrid(report.definition)
 
   async function handleDownload() {
@@ -820,7 +829,7 @@ export function ChartsPage() {
       <Link
         to="/charts/new"
         aria-label="New report"
-        className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
+        className="fixed bottom-24 sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
         style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 24px rgba(45,212,191,0.45)' }}
       >
         <FaPlus className="w-5 h-5 text-white" />
