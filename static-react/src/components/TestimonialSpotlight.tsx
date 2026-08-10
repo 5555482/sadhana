@@ -43,7 +43,7 @@ export function TestimonialSpotlight() {
             <p className="text-lg leading-relaxed text-[#1c1c1e]">
               &ldquo;{t('landing.testimonial.quote')}&rdquo;
             </p>
-            <p className="text-sm text-black/50">
+            <p className="text-sm text-[#6b6862]">
               {t('landing.testimonial.author')}
             </p>
           </div>
