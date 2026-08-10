@@ -73,6 +73,17 @@
       "title": "Practice together",
       "description": "Join a yatra to share the journey — see each member's consistency and encourage one another.",
       "cta": "Explore yatras"
+    },
+    "testimonial": {
+      "heading": "How practitioners built a lasting sadhana",
+      "quote": "Sadhana turned scattered intentions into a steady daily rhythm — watching the streak build keeps me honest.",
+      "author": "Illustrative — a Sadhana practitioner",
+      "stat": "365 days"
+    },
+    "cta": {
+      "title": "Ready to deepen your practice?",
+      "subtitle": "Start tracking today — it's free.",
+      "button": "Get started"
     }
   },
   "keyFeatures": {
