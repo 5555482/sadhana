@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { FaUsers, FaPlus, FaCog } from 'react-icons/fa'
 import { LuX, LuRefreshCw } from 'react-icons/lu'
 import { useTranslation } from 'react-i18next'
 import { yatrasApi } from '../../api/yatras'
+import { useUiStore } from '../../store/uiStore'
 import { Spinner } from '../../components/ui/Spinner'
 import type { UserYatraDataRow, ColourZonesConfig, ZoneColour } from '../../types/api'
 
@@ -179,6 +180,18 @@ export function YatrasPage() {
     setNewName('')
     setShowCreate(true)
   }
+
+  // The mobile bottom-nav center "+" asks us (a separately-mounted page) to
+  // open the create-yatra modal. Guard against a fresh mount re-firing.
+  const yatraCreateNonce = useUiStore((s) => s.yatraCreateNonce)
+  const lastYatraNonce = useRef(yatraCreateNonce)
+  useEffect(() => {
+    if (yatraCreateNonce !== lastYatraNonce.current) {
+      lastYatraNonce.current = yatraCreateNonce
+      setNewName('')
+      setShowCreate(true)
+    }
+  }, [yatraCreateNonce])
 
   const submitCreate = () => {
     const n = newName.trim()
@@ -498,7 +511,7 @@ export function YatrasPage() {
       <button
         onClick={handleCreate}
         aria-label="Create yatra"
-        className="fixed bottom-24 sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center border-none cursor-pointer"
+        className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center border-none cursor-pointer"
         style={{
           background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
           boxShadow: '0 4px 24px rgba(45,212,191,0.45)',

@@ -13,6 +13,7 @@ if (!i18n.isInitialized) {
       en: {
         translation: {
           nav: { home: 'Home', charts: 'Charts', yatras: 'Yatras', settings: 'Settings' },
+          yatras: { createNewYatra: 'Create new yatra' },
           auth: {
             login: 'Sign In',
             register: 'Create Account',

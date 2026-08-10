@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FaSlidersH, FaPlus, FaSignOutAlt } from 'react-icons/fa'
 import { navItems } from './navItems'
 import { useAuthStore } from '../../store/authStore'
+import { useUiStore } from '../../store/uiStore'
 
 const CENTER_CLASS = 'flex items-center justify-center rounded-full no-underline'
 const CENTER_STYLE: React.CSSProperties = {
@@ -44,34 +45,54 @@ export function BottomNav() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const logout = useAuthStore((s) => s.logout)
+  const requestYatraCreate = useUiStore((s) => s.requestYatraCreate)
 
   // Center button is context-aware per route:
   //   /charts   → new report
   //   /settings → logout
+  //   /yatras   → create new yatra (asks YatrasPage to open its modal)
   //   else      → edit practices
   const onCharts = pathname === '/charts'
   const onSettings = pathname === '/settings'
+  const onYatras = pathname === '/yatras'
 
-  const center = onSettings ? (
-    <button
-      type="button"
-      aria-label={t('auth.logout')}
-      onClick={() => { logout(); navigate('/login', { replace: true }) }}
-      className={CENTER_CLASS}
-      style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
-    >
-      <FaSignOutAlt className="w-5 h-5 text-white" />
-    </button>
-  ) : (
-    <Link
-      to={onCharts ? '/charts/new' : '/user/practices'}
-      aria-label={onCharts ? t('charts.newReport') : 'Edit practices'}
-      className={CENTER_CLASS}
-      style={CENTER_STYLE}
-    >
-      {onCharts ? <FaPlus className="w-5 h-5 text-white" /> : <FaSlidersH className="w-5 h-5 text-white" />}
-    </Link>
-  )
+  let center: React.ReactNode
+  if (onSettings) {
+    center = (
+      <button
+        type="button"
+        aria-label={t('auth.logout')}
+        onClick={() => { logout(); navigate('/login', { replace: true }) }}
+        className={CENTER_CLASS}
+        style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
+      >
+        <FaSignOutAlt className="w-5 h-5 text-white" />
+      </button>
+    )
+  } else if (onYatras) {
+    center = (
+      <button
+        type="button"
+        aria-label={t('yatras.createNewYatra')}
+        onClick={() => requestYatraCreate()}
+        className={CENTER_CLASS}
+        style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
+      >
+        <FaPlus className="w-5 h-5 text-white" />
+      </button>
+    )
+  } else {
+    center = (
+      <Link
+        to={onCharts ? '/charts/new' : '/user/practices'}
+        aria-label={onCharts ? t('charts.newReport') : 'Edit practices'}
+        className={CENTER_CLASS}
+        style={CENTER_STYLE}
+      >
+        {onCharts ? <FaPlus className="w-5 h-5 text-white" /> : <FaSlidersH className="w-5 h-5 text-white" />}
+      </Link>
+    )
+  }
 
   return (
     <nav
