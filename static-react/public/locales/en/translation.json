@@ -84,6 +84,25 @@
       "title": "Ready to deepen your practice?",
       "subtitle": "Start tracking today — it's free.",
       "button": "Get started"
+    },
+    "footer": {
+      "product": {
+        "title": "Product",
+        "practices": "Practices",
+        "charts": "Charts",
+        "yatras": "Yatras"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About",
+        "contact": "Contact"
+      },
+      "resources": {
+        "title": "Resources",
+        "help": "Help",
+        "privacy": "Privacy"
+      },
+      "copyright": "© 2026 Sadhana Pro"
     }
   },
   "keyFeatures": {
