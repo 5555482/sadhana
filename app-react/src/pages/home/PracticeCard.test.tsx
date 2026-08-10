@@ -159,9 +159,11 @@ describe('PracticeCard — Text + Time (Task 3)', () => {
     expect(ta.tagName).toBe('TEXTAREA')
   })
 
-  it('Text with options renders a select', () => {
+  it('Text always renders a textarea, even with configured options (no dropdown)', () => {
     renderCard({ id: '3', practice: 'Mood', data_type: 'Text', is_active: true, is_required: false, dropdown_variants: 'Good\nOkay\nLow' })
-    expect(screen.getByRole('combobox', { name: 'Mood' })).toBeInTheDocument()
+    const ta = screen.getByRole('textbox', { name: 'Mood' })
+    expect(ta.tagName).toBe('TEXTAREA')
+    expect(screen.queryByRole('combobox', { name: 'Mood' })).toBeNull()
   })
 
   it('Time renders one field that formats and saves HH:MM', async () => {

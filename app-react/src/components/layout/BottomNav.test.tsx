@@ -25,6 +25,12 @@ describe('BottomNav', () => {
     expect(screen.getByRole('link', { name: 'Edit practices' })).toHaveAttribute('href', '/user/practices')
   })
 
+  it('center becomes a logout button on the settings route', () => {
+    renderAt('/settings')
+    expect(screen.getByRole('button', { name: 'Log out' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Edit practices' })).toBeNull()
+  })
+
   it('center button becomes New report on the charts route', () => {
     renderAt('/charts')
     expect(screen.getByRole('link', { name: 'New report' })).toHaveAttribute('href', '/charts/new')

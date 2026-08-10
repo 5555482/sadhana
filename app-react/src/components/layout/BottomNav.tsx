@@ -1,7 +1,17 @@
-import { NavLink, Link, useLocation } from 'react-router-dom'
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FaSlidersH, FaPlus } from 'react-icons/fa'
+import { FaSlidersH, FaPlus, FaSignOutAlt } from 'react-icons/fa'
 import { navItems } from './navItems'
+import { useAuthStore } from '../../store/authStore'
+
+const CENTER_CLASS = 'flex items-center justify-center rounded-full no-underline'
+const CENTER_STYLE: React.CSSProperties = {
+  width: '52px',
+  height: '52px',
+  marginTop: '-14px',
+  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+  boxShadow: '0 4px 20px rgba(1,163,134,0.40)',
+}
 
 function Tab({ to, navKey, icon: Icon, exact }: (typeof navItems)[number]) {
   const { t } = useTranslation()
@@ -32,13 +42,36 @@ export function BottomNav() {
   const { t } = useTranslation()
   const [home, charts, yatras, settings] = navItems
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const logout = useAuthStore((s) => s.logout)
 
-  // Center button is context-aware: on Charts it adds a new report;
-  // elsewhere it opens practice editing.
+  // Center button is context-aware per route:
+  //   /charts   → new report
+  //   /settings → logout
+  //   else      → edit practices
   const onCharts = pathname === '/charts'
-  const centerTo = onCharts ? '/charts/new' : '/user/practices'
-  const centerLabel = onCharts ? t('charts.newReport') : 'Edit practices'
-  const CenterIcon = onCharts ? FaPlus : FaSlidersH
+  const onSettings = pathname === '/settings'
+
+  const center = onSettings ? (
+    <button
+      type="button"
+      aria-label={t('auth.logout')}
+      onClick={() => { logout(); navigate('/login', { replace: true }) }}
+      className={CENTER_CLASS}
+      style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
+    >
+      <FaSignOutAlt className="w-5 h-5 text-white" />
+    </button>
+  ) : (
+    <Link
+      to={onCharts ? '/charts/new' : '/user/practices'}
+      aria-label={onCharts ? t('charts.newReport') : 'Edit practices'}
+      className={CENTER_CLASS}
+      style={CENTER_STYLE}
+    >
+      {onCharts ? <FaPlus className="w-5 h-5 text-white" /> : <FaSlidersH className="w-5 h-5 text-white" />}
+    </Link>
+  )
 
   return (
     <nav
@@ -55,23 +88,8 @@ export function BottomNav() {
       <Tab {...home} />
       <Tab {...charts} />
 
-      {/* Center — context-aware: New report on Charts, else Edit practices */}
-      <div className="flex-1 flex justify-center items-start">
-        <Link
-          to={centerTo}
-          aria-label={centerLabel}
-          className="flex items-center justify-center rounded-full no-underline"
-          style={{
-            width: '52px',
-            height: '52px',
-            marginTop: '-14px',
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 20px rgba(1,163,134,0.40)',
-          }}
-        >
-          <CenterIcon className="w-5 h-5 text-white" />
-        </Link>
-      </div>
+      {/* Center — context-aware: New report on Charts, Logout on Settings, else Edit practices */}
+      <div className="flex-1 flex justify-center items-start">{center}</div>
 
       <Tab {...yatras} />
       <Tab {...settings} />

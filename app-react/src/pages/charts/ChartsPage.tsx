@@ -871,7 +871,7 @@ export function ChartsPage() {
       <Link
         to="/charts/new"
         aria-label="New report"
-        className="fixed bottom-24 sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
+        className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center"
         style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 24px rgba(45,212,191,0.45)' }}
       >
         <FaPlus className="w-5 h-5 text-white" />

@@ -150,7 +150,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
     : ''
   const [timeStr, setTimeStr] = useState(initialTime)
 
-  const isFreeText = practice.data_type === 'Text' && !practice.dropdown_variants
+  const isFreeText = practice.data_type === 'Text'
 
   /* ── Value refs ── */
   const durRef   = useRef(durVal)
@@ -368,34 +368,8 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
         />
       )}
 
-      {/* ── Text (dropdown) ── */}
-      {practice.data_type === 'Text' && practice.dropdown_variants && (
-        <select
-          defaultValue={textVal}
-          aria-label={practice.practice}
-          className="focus:outline-none text-sm cursor-pointer"
-          style={{
-            ...field,
-            width: '7rem', height: '2.25rem',
-            padding: '0 0.5rem',
-            textAlign: 'left',
-            fontWeight: 500,
-            color: textVal ? ACCENT : '#9ca3af',
-          }}
-          onChange={(e) => {
-            e.target.style.color = e.target.value ? ACCENT : '#9ca3af'
-            save({ Text: e.target.value })
-          }}
-        >
-          <option value="">—</option>
-          {practice.dropdown_variants.split('\n').map(v => v.trim()).filter(Boolean).map(v => (
-            <option key={v} value={v}>{v}</option>
-          ))}
-        </select>
-      )}
-
-      {/* ── Text (free textarea) ── */}
-      {practice.data_type === 'Text' && !practice.dropdown_variants && (
+      {/* ── Text — always a free-text textarea (matches Rust; no dropdown) ── */}
+      {practice.data_type === 'Text' && (
         <textarea
           defaultValue={textVal}
           placeholder="—"
