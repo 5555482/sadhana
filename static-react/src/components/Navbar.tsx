@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pill } from './Pill'
+import LanguageSelector from './LanguageSelector'
 import logo from '../assets/logo.png'
 
 const APP_URL = 'https://app.sadhana.pro/'
@@ -56,11 +57,13 @@ export default function Navbar() {
           <a href={SIGNIN_URL} className="text-sm text-white/70 hover:text-white transition-colors">
             {t('landing.nav.signIn')}
           </a>
+          <LanguageSelector />
           <Pill href={APP_URL}>{t('landing.nav.getStarted')}</Pill>
         </div>
 
-        {/* Mobile: pill only */}
-        <div className="flex md:hidden items-center">
+        {/* Mobile: language switcher + pill */}
+        <div className="flex md:hidden items-center gap-2">
+          <LanguageSelector compact />
           <Pill href={APP_URL}>{t('landing.nav.getStarted')}</Pill>
         </div>
       </div>
