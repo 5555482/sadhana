@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="bg-[#0b0b0d] border-t border-white/10 py-16 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Top grid: brand + three columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1 flex flex-col gap-3">
             <a
@@ -20,14 +20,14 @@ export default function Footer() {
             >
               Sadhana
             </a>
-            <p className="text-white/45 text-sm leading-relaxed">
-              {t('landing.title')}
+            <p className="text-white/55 text-sm leading-relaxed">
+              {t('landing.footer.tagline')}
             </p>
           </div>
 
           {/* Product column */}
           <div className="flex flex-col gap-3">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-white/40 font-medium">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-white/55 font-medium">
               {t('landing.footer.product.title')}
             </p>
             <ul className="flex flex-col gap-2 list-none p-0 m-0">
@@ -51,7 +51,7 @@ export default function Footer() {
 
           {/* Company column */}
           <div className="flex flex-col gap-3">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-white/40 font-medium">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-white/55 font-medium">
               {t('landing.footer.company.title')}
             </p>
             <ul className="flex flex-col gap-2 list-none p-0 m-0">
@@ -70,7 +70,7 @@ export default function Footer() {
 
           {/* Resources column */}
           <div className="flex flex-col gap-3">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-white/40 font-medium">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-white/55 font-medium">
               {t('landing.footer.resources.title')}
             </p>
             <ul className="flex flex-col gap-2 list-none p-0 m-0">
@@ -90,7 +90,7 @@ export default function Footer() {
 
         {/* Bottom row: copyright */}
         <div className="border-t border-white/10 pt-6">
-          <p className="text-white/40 text-sm">
+          <p className="text-white/55 text-sm">
             {t('landing.footer.copyright')}
           </p>
         </div>
