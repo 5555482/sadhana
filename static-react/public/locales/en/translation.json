@@ -47,6 +47,32 @@
           "desc": "Turn daily logs into trends that keep you going."
         }
       }
+    },
+    "splitA": {
+      "label": "Practices",
+      "title": "Your practice canvas",
+      "description": "Shape a practice that fits your life. Add what you want to track, mark what's required, and log it in seconds each day.",
+      "cta": "Explore practices",
+      "step1": "Add practices",
+      "step2": "Mark what's required",
+      "step3": "Log daily",
+      "step4": "Review trends"
+    },
+    "splitB": {
+      "label": "Insights",
+      "title": "See your progress",
+      "description": "Charts turn your daily logs into patterns — so you can see what's working and adjust.",
+      "cta": "Explore charts",
+      "step1": "Pick practices",
+      "step2": "Choose a range",
+      "step3": "Read the trend",
+      "step4": "Adjust your routine"
+    },
+    "splitC": {
+      "label": "Yatras",
+      "title": "Practice together",
+      "description": "Join a yatra to share the journey — see each member's consistency and encourage one another.",
+      "cta": "Explore yatras"
     }
   },
   "keyFeatures": {
