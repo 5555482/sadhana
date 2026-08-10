@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
 import { TopBar } from './TopBar'
 import { BottomNav } from './BottomNav'
 import { navItems } from './navItems'
@@ -27,11 +26,11 @@ export function AppShell() {
             : 'pt-14'
         }
       >
-        <AnimatePresence>
-          <PageTransition key={location.pathname}>
-            <Outlet />
-          </PageTransition>
-        </AnimatePresence>
+        {/* Keyed remount fades each page in. No AnimatePresence: its sync mode
+            kept the previous page mounted during the switch, causing a flash. */}
+        <PageTransition key={location.pathname}>
+          <Outlet />
+        </PageTransition>
       </main>
       {showBottomNav && <BottomNav />}
       <ToastContainer />
