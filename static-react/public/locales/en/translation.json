@@ -25,6 +25,28 @@
       "typesLabel": "practice types",
       "langLabel": "languages",
       "offlineLabel": "offline-first"
+    },
+    "features": {
+      "label": "Core",
+      "title": "Built for daily practice",
+      "items": {
+        "custom": {
+          "title": "Custom practices",
+          "desc": "Track anything: minutes, counts, times, notes, or simple done/not."
+        },
+        "offline": {
+          "title": "Offline-first",
+          "desc": "Log anywhere; changes sync when you're back online."
+        },
+        "yatras": {
+          "title": "Group yatras",
+          "desc": "Practice together and see the group's stability at a glance."
+        },
+        "charts": {
+          "title": "Insightful charts",
+          "desc": "Turn daily logs into trends that keep you going."
+        }
+      }
     }
   },
   "keyFeatures": {
