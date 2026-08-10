@@ -2,7 +2,21 @@
   "landing": {
     "title": "Sadhana Pro",
     "subtitle": "Sadhana tracker and chart - a tracker for spiritual practice, meditation, and habits",
-    "description": "Sadhana Pro is a powerful and flexible sadhana (daily spiritual practice) diary that helps you track your daily practices, habits, and meditation. You can track your activities in convenient tables or monitor your progress on visual graphs. The app is ideal for both regular spiritual practice and systematically tracking your daily tasks and habits. With Sadhana Pro, you can consciously develop your spiritual discipline."
+    "description": "Sadhana Pro is a powerful and flexible sadhana (daily spiritual practice) diary that helps you track your daily practices, habits, and meditation. You can track your activities in convenient tables or monitor your progress on visual graphs. The app is ideal for both regular spiritual practice and systematically tracking your daily tasks and habits. With Sadhana Pro, you can consciously develop your spiritual discipline.",
+    "nav": {
+      "features": "Features",
+      "practices": "Practices",
+      "charts": "Charts",
+      "signIn": "Sign in",
+      "getStarted": "Get started"
+    },
+    "hero": {
+      "badge": "New · Group yatras",
+      "title1": "Practice with intention.",
+      "title2": "Track what truly matters.",
+      "subtitle": "Sadhana Pro helps you build lasting spiritual habits — log daily, join group yatras, and watch your progress unfold.",
+      "cta": "Get started"
+    }
   },
   "keyFeatures": {
     "title": "Key Features",
