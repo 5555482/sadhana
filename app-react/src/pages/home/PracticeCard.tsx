@@ -1,7 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { formatTimeInput, parseTime } from './inputFormat'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { LuToggleRight, LuHash, LuTimer, LuClock, LuType, LuZap } from 'react-icons/lu'
+import { LuToggleRight, LuHash, LuTimer, LuClock, LuType } from 'react-icons/lu'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../hooks/useToast'
 import { practicesApi } from '../../api/practices'
@@ -143,7 +143,6 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
   const [localBool, setLocalBool]     = useState(boolVal)
   const [flash, setFlash]             = useState(false)
   const [errorFlash, setErrorFlash]   = useState(false)
-  const [showQuickAdd, setShowQuickAdd] = useState(false)
 
   const initialTime = (timeH > 0 || timeM > 0)
     ? `${String(timeH).padStart(2, '0')}:${String(timeM).padStart(2, '0')}`
@@ -274,44 +273,25 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
 
       {/* ── Duration ── */}
       {practice.data_type === 'Duration' && (
-        <>
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            <input
-              ref={durEl}
-              type="text" inputMode="numeric"
-              defaultValue={fmtDur(durVal)}
-              aria-label={`${practice.practice} duration`}
-              placeholder="—"
-              className="focus:outline-none text-sm"
-              style={{ ...field, width: '5.5rem', height: '2.25rem', color: durVal > 0 ? ACCENT : '#9ca3af' }}
-              onFocus={(e) => { fieldFocus(e); e.target.value = durRef.current > 0 ? String(durRef.current) : ''; setTimeout(() => e.target.select(), 0) }}
-              onBlur={(e) => {
-                fieldBlur(e)
-                const v = parseInt(e.target.value, 10)
-                durRef.current = isNaN(v) || v < 0 ? 0 : v
-                e.target.value = fmtDur(durRef.current)
-                e.target.style.color = durRef.current > 0 ? ACCENT : '#9ca3af'
-                save({ Duration: durRef.current })
-              }}
-              onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
-            />
-            <button
-              type="button" aria-label="Quick add minutes"
-              onClick={() => setShowQuickAdd(true)}
-              className="w-7 h-7 rounded-lg flex items-center justify-center select-none flex-shrink-0"
-              style={{ background: 'rgba(1,163,134,0.12)', border: '1px solid rgba(1,163,134,0.25)', color: ACCENT }}
-            >
-              <LuZap className="w-3.5 h-3.5" />
-            </button>
-          </div>
-          {showQuickAdd && (
-            <DurationQuickAddModal
-              onAdd={(minutes) => save({ Duration: durRef.current + minutes })}
-              onClose={() => setShowQuickAdd(false)}
-              isPending={mutation.isPending}
-            />
-          )}
-        </>
+        <input
+          ref={durEl}
+          type="text" inputMode="numeric"
+          defaultValue={fmtDur(durVal)}
+          aria-label={`${practice.practice} duration`}
+          placeholder="—"
+          className="focus:outline-none text-sm flex-shrink-0"
+          style={{ ...field, width: '5.5rem', height: '2.25rem', color: durVal > 0 ? ACCENT : '#9ca3af' }}
+          onFocus={(e) => { fieldFocus(e); e.target.value = durRef.current > 0 ? String(durRef.current) : ''; setTimeout(() => e.target.select(), 0) }}
+          onBlur={(e) => {
+            fieldBlur(e)
+            const v = parseInt(e.target.value, 10)
+            durRef.current = isNaN(v) || v < 0 ? 0 : v
+            e.target.value = fmtDur(durRef.current)
+            e.target.style.color = durRef.current > 0 ? ACCENT : '#9ca3af'
+            save({ Duration: durRef.current })
+          }}
+          onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
+        />
       )}
 
       {/* ── Int ── */}
