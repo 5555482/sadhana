@@ -21,9 +21,10 @@ import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import type { UserPractice } from '../../types/api'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../hooks/useToast'
+import { ACCENT_GRADIENT } from '../../theme/tokens'
 
 const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, tKey: string }> = {
-  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   tKey: 'practice.typeBool'     },
+  Bool:     { icon: LuToggleRight, color: '#c8724a', bg: 'rgba(200,114,74,0.10)',   tKey: 'practice.typeBool'     },
   Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  tKey: 'practice.typeInt'      },
   Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  tKey: 'practice.typeDuration' },
   Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  tKey: 'practice.typeTime'     },
@@ -47,11 +48,11 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
       ref={setNodeRef}
       style={{
         ...style,
-        background: 'rgba(255,255,255,0.92)',
+        background: '#141416',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,255,255,0.85)',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
+        border: '1px solid rgba(255,255,255,0.10)',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.4)',
         borderRadius: '1rem',
       }}
     >
@@ -61,7 +62,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
           {...attributes}
           {...listeners}
           className="flex-shrink-0 touch-none w-8 h-8 flex items-center justify-center rounded-lg"
-          style={{ color: 'rgba(0,0,0,0.18)', cursor: 'grab' }}
+          style={{ color: 'rgba(255,255,255,0.25)', cursor: 'grab' }}
           aria-label="Drag to reorder"
         >
           <FaGripVertical className="w-3.5 h-3.5" />
@@ -78,7 +79,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
         {/* Name */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-gray-800 text-sm truncate">{practice.practice}</span>
+            <span className="font-semibold text-base-content text-sm truncate">{practice.practice}</span>
             {practice.is_required && (
               <span className="text-xs font-bold flex-shrink-0" style={{ color: '#e11d48' }}>*</span>
             )}
@@ -165,24 +166,24 @@ export function MyPracticesPage() {
         <div
           className="rounded-2xl px-5 py-5 flex items-center gap-4"
           style={{
-            background: 'rgba(255,255,255,0.90)',
+            background: '#141416',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.80)',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+            border: '1px solid rgba(255,255,255,0.10)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
           }}
         >
           <div
             className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+              background: ACCENT_GRADIENT,
+              boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
             }}
           >
             <FaLayerGroup className="w-5 h-5 text-white" />
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="text-base font-bold text-gray-800 leading-tight">{t('settings.myPractices')}</h1>
+            <h1 className="text-base font-bold text-base-content leading-tight">{t('settings.myPractices')}</h1>
             <p className="text-xs text-gray-400 mt-0.5">
               {items.length > 0
                 ? t('practice.listSubtitle', { count: items.length })
@@ -193,7 +194,7 @@ export function MyPracticesPage() {
             to="/"
             aria-label="Close"
             className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+            style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
           >
             <LuX className="w-4 h-4" />
           </Link>
@@ -221,8 +222,8 @@ export function MyPracticesPage() {
         aria-label="Add practice"
         className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
         style={{
-          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-          boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
+          background: ACCENT_GRADIENT,
+          boxShadow: '0 4px 24px rgba(200,114,74,0.45)',
         }}
       >
         <FaPlus className="w-5 h-5 text-white" />

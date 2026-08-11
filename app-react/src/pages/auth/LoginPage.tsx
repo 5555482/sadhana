@@ -63,7 +63,7 @@ export function LoginPage() {
           </h1>
           <p className="text-xs text-base-content/50 mt-2">
             {t('auth.noAccount')}{' '}
-            <Link to="/register" className="font-medium hover:underline" style={{ color: '#01a386' }}>
+            <Link to="/register" className="font-medium hover:underline" style={{ color: '#c8724a' }}>
               {t('auth.signUp')}
             </Link>
           </p>
@@ -111,7 +111,7 @@ export function LoginPage() {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
-                style={{ color: '#01a386' }}
+                style={{ color: '#c8724a' }}
               >
                 {showPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
               </button>
@@ -134,9 +134,9 @@ export function LoginPage() {
             disabled={loading}
             className="w-full h-12 rounded-full text-sm font-semibold transition-all flex items-center justify-center gap-2"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              color: '#134e4a',
-              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+              color: '#0b0b0d',
+              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
               opacity: loading ? 0.6 : 1,
             }}
           >

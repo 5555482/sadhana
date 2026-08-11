@@ -5,16 +5,15 @@ import { FaUsers } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { yatrasApi } from '../../api/yatras'
 import { Spinner } from '../../components/ui/Spinner'
+import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: '#141416',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
-
-const ACCENT = '#01a386'
 
 export function YatraJoinPage() {
   const { t } = useTranslation()
@@ -63,21 +62,21 @@ export function YatraJoinPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.28)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.28)',
           }}
         >
           <FaUsers className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">{t('yatras.join')}</h1>
+          <h1 className="text-base font-bold text-base-content">{t('yatras.join')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('yatras.invited')}</p>
         </div>
         <button
           onClick={() => navigate(-1)}
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)', border: 'none', cursor: 'pointer' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)', border: 'none', cursor: 'pointer' }}
         >
           <LuX className="w-4 h-4" />
         </button>
@@ -88,14 +87,14 @@ export function YatraJoinPage() {
         <div
           className="w-20 h-20 rounded-3xl flex items-center justify-center text-white text-3xl font-bold"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 8px 32px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 8px 32px rgba(200,114,74,0.30)',
           }}
         >
           {initial}
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-800">{data.name}</h2>
+          <h2 className="text-xl font-bold text-base-content">{data.name}</h2>
           {data.member_count != null && (
             <p className="text-sm text-gray-400 mt-1">
               {data.member_count} member{data.member_count === 1 ? '' : 's'}
@@ -113,10 +112,10 @@ export function YatraJoinPage() {
         disabled={join.isPending}
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
-          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+          background: ACCENT_GRADIENT,
           color: 'white',
           border: 'none',
-          boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+          boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
           opacity: join.isPending ? 0.7 : 1,
           cursor: join.isPending ? 'default' : 'pointer',
         }}
@@ -129,11 +128,11 @@ export function YatraJoinPage() {
         onClick={() => navigate(-1)}
         className="w-full h-12 rounded-full text-sm font-semibold"
         style={{
-          background: 'rgba(255,255,255,0.85)',
+          background: 'rgba(255,255,255,0.08)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           color: '#6b7280',
-          border: '1.5px solid rgba(0,0,0,0.10)',
+          border: '1.5px solid rgba(255,255,255,0.10)',
           cursor: 'pointer',
         }}
       >

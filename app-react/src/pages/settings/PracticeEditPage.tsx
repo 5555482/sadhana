@@ -6,13 +6,14 @@ import { LuX } from 'react-icons/lu'
 import { practicesApi } from '../../api/practices'
 import { PracticeForm } from '../../components/PracticeForm'
 import { Spinner } from '../../components/ui/Spinner'
+import { ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
 
 const cardStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 export function PracticeEditPage() {
@@ -36,21 +37,21 @@ export function PracticeEditPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <FaEdit className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800 leading-tight truncate">{practice.practice}</h1>
+          <h1 className="text-base font-bold text-base-content leading-tight truncate">{practice.practice}</h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('practice.edit')}</p>
         </div>
         <Link
           to="/user/practices"
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
         >
           <LuX className="w-4 h-4" />
         </Link>

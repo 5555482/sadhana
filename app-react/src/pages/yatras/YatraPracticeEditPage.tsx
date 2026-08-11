@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { yatrasApi } from '../../api/yatras'
 import { TopBar } from '../../components/layout/TopBar'
 import { Spinner } from '../../components/ui/Spinner'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
 import type {
   YatraPractice, PracticeDataType,
   ColourZonesConfig, ColourBound, ZoneColour, PracticeValue,
@@ -35,14 +36,12 @@ const ZONE_T_KEY: Record<ZoneColour, string> = {
   DarkGreen: 'yatras.zoneDarkGreen',
 }
 
-const ACCENT = '#01a386'
-
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 // ── Value helpers ──────────────────────────────────────────────────────────────
@@ -280,7 +279,7 @@ export function YatraPracticeEditPage() {
             value={name}
             onChange={e => setName(e.target.value)}
             required
-            className="w-full text-sm font-semibold text-gray-800 bg-transparent outline-none"
+            className="w-full text-sm font-semibold text-base-content bg-transparent outline-none"
             placeholder={t('practice.name')}
           />
         </div>
@@ -288,14 +287,14 @@ export function YatraPracticeEditPage() {
         {/* Data type (read-only) */}
         <div className="rounded-2xl px-4 py-3.5" style={glass}>
           <label className="text-xs text-gray-400 block mb-1">{t('practice.type')}</label>
-          <p className="text-sm font-semibold text-gray-800">{t(`practice.type${dt}`)}</p>
+          <p className="text-sm font-semibold text-base-content">{t(`practice.type${dt}`)}</p>
         </div>
 
         {/* Colour zones section */}
         {supportsZones && (
           <div className="rounded-2xl overflow-hidden" style={glass}>
             {/* Header */}
-            <div className="px-4 py-3 border-b border-black/[0.06]">
+            <div className="px-4 py-3 border-b border-white/[0.06]">
               <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('yatras.colourZones')}</p>
               <p className="text-xs text-gray-400 mt-0.5">{t('yatras.colourZonesDesc')}</p>
             </div>
@@ -309,8 +308,8 @@ export function YatraPracticeEditPage() {
                   id="zone-count"
                   value={zonesEnabled ? numZones : 0}
                   onChange={e => handleZoneCount(e.target.value)}
-                  className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none cursor-pointer"
-                  style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                  className="w-full text-sm text-base-content rounded-xl px-3 h-10 outline-none cursor-pointer"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                 >
                   <option value={0}>{t('yatras.zonesDisabled')}</option>
                   <option value={2}>{t('yatras.zones2')}</option>
@@ -327,8 +326,8 @@ export function YatraPracticeEditPage() {
                       id="better-direction"
                       value={zones.better_direction}
                       onChange={e => handleBetterDirection(e.target.value)}
-                      className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none cursor-pointer"
-                      style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                      className="w-full text-sm text-base-content rounded-xl px-3 h-10 outline-none cursor-pointer"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                     >
                       <option value="Higher">{t('yatras.higherBetter')}</option>
                       <option value="Lower">{t('yatras.lowerBetter')}</option>
@@ -347,7 +346,7 @@ export function YatraPracticeEditPage() {
                         value={toStr(bound.to, dt)}
                         onChange={e => handleBoundValue(idx, e.target.value)}
                         placeholder={placeholder(dt)}
-                        className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none"
+                        className="w-full text-sm text-base-content rounded-xl px-3 h-10 outline-none"
                         style={{
                           background: ZONE_BG[bound.colour],
                           border: `1.5px solid ${ZONE_BG[bound.colour]}`,
@@ -364,8 +363,8 @@ export function YatraPracticeEditPage() {
                       id="no-value-colour"
                       value={zones.no_value_colour}
                       onChange={e => setZones(prev => ({ ...prev, no_value_colour: e.target.value as ZoneColour }))}
-                      className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none cursor-pointer"
-                      style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                      className="w-full text-sm text-base-content rounded-xl px-3 h-10 outline-none cursor-pointer"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                     >
                       {ZONE_COLOURS.map(zc => (
                         <option key={zc} value={zc}>{t(ZONE_T_KEY[zc])}</option>
@@ -400,7 +399,7 @@ export function YatraPracticeEditPage() {
         {/* Daily Score section */}
         {DAILY_SCORE_TYPES.includes(dt) && (
           <div className="rounded-2xl overflow-hidden" style={glass}>
-            <div className="px-4 py-3 border-b border-black/[0.06]">
+            <div className="px-4 py-3 border-b border-white/[0.06]">
               <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('yatras.dailyScore')}</p>
               <p className="text-xs text-gray-400 mt-0.5">{t('yatras.dailyScoreDesc')}</p>
             </div>
@@ -413,8 +412,8 @@ export function YatraPracticeEditPage() {
                   id="ds-better"
                   value={dailyScore.better_direction}
                   onChange={e => setDailyScore(prev => ({ ...prev, better_direction: e.target.value as 'Higher' | 'Lower' }))}
-                  className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none cursor-pointer"
-                  style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                  className="w-full text-sm text-base-content rounded-xl px-3 h-10 outline-none cursor-pointer"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                 >
                   <option value="Higher">{t('yatras.higherBetter')}</option>
                   <option value="Lower">{t('yatras.lowerBetter')}</option>
@@ -431,8 +430,8 @@ export function YatraPracticeEditPage() {
                   value={toStr(dailyScore.mandatory_threshold, dt)}
                   onChange={e => handleDailyScoreMandatory(e.target.value)}
                   placeholder={placeholder(dt)}
-                  className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none"
-                  style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                  className="w-full text-sm text-base-content rounded-xl px-3 h-10 outline-none"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                   min={dt === 'Int' ? 0 : undefined}
                 />
                 <p className="text-xs text-gray-400 mt-1">{t('yatras.mandatoryDesc')}</p>
@@ -448,8 +447,8 @@ export function YatraPracticeEditPage() {
                   value={toStr(bonusThreshold, dt)}
                   onChange={e => handleDailyScoreBonus(e.target.value)}
                   placeholder={placeholder(dt)}
-                  className="w-full text-sm text-gray-800 rounded-xl px-3 h-10 outline-none"
-                  style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.08)' }}
+                  className="w-full text-sm text-base-content rounded-xl px-3 h-10 outline-none"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                   min={dt === 'Int' ? 0 : undefined}
                 />
                 <p className="text-xs text-gray-400 mt-1">{t('yatras.bonusDesc')}</p>
@@ -465,10 +464,10 @@ export function YatraPracticeEditPage() {
           disabled={saveMutation.isPending || !name.trim()}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+            background: ACCENT_GRADIENT,
             color: 'white',
             border: 'none',
-            boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             opacity: saveMutation.isPending ? 0.7 : 1,
           }}
         >

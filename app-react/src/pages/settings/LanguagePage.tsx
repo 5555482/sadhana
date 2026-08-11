@@ -1,13 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { LuGlobe, LuCheck, LuX } from 'react-icons/lu'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, TEXT, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const LANGS = [
@@ -27,21 +28,21 @@ export function LanguagePage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <LuGlobe className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">Language</h1>
+          <h1 className="text-base font-bold text-base-content">Language</h1>
           <p className="text-xs text-gray-400 mt-0.5">Choose your preferred language</p>
         </div>
         <Link
           to="/settings"
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
         >
           <LuX className="w-4 h-4" />
         </Link>
@@ -57,16 +58,16 @@ export function LanguagePage() {
               onClick={() => i18n.changeLanguage(code)}
               className="w-full flex items-center gap-4 px-4 py-4 text-left transition-colors"
               style={{
-                background: active ? 'rgba(1,163,134,0.06)' : 'transparent',
+                background: active ? 'rgba(200,114,74,0.06)' : 'transparent',
                 border: 'none',
-                borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.05)',
+                borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
               }}
             >
               <div className="flex-1">
-                <p className="text-sm font-semibold" style={{ color: active ? '#01a386' : '#1f2937' }}>{native}</p>
+                <p className="text-sm font-semibold" style={{ color: active ? ACCENT : TEXT }}>{native}</p>
                 <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>{label}</p>
               </div>
-              {active && <LuCheck className="w-4 h-4 flex-shrink-0" style={{ color: '#01a386' }} />}
+              {active && <LuCheck className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />}
             </button>
           )
         })}

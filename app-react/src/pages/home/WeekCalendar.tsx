@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MonthCalendar } from './MonthCalendar'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
 
 interface WeekCalendarProps {
   date: Date
@@ -87,7 +88,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
           className="text-xs leading-none"
           style={{
             fontWeight: selected ? 700 : 400,
-            color: selected ? '#01a386' : '#9ca3af',
+            color: selected ? ACCENT : '#9ca3af',
           }}
         >
           {narrowDay}
@@ -97,13 +98,13 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
           style={
             selected
               ? {
-                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                  background: ACCENT_GRADIENT,
                   color: '#fff',
-                  boxShadow: '0 2px 8px rgba(1,163,134,0.35)',
+                  boxShadow: '0 2px 8px rgba(200,114,74,0.35)',
                 }
               : isToday
-              ? { color: '#01a386', fontWeight: 600 }
-              : { color: '#4b5563' }
+              ? { color: ACCENT, fontWeight: 600 }
+              : { color: '#f5f4f2' }
           }
         >
           {d.getDate()}
@@ -119,11 +120,11 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
     <div
       className="rounded-2xl select-none overflow-hidden"
       style={{
-        background: 'rgba(255,255,255,0.92)',
+        background: SURFACE_2,
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255,255,255,0.85)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+        border: `1px solid ${BORDER}`,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
       }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
@@ -146,19 +147,19 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
               onClick={() => onDateChange(new Date())}
               aria-label="Go to today"
               className="text-xs font-semibold px-2 py-0.5 rounded-full focus:outline-none"
-              style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)', border: 'none', cursor: 'pointer' }}
+              style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)', border: 'none', cursor: 'pointer' }}
             >
               {t('home.today')}
             </button>
           )}
-          <span className="text-xs font-semibold" style={{ color: '#374151' }}>
+          <span className="text-xs font-semibold" style={{ color: '#f5f4f2' }}>
             {shortDate}
           </span>
         </div>
       </div>
 
       {/* Divider */}
-      <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '0 16px' }} />
+      <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '0 16px' }} />
 
       {/* Week grid */}
       <div className="px-1 pb-3 pt-1 touch-pan-y">

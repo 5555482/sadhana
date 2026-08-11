@@ -8,13 +8,14 @@ import { yatrasApi } from '../../api/yatras'
 import { useUiStore } from '../../store/uiStore'
 import { Spinner } from '../../components/ui/Spinner'
 import type { UserYatraDataRow, ColourZonesConfig, ZoneColour } from '../../types/api'
+import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: '#141416',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const SELECTED_YATRA_KEY = 'selected_yatra'
@@ -229,8 +230,8 @@ export function YatrasPage() {
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              boxShadow: '0 4px 12px rgba(1,163,134,0.28)',
+              background: ACCENT_GRADIENT,
+              boxShadow: '0 4px 12px rgba(200,114,74,0.28)',
             }}
           >
             <FaUsers className="w-4 h-4 text-white" />
@@ -240,7 +241,7 @@ export function YatrasPage() {
             <select
               value={selectedYatra?.id ?? ''}
               onChange={e => handleSelect(e.target.value)}
-              className="flex-1 text-sm font-semibold text-gray-800 bg-transparent border-none outline-none cursor-pointer"
+              className="flex-1 text-sm font-semibold text-base-content bg-transparent border-none outline-none cursor-pointer"
             >
               {yatras.map(y => (
                 <option key={y.id} value={y.id}>{y.name}</option>
@@ -255,7 +256,7 @@ export function YatrasPage() {
               to={`/yatra/${selectedYatra.id}/settings`}
               aria-label="Yatra settings"
               className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-              style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)' }}
+              style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)' }}
             >
               <FaCog className="w-3.5 h-3.5" />
             </Link>
@@ -266,7 +267,7 @@ export function YatrasPage() {
             onClick={() => qc.invalidateQueries({ queryKey: ['yatra-data', selectedYatra?.id, dateStr] })}
             aria-label={t('yatras.refresh')}
             className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-            style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)', border: 'none', cursor: 'pointer' }}
+            style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)', border: 'none', cursor: 'pointer' }}
           >
             <LuRefreshCw className={`w-3.5 h-3.5 ${dataQuery.isFetching ? 'animate-spin' : ''}`} />
           </button>
@@ -276,7 +277,7 @@ export function YatrasPage() {
             onClick={handleCreate}
             aria-label="Create yatra"
             className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-            style={{ color: '#01a386', background: 'rgba(1,163,134,0.08)', border: 'none' }}
+            style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)', border: 'none' }}
           >
             <FaPlus className="w-3.5 h-3.5" />
           </button>
@@ -292,21 +293,21 @@ export function YatrasPage() {
           <div className="flex flex-col items-center py-16 gap-4">
             <div
               className="w-16 h-16 rounded-3xl flex items-center justify-center"
-              style={{ background: 'rgba(1,163,134,0.08)' }}
+              style={{ background: 'rgba(200,114,74,0.08)' }}
             >
-              <FaUsers className="w-7 h-7" style={{ color: '#01a386' }} />
+              <FaUsers className="w-7 h-7" style={{ color: ACCENT }} />
             </div>
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700">{t('yatras.noYet')}</p>
+              <p className="text-sm font-medium text-base-content">{t('yatras.noYet')}</p>
               <p className="text-xs text-gray-400 mt-1">{t('yatras.createCircle')}</p>
             </div>
             <button
               onClick={handleCreate}
               className="px-6 h-11 rounded-full text-sm font-semibold flex items-center gap-2 border-none cursor-pointer"
               style={{
-                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                background: ACCENT_GRADIENT,
                 color: 'white',
-                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
               }}
             >
               {t('yatras.createButton')}
@@ -333,7 +334,7 @@ export function YatrasPage() {
             <button
               onClick={dismissLegend}
               className="ml-auto w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-gray-500"
-              style={{ background: 'rgba(0,0,0,0.04)', border: 'none', cursor: 'pointer' }}
+              style={{ background: 'rgba(255,255,255,0.06)', border: 'none', cursor: 'pointer' }}
               aria-label="Dismiss legend"
             >
               <LuX className="w-3 h-3" />
@@ -354,7 +355,7 @@ export function YatrasPage() {
                   ))}
                 </colgroup>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}>
                     <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
                       Sadhaka
                     </th>
@@ -390,9 +391,9 @@ export function YatrasPage() {
                   {data.data.map((row, i) => (
                     <tr
                       key={row.user_id}
-                      style={{ borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : undefined }}
+                      style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.06)' : undefined }}
                     >
-                      <td className="px-4 py-3 font-semibold text-gray-800 whitespace-nowrap">
+                      <td className="px-4 py-3 font-semibold text-base-content whitespace-nowrap">
                         {row.user_name}
                       </td>
                       {showStability && (
@@ -408,7 +409,7 @@ export function YatrasPage() {
                           key={j}
                           className="px-3 py-3 text-center"
                           style={{
-                            color: '#374151',
+                            color: '#f5f4f2',
                             background: cellBackground(val, data.practices[j]?.colour_zones),
                           }}
                         >
@@ -430,7 +431,7 @@ export function YatrasPage() {
           <div className="rounded-2xl overflow-hidden" style={glass}>
             <div
               className="px-4 py-3"
-              style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}
+              style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}
             >
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
                 {t('yatras.stability')}
@@ -439,7 +440,7 @@ export function YatrasPage() {
             <div className="overflow-x-auto">
               <table className="text-xs" style={{ minWidth: 'max-content', width: '100%' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                     <th className="px-4 py-1.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af', width: '35%' }}>
                       {t('yatras.stability')}
                     </th>
@@ -458,9 +459,9 @@ export function YatrasPage() {
                   {data.data.map((row, i) => (
                     <tr
                       key={row.user_id}
-                      style={{ borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : undefined }}
+                      style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.06)' : undefined }}
                     >
-                      <td className="px-4 py-2 font-semibold text-gray-800 whitespace-nowrap">
+                      <td className="px-4 py-2 font-semibold text-base-content whitespace-nowrap">
                         {row.user_name}
                       </td>
                       {heatmapScores(row).map((score, j) => (
@@ -469,7 +470,7 @@ export function YatrasPage() {
                           className="px-2 py-2 text-center w-8"
                           style={{
                             background: heatmapBackground(score),
-                            color: score > 0 ? '#374151' : '#d1d5db',
+                            color: score > 0 ? '#f5f4f2' : '#d1d5db',
                             fontWeight: score > 0 ? 600 : 400,
                           }}
                         >
@@ -494,10 +495,10 @@ export function YatrasPage() {
               <div
                 key={i}
                 className="flex justify-between items-center py-1.5"
-                style={{ borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : undefined }}
+                style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.06)' : undefined }}
               >
                 <span className="text-sm text-gray-600">{stat.label}</span>
-                <span className="text-sm font-bold text-gray-800">
+                <span className="text-sm font-bold text-base-content">
                   {stat.value !== null ? formatValue(stat.value) : '—'}
                 </span>
               </div>
@@ -513,8 +514,8 @@ export function YatrasPage() {
         aria-label="Create yatra"
         className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center border-none cursor-pointer"
         style={{
-          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-          boxShadow: '0 4px 24px rgba(45,212,191,0.45)',
+          background: ACCENT_GRADIENT,
+          boxShadow: '0 4px 24px rgba(200,114,74,0.45)',
         }}
       >
         <FaPlus className="w-5 h-5 text-white" />
@@ -536,7 +537,7 @@ export function YatrasPage() {
           <div
             className="w-full max-w-sm rounded-3xl p-6 flex flex-col gap-4"
             style={{
-              background: 'rgba(255,255,255,0.96)',
+              background: '#141416',
               backdropFilter: 'blur(24px)',
               WebkitBackdropFilter: 'blur(24px)',
               boxShadow: '0 24px 48px rgba(0,0,0,0.18)',
@@ -547,12 +548,12 @@ export function YatrasPage() {
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 12px rgba(1,163,134,0.30)' }}
+                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(200,114,74,0.30)' }}
               >
                 <FaUsers className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-base font-bold text-gray-800 leading-tight">{t('yatras.newTitle')}</p>
+                <p className="text-base font-bold text-base-content leading-tight">{t('yatras.newTitle')}</p>
                 <p className="text-xs text-gray-400">{t('yatras.newSubtitle')}</p>
               </div>
             </div>
@@ -575,10 +576,11 @@ export function YatrasPage() {
               }}
               placeholder={t('yatras.namePlaceholder')}
               aria-label={t('yatras.namePlaceholder')}
-              className="w-full rounded-2xl px-4 h-12 text-sm font-semibold text-gray-800 outline-none"
+              className="w-full rounded-2xl px-4 h-12 text-sm font-semibold text-base-content outline-none"
               style={{
-                background: 'rgba(0,0,0,0.04)',
-                border: '1.5px solid rgba(1,163,134,0.30)',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1.5px solid rgba(200,114,74,0.30)',
+                color: '#f5f4f2',
               }}
             />
 
@@ -594,7 +596,7 @@ export function YatrasPage() {
                   setNewName('')
                 }}
                 className="flex-1 h-11 rounded-full text-sm font-semibold"
-                style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
+                style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.60)', border: 'none' }}
               >
                 {t('common.cancel')}
               </button>
@@ -604,7 +606,7 @@ export function YatrasPage() {
                 disabled={!newName.trim() || createMutation.isPending}
                 className="flex-1 h-11 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
                 style={{
-                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                  background: ACCENT_GRADIENT,
                   color: 'white',
                   border: 'none',
                   opacity: !newName.trim() || createMutation.isPending ? 0.5 : 1,

@@ -5,34 +5,35 @@ import { useTranslation } from 'react-i18next'
 import { LuMessageSquare, LuCheck, LuX } from 'react-icons/lu'
 import { supportApi } from '../../api/support'
 import { useAuthStore } from '../../store/authStore'
+import { ACCENT, SURFACE_2, TEXT, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const inputStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.80)',
-  border: '1px solid rgba(0,0,0,0.10)',
+  background: SURFACE_2,
+  border: `1px solid ${BORDER}`,
   borderRadius: '0.75rem',
   outline: 'none',
   width: '100%',
   fontSize: '0.9rem',
-  color: '#1f2937',
+  color: TEXT,
   padding: '0.625rem 0.875rem',
   transition: 'border-color 0.15s, box-shadow 0.15s',
 }
 
 function onFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-  e.target.style.borderColor = '#01a386'
-  e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)'
+  e.target.style.borderColor = ACCENT
+  e.target.style.boxShadow = '0 0 0 3px rgba(200,114,74,0.15)'
 }
 
 function onBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-  e.target.style.borderColor = 'rgba(0,0,0,0.10)'
+  e.target.style.borderColor = BORDER
   e.target.style.boxShadow = 'none'
 }
 
@@ -57,15 +58,15 @@ export function SupportPage() {
       <div className="px-4 py-6 max-w-lg mx-auto flex flex-col items-center justify-center gap-4 pb-24" style={{ paddingTop: '6rem' }}>
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(1,163,134,0.12)' }}
+          style={{ background: 'rgba(200,114,74,0.12)' }}
         >
-          <LuCheck className="w-7 h-7" style={{ color: '#01a386' }} />
+          <LuCheck className="w-7 h-7" style={{ color: ACCENT }} />
         </div>
-        <p className="font-semibold text-gray-800 text-lg text-center">{t('support.thankYou')}</p>
+        <p className="font-semibold text-base-content text-lg text-center">{t('support.thankYou')}</p>
         <Link
           to="/help"
           className="text-sm font-medium no-underline"
-          style={{ color: '#01a386' }}
+          style={{ color: ACCENT }}
         >
           {t('support.backToHelp')}
         </Link>
@@ -89,14 +90,14 @@ export function SupportPage() {
           <LuMessageSquare className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">{t('support.title')}</h1>
+          <h1 className="text-base font-bold text-base-content">{t('support.title')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('support.subtitle')}</p>
         </div>
         <Link
           to="/help"
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
         >
           <LuX className="w-4 h-4" />
         </Link>

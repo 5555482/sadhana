@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { LuWifiOff } from 'react-icons/lu'
 import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
+import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 import { PracticeCard } from './PracticeCard'
 import { WeekCalendar, getWeekDays } from './WeekCalendar'
 import { ErrorBanner } from '../../components/ui/ErrorBanner'
@@ -145,14 +146,14 @@ export function HomePage() {
                 key={i}
                 className="rounded-2xl px-4 min-h-[60px] flex items-center gap-3 animate-pulse"
                 style={{
-                  background: 'rgba(255,255,255,0.70)',
-                  border: '1px solid rgba(255,255,255,0.85)',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
                 }}
               >
-                <div className="w-8 h-8 rounded-xl flex-shrink-0" style={{ background: 'rgba(0,0,0,0.07)' }} />
-                <div className="h-3.5 rounded-full flex-1" style={{ background: 'rgba(0,0,0,0.07)', maxWidth: '55%' }} />
-                <div className="w-12 h-6 rounded-full flex-shrink-0" style={{ background: 'rgba(0,0,0,0.07)' }} />
+                <div className="w-8 h-8 rounded-xl flex-shrink-0" style={{ background: 'rgba(255,255,255,0.08)' }} />
+                <div className="h-3.5 rounded-full flex-1" style={{ background: 'rgba(255,255,255,0.08)', maxWidth: '55%' }} />
+                <div className="w-12 h-6 rounded-full flex-shrink-0" style={{ background: 'rgba(255,255,255,0.08)' }} />
               </div>
             ))
           ) : (diaryQuery.isError || practicesQuery.isError) ? (
@@ -179,10 +180,10 @@ export function HomePage() {
                 disabled={seedMutation.isPending}
                 className="px-6 h-11 rounded-full text-sm font-semibold flex items-center gap-2"
                 style={{
-                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                  background: ACCENT_GRADIENT,
                   color: 'white',
                   border: 'none',
-                  boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+                  boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
                 }}
               >
                 {seedMutation.isPending && <span className="loading loading-spinner loading-xs" />}
@@ -192,7 +193,7 @@ export function HomePage() {
               <Link
                 to="/user/practice/new"
                 className="text-sm font-medium"
-                style={{ color: '#01a386' }}
+                style={{ color: ACCENT }}
               >
                 {t('home.addCustom')}
               </Link>

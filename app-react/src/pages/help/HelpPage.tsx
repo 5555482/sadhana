@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { LuCircleHelp, LuChevronDown, LuChevronUp, LuMessageSquare, LuX } from 'react-icons/lu'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const FAQ_COUNT = 8
@@ -22,16 +23,16 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         className="w-full px-4 py-4 flex items-center gap-3 text-left"
         style={{ background: 'transparent', border: 'none' }}
       >
-        <span className="flex-1 text-sm font-semibold text-gray-800">{q}</span>
+        <span className="flex-1 text-sm font-semibold text-base-content">{q}</span>
         {open
-          ? <LuChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: '#01a386' }} />
+          ? <LuChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />
           : <LuChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: '#9ca3af' }} />
         }
       </button>
       {open && (
         <div
           className="px-4 pb-4 text-sm leading-relaxed"
-          style={{ color: '#4b5563', borderTop: '1px solid rgba(0,0,0,0.05)' }}
+          style={{ color: 'rgba(245,244,242,0.60)', borderTop: `1px solid ${BORDER}` }}
         >
           <p className="pt-3">{a}</p>
         </div>
@@ -55,21 +56,21 @@ export function HelpPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <LuCircleHelp className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">{t('help.title')}</h1>
+          <h1 className="text-base font-bold text-base-content">{t('help.title')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('help.subtitle')}</p>
         </div>
         <Link
           to="/settings"
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
         >
           <LuX className="w-4 h-4" />
         </Link>
@@ -89,7 +90,7 @@ export function HelpPage() {
         >
           <LuMessageSquare className="w-4 h-4" style={{ color: '#6366f1' }} />
         </div>
-        <span className="flex-1 text-sm font-semibold text-gray-800">{t('help.contactSupport')}</span>
+        <span className="flex-1 text-sm font-semibold text-base-content">{t('help.contactSupport')}</span>
       </Link>
     </div>
   )

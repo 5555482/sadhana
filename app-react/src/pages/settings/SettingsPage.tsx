@@ -5,13 +5,14 @@ import { FaCog, FaChevronRight, FaSignOutAlt } from 'react-icons/fa'
 import { LuUser, LuLock, LuLayers, LuUpload, LuGlobe, LuCircleHelp } from 'react-icons/lu'
 import { useAuthStore } from '../../store/authStore'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
+import { ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: '#141416',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 function MenuItem({
@@ -30,13 +31,13 @@ function MenuItem({
       to={to}
       className="flex items-center gap-3 px-4 py-3.5 transition-colors"
       style={{
-        borderTop: last ? undefined : '1px solid rgba(0,0,0,0.05)',
+        borderTop: last ? undefined : '1px solid rgba(255,255,255,0.08)',
         color: 'inherit',
         textDecoration: 'none',
       }}
     >
-      <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#01a386' }} />
-      <span className="flex-1 text-sm font-medium text-gray-800">{label}</span>
+      <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#c8724a' }} />
+      <span className="flex-1 text-sm font-medium text-base-content">{label}</span>
       <FaChevronRight className="w-3 h-3 flex-shrink-0" style={{ color: '#d1d5db' }} />
     </Link>
   )
@@ -83,14 +84,14 @@ export function SettingsPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <FaCog className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold text-gray-800 leading-tight">{user?.name || t('nav.settings')}</h1>
+          <h1 className="text-base font-bold text-base-content leading-tight">{user?.name || t('nav.settings')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('settings.subtitle')}</p>
         </div>
       </div>
@@ -122,7 +123,7 @@ export function SettingsPage() {
         onClick={() => setShowLogoutConfirm(true)}
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
-          background: 'rgba(255,255,255,0.85)',
+          background: 'rgba(255,255,255,0.08)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           color: '#dc2626',

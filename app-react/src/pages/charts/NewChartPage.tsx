@@ -8,36 +8,37 @@ import { practicesApi } from '../../api/practices'
 import { chartsApi } from '../../api/charts'
 import type { ReportDefinition, TraceType, PracticeTrace } from '../../api/charts'
 import { Spinner } from '../../components/ui/Spinner'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, TEXT, BORDER } from '../../theme/tokens'
 
 type ReportKind = 'Graph' | 'Grid'
 type GraphTraceType = 'Line' | 'Bar' | 'Dot'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const inputStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.80)',
-  border: '1px solid rgba(0,0,0,0.10)',
+  background: SURFACE_2,
+  border: `1px solid ${BORDER}`,
   borderRadius: '0.75rem',
   outline: 'none',
   width: '100%',
   fontSize: '0.95rem',
-  color: '#1f2937',
+  color: TEXT,
   padding: '0.625rem 0.875rem',
   transition: 'border-color 0.15s, box-shadow 0.15s',
 }
 
 function onFocus(e: React.FocusEvent<HTMLInputElement>) {
-  e.target.style.borderColor = '#01a386'
-  e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)'
+  e.target.style.borderColor = ACCENT
+  e.target.style.boxShadow = '0 0 0 3px rgba(200,114,74,0.15)'
 }
 function onBlur(e: React.FocusEvent<HTMLInputElement>) {
-  e.target.style.borderColor = 'rgba(0,0,0,0.10)'
+  e.target.style.borderColor = BORDER
   e.target.style.boxShadow = 'none'
 }
 
@@ -118,21 +119,21 @@ export function NewChartPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <FaChartLine className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800 leading-tight">{t('charts.newReport')}</h1>
+          <h1 className="text-base font-bold text-base-content leading-tight">{t('charts.newReport')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">Step {step + 1} of {STEP_LABELS.length}</p>
         </div>
         <Link
           to="/charts"
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
         >
           <LuX className="w-4 h-4" />
         </Link>
@@ -144,9 +145,9 @@ export function NewChartPage() {
           <div key={label} className="flex-1 flex flex-col gap-1.5">
             <div
               className="h-1 rounded-full transition-all duration-300"
-              style={{ background: i <= step ? '#01a386' : 'rgba(0,0,0,0.10)' }}
+              style={{ background: i <= step ? ACCENT : 'rgba(255,255,255,0.15)' }}
             />
-            <span className="text-xs font-medium" style={{ color: i === step ? '#01a386' : '#9ca3af' }}>
+            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : '#9ca3af' }}>
               {label}
             </span>
           </div>
@@ -186,13 +187,13 @@ export function NewChartPage() {
                       onClick={() => setKind(k)}
                       className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl transition-all"
                       style={{
-                        background: active ? 'rgba(1,163,134,0.08)' : 'rgba(0,0,0,0.03)',
-                        border: active ? '1.5px solid rgba(1,163,134,0.40)' : '1.5px solid rgba(0,0,0,0.07)',
+                        background: active ? 'rgba(200,114,74,0.08)' : 'rgba(255,255,255,0.04)',
+                        border: active ? '1.5px solid rgba(200,114,74,0.40)' : `1.5px solid ${BORDER}`,
                       }}
                     >
-                      <Icon className="w-5 h-5" style={{ color: active ? '#01a386' : '#9ca3af' }} />
+                      <Icon className="w-5 h-5" style={{ color: active ? ACCENT : '#9ca3af' }} />
                       <div>
-                        <div className="text-sm font-semibold" style={{ color: active ? '#01a386' : '#374151' }}>{t(`charts.${labelKey}`)}</div>
+                        <div className="text-sm font-semibold" style={{ color: active ? ACCENT : '#f5f4f2' }}>{t(`charts.${labelKey}`)}</div>
                         <div className="text-xs text-center" style={{ color: '#9ca3af' }}>{t(`charts.${descKey}`)}</div>
                       </div>
                     </button>
@@ -207,7 +208,7 @@ export function NewChartPage() {
             disabled={!canNext0}
             className="w-full h-12 rounded-full text-sm font-semibold transition-opacity"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              background: ACCENT_GRADIENT,
               color: 'white',
               border: 'none',
               boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
@@ -231,7 +232,7 @@ export function NewChartPage() {
                 type="button"
                 onClick={selectAll}
                 className="text-xs font-semibold"
-                style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ color: ACCENT, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 {t('charts.selectAll')}
               </button>
@@ -259,8 +260,8 @@ export function NewChartPage() {
                     onClick={() => togglePractice(p.id)}
                     className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 transition-all"
                     style={{
-                      background: sel ? '#01a386' : 'rgba(0,0,0,0.06)',
-                      border: sel ? 'none' : '1.5px solid rgba(0,0,0,0.15)',
+                      background: sel ? ACCENT : 'rgba(255,255,255,0.06)',
+                      border: sel ? 'none' : `1.5px solid ${BORDER}`,
                     }}
                   >
                     {sel && (
@@ -270,7 +271,7 @@ export function NewChartPage() {
                     )}
                   </button>
 
-                  <span className="flex-1 text-sm font-semibold text-gray-800">{p.practice}</span>
+                  <span className="flex-1 text-sm font-semibold text-base-content">{p.practice}</span>
 
                   {/* Trace type selector (Graph only, when selected) */}
                   {kind === 'Graph' && sel && (
@@ -282,11 +283,11 @@ export function NewChartPage() {
                           className="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all"
                           style={{
                             background: (traceTypes[p.id] ?? 'Line') === tt.value
-                              ? 'rgba(1,163,134,0.12)' : 'rgba(0,0,0,0.05)',
+                              ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.05)',
                             color: (traceTypes[p.id] ?? 'Line') === tt.value
-                              ? '#01a386' : '#6b7280',
+                              ? ACCENT : '#6b7280',
                             border: (traceTypes[p.id] ?? 'Line') === tt.value
-                              ? '1px solid rgba(1,163,134,0.30)' : '1px solid transparent',
+                              ? '1px solid rgba(200,114,74,0.30)' : '1px solid transparent',
                           }}
                         >
                           {t(`charts.${tt.tKey}`)}
@@ -316,7 +317,7 @@ export function NewChartPage() {
               disabled={!canSave || mutation.isPending}
               className="flex-1 h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
               style={{
-                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                background: ACCENT_GRADIENT,
                 color: 'white',
                 border: 'none',
                 boxShadow: '0 4px 20px rgba(45,212,191,0.35)',

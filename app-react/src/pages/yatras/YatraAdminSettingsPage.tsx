@@ -13,22 +13,23 @@ import { yatrasApi } from '../../api/yatras'
 import { Spinner } from '../../components/ui/Spinner'
 import { ConfirmModal } from '../../components/ui/ConfirmModal'
 import type { YatraStatisticConfig, Aggregation, TimeRange, YatraPractice } from '../../types/api'
+import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: '#141416',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const inputStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.80)',
-  border: '1px solid rgba(0,0,0,0.10)',
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid rgba(255,255,255,0.10)',
   borderRadius: '0.75rem',
   outline: 'none',
   fontSize: '0.9rem',
-  color: '#1f2937',
+  color: '#f5f4f2',
   padding: '0.5rem 0.875rem',
   width: '100%',
   transition: 'border-color 0.15s, box-shadow 0.15s',
@@ -40,15 +41,13 @@ const selectStyle: React.CSSProperties = {
   appearance: 'none' as const,
 }
 
-const ACCENT = '#01a386'
-
 const TYPE_META: Record<string, {
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
   color: string
   bg: string
   tKey: string
 }> = {
-  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(1,163,134,0.10)',   tKey: 'practice.typeBool'     },
+  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(200,114,74,0.10)',   tKey: 'practice.typeBool'     },
   Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  tKey: 'practice.typeInt'      },
   Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  tKey: 'practice.typeDuration' },
   Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  tKey: 'practice.typeTime'     },
@@ -239,7 +238,6 @@ export function YatraAdminSettingsPage() {
   const isLoading = yatraQuery.isLoading || usersQuery.isLoading || practicesQuery.isLoading
   const members = usersQuery.data ?? []
   const practices = practicesQuery.data ?? []
-  const initial = yatraQuery.data?.name.charAt(0).toUpperCase() ?? '?'
 
   if (isLoading) return <Spinner />
   if (!yatraQuery.data) return null
@@ -261,7 +259,7 @@ export function YatraAdminSettingsPage() {
           <FaShieldAlt className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800 leading-tight truncate">
+          <h1 className="text-base font-bold text-base-content leading-tight truncate">
             {yatraQuery.data.name}
           </h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('yatras.adminSettings')}</p>
@@ -270,7 +268,7 @@ export function YatraAdminSettingsPage() {
           to={`/yatra/${id}/settings`}
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
         >
           <LuX className="w-4 h-4" />
         </Link>
@@ -288,14 +286,14 @@ export function YatraAdminSettingsPage() {
             value={yatraName}
             required
             onChange={e => setYatraName(e.target.value)}
-            onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(1,163,134,0.12)` }}
-            onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
+            onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(200,114,74,0.12)` }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.10)'; e.target.style.boxShadow = 'none' }}
           />
         </div>
 
         {/* Show stability metrics */}
         <label className="flex items-center gap-3 cursor-pointer select-none py-1">
-          <span className="flex-1 text-sm font-medium text-gray-700">{t('yatras.showStability')}</span>
+          <span className="flex-1 text-sm font-medium text-base-content">{t('yatras.showStability')}</span>
           <div
             onClick={() => setShowStability(v => !v)}
             className="relative w-10 h-6 rounded-full transition-colors flex-shrink-0"
@@ -328,11 +326,11 @@ export function YatraAdminSettingsPage() {
       >
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: copied ? 'rgba(1,163,134,0.10)' : 'rgba(0,0,0,0.05)' }}
+          style={{ background: copied ? 'rgba(200,114,74,0.10)' : 'rgba(255,255,255,0.06)' }}
         >
           <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : '#6b7280' }} />
         </div>
-        <span className="flex-1 text-sm font-semibold text-gray-800">
+        <span className="flex-1 text-sm font-semibold text-base-content">
           {copied ? t('yatras.inviteCopied') : t('yatras.copyInvite')}
         </span>
         {copied
@@ -358,13 +356,13 @@ export function YatraAdminSettingsPage() {
                   <TypeIcon className="w-3.5 h-3.5" style={{ color: meta.color }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm font-semibold text-gray-800 block truncate">{p.practice}</span>
+                  <span className="text-sm font-semibold text-base-content block truncate">{p.practice}</span>
                   <span className="text-xs font-medium" style={{ color: meta.color }}>{t(meta.tKey)}</span>
                 </div>
                 <Link
                   to={`/yatra/${id}/practice/${p.id}/edit`}
                   className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
-                  style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+                  style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
                 >
                   <FaEdit className="w-3 h-3" />
                 </Link>
@@ -390,9 +388,9 @@ export function YatraAdminSettingsPage() {
             to={`/yatra/${id}/practice/new`}
             className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 no-underline"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              background: ACCENT_GRADIENT,
               color: 'white',
-              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             }}
           >
             <FaPlus className="w-3.5 h-3.5" />
@@ -413,14 +411,14 @@ export function YatraAdminSettingsPage() {
               >
                 {m.user_name.charAt(0).toUpperCase()}
               </div>
-              <span className="flex-1 text-sm font-semibold text-gray-800">{m.user_name}</span>
+              <span className="flex-1 text-sm font-semibold text-base-content">{m.user_name}</span>
               <button
                 type="button"
                 onClick={() => toggleAdmin.mutate(m.user_id)}
                 disabled={toggleAdmin.isPending}
                 className="text-xs font-semibold px-2 py-0.5 rounded-full transition-colors"
                 style={{
-                  background: m.is_admin ? 'rgba(124,58,237,0.12)' : 'rgba(0,0,0,0.06)',
+                  background: m.is_admin ? 'rgba(124,58,237,0.12)' : 'rgba(255,255,255,0.06)',
                   color: m.is_admin ? '#7c3aed' : '#9ca3af',
                   border: 'none',
                   cursor: 'pointer',
@@ -458,7 +456,7 @@ export function YatraAdminSettingsPage() {
           {/* Visibility */}
           <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
             <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#6366f1' }} />
-            <span className="flex-1 text-sm font-medium text-gray-700">{t('yatras.visibleTo')}</span>
+            <span className="flex-1 text-sm font-medium text-base-content">{t('yatras.visibleTo')}</span>
             <select
               value={statsVisibleToAll ? 'Everyone' : 'Admins'}
               onChange={e => setStatsVisibleToAll(e.target.value === 'Everyone')}
@@ -496,8 +494,8 @@ export function YatraAdminSettingsPage() {
                     value={stat.label}
                     required
                     onChange={e => updateStat(idx, { label: e.target.value })}
-                    onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(1,163,134,0.12)` }}
-                    onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.10)'; e.target.style.boxShadow = 'none' }}
+                    onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(200,114,74,0.12)` }}
+                    onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.10)'; e.target.style.boxShadow = 'none' }}
                   />
                 </div>
 
@@ -566,10 +564,10 @@ export function YatraAdminSettingsPage() {
         disabled={saveMutation.isPending}
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
-          background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+          background: ACCENT_GRADIENT,
           color: 'white',
           border: 'none',
-          boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+          boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
           opacity: saveMutation.isPending ? 0.7 : 1,
         }}
       >
@@ -584,7 +582,7 @@ export function YatraAdminSettingsPage() {
         onClick={() => (document.getElementById('del-yatra') as HTMLDialogElement)?.showModal()}
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
-          background: 'rgba(255,255,255,0.85)',
+          background: 'rgba(255,255,255,0.06)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           color: '#dc2626',

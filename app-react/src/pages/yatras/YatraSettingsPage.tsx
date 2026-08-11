@@ -8,13 +8,14 @@ import { yatrasApi } from '../../api/yatras'
 import { practicesApi } from '../../api/practices'
 import { Spinner } from '../../components/ui/Spinner'
 import type { PracticeDataType } from '../../types/api'
+import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: '#141416',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const TYPE_META: Record<PracticeDataType, {
@@ -23,14 +24,12 @@ const TYPE_META: Record<PracticeDataType, {
   bg: string
   tKey: string
 }> = {
-  Bool:     { icon: LuToggleRight, color: '#01a386', bg: 'rgba(1,163,134,0.10)',   tKey: 'practice.typeBool'     },
+  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(200,114,74,0.10)',   tKey: 'practice.typeBool'     },
   Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  tKey: 'practice.typeInt'      },
   Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  tKey: 'practice.typeDuration' },
   Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  tKey: 'practice.typeTime'     },
   Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', tKey: 'practice.typeText'     },
 }
-
-const ACCENT = '#01a386'
 
 export function YatraSettingsPage() {
   const { t } = useTranslation()
@@ -136,12 +135,12 @@ export function YatraSettingsPage() {
         <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
           <div
             className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 16px rgba(1,163,134,0.30)' }}
+            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(200,114,74,0.30)' }}
           >
             <FaCog className="w-5 h-5 text-white" />
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="text-base font-bold text-gray-800 leading-tight truncate">
+            <h1 className="text-base font-bold text-base-content leading-tight truncate">
               {yatraQuery.data?.name ?? '…'}
             </h1>
             <p className="text-xs text-gray-400 mt-0.5">{t('nav.settings')}</p>
@@ -150,7 +149,7 @@ export function YatraSettingsPage() {
             to="/yatras"
             aria-label="Close"
             className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+            style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.60)' }}
           >
             <LuX className="w-4 h-4" />
           </Link>
@@ -194,7 +193,7 @@ export function YatraSettingsPage() {
 
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-gray-400 leading-none mb-0.5">{t('yatras.groupPractice')}</p>
-                <p className="text-sm font-semibold text-gray-800 truncate">
+                <p className="text-sm font-semibold text-base-content truncate">
                   {item.yatra_practice.practice}
                 </p>
               </div>
@@ -207,8 +206,8 @@ export function YatraSettingsPage() {
                 }}
                 className="text-sm rounded-xl px-2 h-9 flex-shrink-0 outline-none cursor-pointer"
                 style={{
-                  background: 'rgba(0,0,0,0.04)',
-                  border: '1.5px solid rgba(0,0,0,0.08)',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1.5px solid rgba(255,255,255,0.10)',
                   color: currentValue ? ACCENT : '#9ca3af',
                   maxWidth: '10rem',
                   fontWeight: currentValue ? 600 : 400,
@@ -246,11 +245,11 @@ export function YatraSettingsPage() {
             className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
             style={{
               background: saved
-                ? 'rgba(1,163,134,0.12)'
-                : 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-              color: saved ? '#01a386' : 'white',
-              border: saved ? '1.5px solid rgba(1,163,134,0.30)' : 'none',
-              boxShadow: saved ? 'none' : '0 4px 20px rgba(45,212,191,0.35)',
+                ? 'rgba(200,114,74,0.12)'
+                : ACCENT_GRADIENT,
+              color: saved ? ACCENT : 'white',
+              border: saved ? `1.5px solid rgba(200,114,74,0.30)` : 'none',
+              boxShadow: saved ? 'none' : '0 4px 20px rgba(200,114,74,0.35)',
               opacity: saveMutation.isPending ? 0.7 : 1,
               transition: 'all 0.25s',
             }}
@@ -274,7 +273,7 @@ export function YatraSettingsPage() {
             >
               <FaCog className="w-4 h-4" style={{ color: '#6366f1' }} />
             </div>
-            <span className="flex-1 text-sm font-semibold text-gray-800">{t('yatras.adminSettings')}</span>
+            <span className="flex-1 text-sm font-semibold text-base-content">{t('yatras.adminSettings')}</span>
             <span className="text-xs" style={{ color: '#d1d5db' }}>›</span>
           </Link>
         )}
@@ -288,11 +287,11 @@ export function YatraSettingsPage() {
           >
             <div
               className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: 'rgba(1,163,134,0.10)' }}
+              style={{ background: 'rgba(200,114,74,0.10)' }}
             >
               <FaPlus className="w-3.5 h-3.5" style={{ color: ACCENT }} />
             </div>
-            <span className="flex-1 text-sm font-medium text-gray-700">{t('yatras.createNewYatra')}</span>
+            <span className="flex-1 text-sm font-medium text-base-content">{t('yatras.createNewYatra')}</span>
           </button>
         )}
 
@@ -307,7 +306,7 @@ export function YatraSettingsPage() {
             disabled={leaveMutation.isPending}
             className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
             style={{
-              background: 'rgba(255,255,255,0.85)',
+              background: 'rgba(255,255,255,0.06)',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
               color: '#dc2626',
@@ -346,17 +345,17 @@ export function YatraSettingsPage() {
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 12px rgba(1,163,134,0.28)' }}
+                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(200,114,74,0.28)' }}
               >
                 <FaUsers className="w-4.5 h-4.5 text-white" />
               </div>
-              <h2 className="text-base font-bold text-gray-800">{t('yatras.newTitle')}</h2>
+              <h2 className="text-base font-bold text-base-content">{t('yatras.newTitle')}</h2>
               <button
                 type="button"
                 onClick={() => { setShowCreate(false); setNewName('') }}
                 aria-label="Close"
                 className="ml-auto w-8 h-8 flex items-center justify-center rounded-full"
-                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', cursor: 'pointer', color: '#6b7280' }}
+                style={{ background: 'rgba(255,255,255,0.08)', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.60)' }}
               >
                 <LuX className="w-4 h-4" />
               </button>
@@ -369,17 +368,18 @@ export function YatraSettingsPage() {
               value={newName}
               onChange={e => setNewName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') submitCreate(); if (e.key === 'Escape') { setShowCreate(false); setNewName('') } }}
-              className="w-full px-4 py-3 rounded-2xl text-sm font-medium text-gray-800 outline-none"
+              className="w-full px-4 py-3 rounded-2xl text-sm font-medium outline-none"
               style={{
-                background: 'rgba(0,0,0,0.04)',
-                border: '1.5px solid rgba(0,0,0,0.08)',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1.5px solid rgba(255,255,255,0.10)',
+                color: '#f5f4f2',
               }}
             />
             <div className="flex gap-2">
               <button
                 onClick={() => { setShowCreate(false); setNewName('') }}
                 className="flex-1 h-11 rounded-full text-sm font-semibold"
-                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#6b7280', cursor: 'pointer' }}
+                style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'rgba(255,255,255,0.60)', cursor: 'pointer' }}
               >
                 {t('common.cancel')}
               </button>
@@ -388,7 +388,7 @@ export function YatraSettingsPage() {
                 disabled={!newName.trim() || createMutation.isPending}
                 className="flex-1 h-11 rounded-full text-sm font-semibold text-white"
                 style={{
-                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                  background: ACCENT_GRADIENT,
                   border: 'none',
                   cursor: 'pointer',
                   opacity: !newName.trim() || createMutation.isPending ? 0.6 : 1,

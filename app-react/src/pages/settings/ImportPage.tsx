@@ -6,22 +6,23 @@ import { useTranslation } from 'react-i18next'
 import { LuUpload, LuFileText, LuCheck } from 'react-icons/lu'
 import { importApi } from '../../api/import'
 import type { ImportPreview, ImportResult } from '../../types/api'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, TEXT, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const inputStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.80)',
-  border: '1px solid rgba(0,0,0,0.10)',
+  background: SURFACE_2,
+  border: `1px solid ${BORDER}`,
   borderRadius: '0.625rem',
   outline: 'none',
   fontSize: '0.85rem',
-  color: '#1f2937',
+  color: TEXT,
   padding: '0.375rem 0.625rem',
   width: '100%',
   transition: 'border-color 0.15s',
@@ -61,14 +62,14 @@ export function ImportPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <LuUpload className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold text-gray-800">{t('import.title')}</h1>
+          <h1 className="text-base font-bold text-base-content">{t('import.title')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('import.subtitle')}</p>
         </div>
       </div>
@@ -79,9 +80,9 @@ export function ImportPage() {
           <div key={label} className="flex-1 flex flex-col gap-1.5">
             <div
               className="h-1 rounded-full"
-              style={{ background: i <= step ? '#01a386' : 'rgba(0,0,0,0.10)' }}
+              style={{ background: i <= step ? ACCENT : 'rgba(255,255,255,0.15)' }}
             />
-            <span className="text-xs font-medium" style={{ color: i === step ? '#01a386' : '#9ca3af' }}>
+            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : '#9ca3af' }}>
               {label}
             </span>
           </div>
@@ -97,29 +98,29 @@ export function ImportPage() {
             style={{
               ...glass,
               border: isDragActive
-                ? '2px dashed rgba(1,163,134,0.60)'
-                : file ? '2px solid rgba(1,163,134,0.30)' : '2px dashed rgba(0,0,0,0.12)',
-              background: isDragActive ? 'rgba(1,163,134,0.05)' : glass.background,
+                ? '2px dashed rgba(200,114,74,0.60)'
+                : file ? '2px solid rgba(200,114,74,0.30)' : '2px dashed rgba(255,255,255,0.12)',
+              background: isDragActive ? 'rgba(200,114,74,0.05)' : glass.background,
             }}
           >
             <input {...getInputProps()} />
             <div
               className="w-12 h-12 rounded-2xl flex items-center justify-center"
-              style={{ background: file ? 'rgba(1,163,134,0.10)' : 'rgba(0,0,0,0.05)' }}
+              style={{ background: file ? 'rgba(200,114,74,0.10)' : 'rgba(255,255,255,0.05)' }}
             >
               {file
-                ? <LuFileText className="w-5 h-5" style={{ color: '#01a386' }} />
+                ? <LuFileText className="w-5 h-5" style={{ color: ACCENT }} />
                 : <LuUpload className="w-5 h-5" style={{ color: '#9ca3af' }} />
               }
             </div>
             {file ? (
               <div className="text-center">
-                <p className="text-sm font-semibold" style={{ color: '#01a386' }}>{file.name}</p>
+                <p className="text-sm font-semibold" style={{ color: ACCENT }}>{file.name}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{t('import.clickToChange')}</p>
               </div>
             ) : (
               <div className="text-center">
-                <p className="text-sm font-semibold text-gray-700">
+                <p className="text-sm font-semibold text-base-content">
                   {isDragActive ? t('import.drop') : t('import.dropOrClick')}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">{t('import.csvOnly')}</p>
@@ -138,10 +139,10 @@ export function ImportPage() {
             disabled={!file || previewMutation.isPending}
             className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              background: ACCENT_GRADIENT,
               color: 'white',
               border: 'none',
-              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
               opacity: !file || previewMutation.isPending ? 0.45 : 1,
             }}
           >
@@ -155,17 +156,17 @@ export function ImportPage() {
       {step === 1 && preview && (
         <div className="flex flex-col gap-3">
           <div className="rounded-2xl overflow-hidden" style={glass}>
-            <div className="px-4 py-3 border-b" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
+            <div className="px-4 py-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('import.mapColumns')}</p>
             </div>
             {preview.columns.map((col, i) => (
               <div
                 key={col}
                 className="px-4 py-3 flex items-center gap-3"
-                style={{ borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.04)' }}
+                style={{ borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.06)' }}
               >
                 <div className="w-1/3">
-                  <p className="text-sm font-semibold text-gray-800 truncate">{col}</p>
+                  <p className="text-sm font-semibold text-base-content truncate">{col}</p>
                   <p className="text-xs text-gray-400 truncate">{preview.sample_rows[0]?.[i] ?? '—'}</p>
                 </div>
                 <span style={{ color: '#d1d5db' }}>→</span>
@@ -174,8 +175,8 @@ export function ImportPage() {
                   value={mapping[col] ?? ''}
                   onChange={e => setMapping({ ...mapping, [col]: e.target.value })}
                   placeholder={t('import.practicePlaceholder')}
-                  onFocus={e => { e.target.style.borderColor = '#01a386' }}
-                  onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.10)' }}
+                  onFocus={e => { e.target.style.borderColor = ACCENT }}
+                  onBlur={e => { e.target.style.borderColor = BORDER }}
                 />
               </div>
             ))}
@@ -208,7 +209,7 @@ export function ImportPage() {
             <button
               onClick={() => setStep(0)}
               className="flex-1 h-12 rounded-full text-sm font-semibold"
-              style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
+              style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.70)', border: '1px solid rgba(255,255,255,0.15)' }}
             >
               ← {t('common.back')}
             </button>
@@ -217,10 +218,10 @@ export function ImportPage() {
               disabled={confirmMutation.isPending}
               className="flex-1 h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
               style={{
-                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                background: ACCENT_GRADIENT,
                 color: 'white',
                 border: 'none',
-                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
                 opacity: confirmMutation.isPending ? 0.55 : 1,
               }}
             >
@@ -236,22 +237,22 @@ export function ImportPage() {
         <div className="rounded-2xl px-5 py-12 flex flex-col items-center gap-5" style={glass}>
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center"
-            style={{ background: 'rgba(1,163,134,0.12)' }}
+            style={{ background: 'rgba(200,114,74,0.12)' }}
           >
-            <LuCheck className="w-7 h-7" style={{ color: '#01a386' }} />
+            <LuCheck className="w-7 h-7" style={{ color: ACCENT }} />
           </div>
           <div className="text-center">
-            <p className="text-base font-bold text-gray-800">{t('import.complete')}</p>
+            <p className="text-base font-bold text-base-content">{t('import.complete')}</p>
             <p className="text-sm text-gray-400 mt-1">{t('import.rowsImported', { count: result.imported_count })}</p>
           </div>
           <button
             onClick={() => navigate('/settings')}
             className="px-8 h-11 rounded-full text-sm font-semibold"
             style={{
-              background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+              background: ACCENT_GRADIENT,
               color: 'white',
               border: 'none',
-              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             }}
           >
             {t('import.done')}

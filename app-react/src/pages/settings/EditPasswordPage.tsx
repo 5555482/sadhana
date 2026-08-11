@@ -5,33 +5,34 @@ import { LuLock, LuCheck, LuX } from 'react-icons/lu'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { authApi } from '../../api/auth'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, TEXT, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 const inputStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.80)',
-  border: '1px solid rgba(0,0,0,0.10)',
+  background: SURFACE_2,
+  border: `1px solid ${BORDER}`,
   borderRadius: '0.75rem',
   outline: 'none',
   width: '100%',
   fontSize: '0.9rem',
-  color: '#1f2937',
+  color: TEXT,
   padding: '0.625rem 0.875rem',
   transition: 'border-color 0.15s, box-shadow 0.15s',
 }
 
 function onFocus(e: React.FocusEvent<HTMLInputElement>) {
-  e.target.style.borderColor = '#01a386'
-  e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)'
+  e.target.style.borderColor = ACCENT
+  e.target.style.boxShadow = '0 0 0 3px rgba(200,114,74,0.15)'
 }
 function onBlurInput(e: React.FocusEvent<HTMLInputElement>) {
-  e.target.style.borderColor = 'rgba(0,0,0,0.10)'
+  e.target.style.borderColor = BORDER
   e.target.style.boxShadow = 'none'
 }
 
@@ -55,7 +56,7 @@ function PasswordField({ id, label, value, onChange }: { id: string; label: stri
           onClick={() => setShow(v => !v)}
           aria-label={show ? 'Hide password' : 'Show password'}
           className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
-          style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer' }}
+          style={{ color: ACCENT, background: 'none', border: 'none', cursor: 'pointer' }}
         >
           {show ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
         </button>
@@ -100,21 +101,21 @@ export function EditPasswordPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <LuLock className="w-5 h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-base font-bold text-gray-800">{t('settings.changePassword')}</h1>
+          <h1 className="text-base font-bold text-base-content">{t('settings.changePassword')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">Update your login password</p>
         </div>
         <Link
           to="/settings"
           aria-label="Close"
           className="w-9 h-9 flex items-center justify-center rounded-full flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.40)' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.40)' }}
         >
           <LuX className="w-4 h-4" />
         </Link>
@@ -144,11 +145,11 @@ export function EditPasswordPage() {
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
           style={{
             background: success
-              ? 'rgba(1,163,134,0.12)'
-              : 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            color: success ? '#01a386' : 'white',
-            border: success ? '1px solid rgba(1,163,134,0.30)' : 'none',
-            boxShadow: success ? 'none' : '0 4px 20px rgba(45,212,191,0.35)',
+              ? 'rgba(200,114,74,0.12)'
+              : ACCENT_GRADIENT,
+            color: success ? ACCENT : 'white',
+            border: success ? '1px solid rgba(200,114,74,0.30)' : 'none',
+            boxShadow: success ? 'none' : '0 4px 20px rgba(200,114,74,0.35)',
             opacity: mutation.isPending || !current || !next || !confirm ? 0.55 : 1,
             cursor: mutation.isPending || !current || !next || !confirm ? 'not-allowed' : 'pointer',
           }}

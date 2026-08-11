@@ -6,6 +6,16 @@ import { practicesApi } from '../api/practices'
 import { yatrasApi } from '../api/yatras'
 import { ErrorBanner } from './ui/ErrorBanner'
 import type { PracticeDataType } from '../types/api'
+import {
+  ACCENT,
+  ACCENT_SOFT,
+  ACCENT_RING,
+  ACCENT_GRADIENT,
+  SURFACE_2,
+  TEXT,
+  TEXT_MUTED,
+  BORDER,
+} from '../theme/tokens'
 
 type PracticeFormMode = { type: 'user' } | { type: 'yatra'; yatraId: string }
 
@@ -24,31 +34,31 @@ const TYPE_ICONS: { value: PracticeDataType; icon: React.ElementType; key: strin
 ]
 
 const inputBase: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.80)',
-  border: '1px solid rgba(0,0,0,0.10)',
+  background: SURFACE_2,
+  border: `1px solid ${BORDER}`,
   borderRadius: '0.75rem',
   outline: 'none',
   width: '100%',
   fontSize: '0.95rem',
-  color: '#1f2937',
+  color: TEXT,
   transition: 'border-color 0.15s, box-shadow 0.15s',
 }
 
 function onFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-  e.target.style.borderColor = '#01a386'
-  e.target.style.boxShadow = '0 0 0 3px rgba(1,163,134,0.12)'
+  e.target.style.borderColor = ACCENT
+  e.target.style.boxShadow = `0 0 0 3px ${ACCENT_RING}`
 }
 function onBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-  e.target.style.borderColor = 'rgba(0,0,0,0.10)'
+  e.target.style.borderColor = BORDER
   e.target.style.boxShadow = 'none'
 }
 
 const cardStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormProps) {
@@ -128,12 +138,12 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
                   className="flex flex-col items-center gap-1.5 rounded-xl py-3 px-2 transition-all"
                   style={
                     active
-                      ? { background: 'rgba(1,163,134,0.10)', border: '1.5px solid #01a386', boxShadow: '0 0 0 3px rgba(1,163,134,0.08)' }
-                      : { background: 'rgba(0,0,0,0.03)', border: '1.5px solid rgba(0,0,0,0.07)' }
+                      ? { background: ACCENT_SOFT, border: `1.5px solid ${ACCENT}`, boxShadow: `0 0 0 3px ${ACCENT_RING}` }
+                      : { background: 'rgba(255,255,255,0.04)', border: `1.5px solid ${BORDER}` }
                   }
                 >
-                  <Icon className="w-5 h-5" style={{ color: active ? '#01a386' : '#9ca3af' }} />
-                  <span className="text-[10px] font-semibold leading-tight text-center break-words" style={{ color: active ? '#01a386' : '#6b7280' }}>
+                  <Icon className="w-5 h-5" style={{ color: active ? ACCENT : TEXT_MUTED }} />
+                  <span className="text-[10px] font-semibold leading-tight text-center break-words" style={{ color: active ? ACCENT : TEXT_MUTED }}>
                     {label}
                   </span>
                 </button>
@@ -171,14 +181,14 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
               className="flex items-center justify-between w-full select-none"
               style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
             >
-              <span className="text-sm font-medium text-gray-700">{t('practice.isRequired')}</span>
+              <span className="text-sm font-medium text-base-content">{t('practice.isRequired')}</span>
               <div
                 className="relative flex-shrink-0"
                 style={{
                   width: '3rem',
                   height: '1.75rem',
                   borderRadius: '999px',
-                  backgroundColor: isRequired ? '#01a386' : 'rgba(0,0,0,0.15)',
+                  backgroundColor: isRequired ? ACCENT : 'rgba(255,255,255,0.15)',
                   transition: 'background-color 0.2s',
                 }}
               >
@@ -210,11 +220,11 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
           disabled={mutation.isPending || !name.trim()}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            color: 'white',
+            background: ACCENT_GRADIENT,
+            color: '#0b0b0d',
             border: 'none',
             appearance: 'none' as React.CSSProperties['appearance'],
-            boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             opacity: name.trim() && !mutation.isPending ? 1 : 0.55,
             transition: 'opacity 0.2s',
             cursor: name.trim() && !mutation.isPending ? 'pointer' : 'not-allowed',

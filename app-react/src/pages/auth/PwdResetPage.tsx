@@ -58,7 +58,7 @@ function PasswordField({ id, label, value, onChange, autoComplete }: {
           type="button"
           onClick={() => setShow(v => !v)}
           className="absolute right-4 top-1/2 -translate-y-1/2"
-          style={{ color: '#01a386', background: 'none', border: 'none' }}
+          style={{ color: '#c8724a', background: 'none', border: 'none' }}
         >
           {show ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
         </button>
@@ -122,9 +122,9 @@ export function PwdResetPage() {
           disabled={loading || !password || !confirmPassword}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            color: '#134e4a',
-            boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            color: '#0b0b0d',
+            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             opacity: loading || !password || !confirmPassword ? 0.6 : 1,
             cursor: loading || !password || !confirmPassword ? 'not-allowed' : 'pointer',
           }}

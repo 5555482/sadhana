@@ -31,16 +31,15 @@ import {
   formatMinutesAsHHMM,
   type ChartDataRow,
 } from './chartLogic'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
-
-const ACCENT = '#01a386'
 const TRACE_COLORS = [
   '#FF8C00', // DarkOrange
   '#B22222', // FireBrick
@@ -256,7 +255,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
             className="absolute inset-0 rounded-2xl flex items-center justify-center z-10"
             style={{ background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(4px)' }}
           >
-            <span className="loading loading-spinner loading-md" style={{ color: '#01a386' }} />
+            <span className="loading loading-spinner loading-md" style={{ color: ACCENT }} />
           </div>
         )}
         {isLoading ? (
@@ -458,7 +457,7 @@ function ReportPicker({
               onClick={() => { onSelect(opt.id); setOpen(false) }}
               className="w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors"
               style={{
-                background: selectedId === opt.id ? 'rgba(1,163,134,0.06)' : 'transparent',
+                background: selectedId === opt.id ? 'rgba(200,114,74,0.06)' : 'transparent',
                 color: selectedId === opt.id ? ACCENT : '#374151',
                 border: 'none',
                 borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.04)',
@@ -570,7 +569,7 @@ function ReportCard({
       <div className="px-4 py-3 flex items-center gap-3">
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: isGridType ? 'rgba(99,102,241,0.10)' : 'rgba(1,163,134,0.10)' }}
+          style={{ background: isGridType ? 'rgba(99,102,241,0.10)' : 'rgba(200,114,74,0.10)' }}
         >
           {isGridType
             ? <FaTh className="w-3.5 h-3.5" style={{ color: '#6366f1' }} />
@@ -681,7 +680,7 @@ function ReportCard({
                             checked={trace.show_average}
                             onChange={e => changeTrace(trace.practice, { show_average: e.target.checked })}
                             className="w-3 h-3 rounded"
-                            style={{ accentColor: '#01a386' }}
+                            style={{ accentColor: ACCENT }}
                           />
                           {t('charts.showAverage')}
                         </label>
@@ -723,7 +722,7 @@ function ReportCard({
               onClick={addItem}
               disabled={!addPracticeId || updateMutation.isPending}
               className="h-9 px-4 rounded-xl text-sm font-semibold flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', color: 'white', border: 'none', opacity: addPracticeId ? 1 : 0.4 }}
+              style={{ background: ACCENT_GRADIENT, color: 'white', border: 'none', opacity: addPracticeId ? 1 : 0.4 }}
             >
               {t('charts.add')}
             </button>
@@ -772,7 +771,7 @@ export function ChartsPage() {
         <div className="rounded-2xl px-5 py-4 flex items-center gap-3" style={{ ...glass, position: 'relative', zIndex: 100 }}>
           <div
             className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 16px rgba(1,163,134,0.30)' }}
+            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(200,114,74,0.30)' }}
           >
             <FaChartLine className="w-4 h-4 text-white" />
           </div>
@@ -785,7 +784,7 @@ export function ChartsPage() {
           <button
             onClick={copyShareLink}
             className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold flex-shrink-0"
-            style={{ background: shareCopied ? 'rgba(1,163,134,0.12)' : 'rgba(0,0,0,0.05)', color: shareCopied ? ACCENT : '#6b7280', border: 'none' }}
+            style={{ background: shareCopied ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.06)', color: shareCopied ? ACCENT : '#6b7280', border: 'none' }}
           >
             {shareCopied ? <LuCheck className="w-3.5 h-3.5" /> : <LuCopy className="w-3.5 h-3.5" />}
             {shareCopied ? t('charts.copied') : t('charts.share')}
@@ -844,9 +843,9 @@ export function ChartsPage() {
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(1,163,134,0.08)' }}
+              style={{ background: 'rgba(200,114,74,0.08)' }}
             >
-              <LuChartLine className="w-6 h-6" style={{ color: '#01a386' }} />
+              <LuChartLine className="w-6 h-6" style={{ color: ACCENT }} />
             </div>
             <div className="text-center">
               <p className="text-sm font-semibold text-gray-800">{t('charts.emptyTitle')}</p>
@@ -856,10 +855,10 @@ export function ChartsPage() {
               to="/charts/new"
               className="px-6 h-11 rounded-full text-sm font-semibold flex items-center gap-2"
               style={{
-                background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
+                background: ACCENT_GRADIENT,
                 color: 'white',
                 textDecoration: 'none',
-                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
               }}
             >
               {t('charts.create')}
@@ -872,7 +871,7 @@ export function ChartsPage() {
         to="/charts/new"
         aria-label="New report"
         className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center"
-        style={{ background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', boxShadow: '0 4px 24px rgba(45,212,191,0.45)' }}
+        style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(200,114,74,0.45)' }}
       >
         <FaPlus className="w-5 h-5 text-white" />
       </Link>

@@ -66,7 +66,7 @@ function FieldInput({
             type="button"
             onClick={() => setShowPwd(v => !v)}
             className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
-            style={{ color: '#01a386' }}
+            style={{ color: '#c8724a' }}
           >
             {showPwd ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
           </button>
@@ -120,7 +120,7 @@ export function ConfirmationPage() {
     return (
       <GlassShell>
         <div className="flex justify-center py-4">
-          <span className="loading loading-spinner loading-md" style={{ color: '#01a386' }} />
+          <span className="loading loading-spinner loading-md" style={{ color: '#c8724a' }} />
         </div>
       </GlassShell>
     )
@@ -131,7 +131,7 @@ export function ConfirmationPage() {
       <GlassShell>
         <div className="flex flex-col gap-4 text-center">
           <p className="text-sm text-error">{t('auth.confirmationExpired')}</p>
-          <Link to="/register" className="text-sm font-medium hover:underline" style={{ color: '#01a386' }}>
+          <Link to="/register" className="text-sm font-medium hover:underline" style={{ color: '#c8724a' }}>
             {t('auth.signUp')}
           </Link>
         </div>
@@ -178,9 +178,9 @@ export function ConfirmationPage() {
           disabled={loading}
           className="w-full h-12 rounded-full text-sm font-semibold transition-all flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            color: '#134e4a',
-            boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            color: '#0b0b0d',
+            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
           }}
         >
           {loading && <span className="loading loading-spinner loading-sm" />}

@@ -9,13 +9,14 @@ function isGridDef(def: ReportDefinition): def is { Grid: { practices: string[] 
   return 'Grid' in def
 }
 import { Spinner } from '../../components/ui/Spinner'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.90)',
+  background: SURFACE_2,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.80)',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
 }
 
 export function SharedChartPage() {
@@ -45,14 +46,14 @@ export function SharedChartPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            boxShadow: '0 4px 16px rgba(1,163,134,0.30)',
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
           }}
         >
           <FaChartLine className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold text-gray-800">{t('charts.shared')}</h1>
+          <h1 className="text-base font-bold text-base-content">{t('charts.shared')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">
             {reports.length} report{reports.length === 1 ? '' : 's'}
           </p>
@@ -72,15 +73,15 @@ export function SharedChartPage() {
             <div key={r.id} className="rounded-2xl px-4 py-4 flex items-center gap-3" style={glass}>
               <div
                 className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: gridDef ? 'rgba(99,102,241,0.10)' : 'rgba(1,163,134,0.10)' }}
+                style={{ background: gridDef ? 'rgba(99,102,241,0.10)' : 'rgba(200,114,74,0.10)' }}
               >
                 {gridDef
                   ? <FaTh className="w-4 h-4" style={{ color: '#6366f1' }} />
-                  : <FaChartLine className="w-4 h-4" style={{ color: '#01a386' }} />
+                  : <FaChartLine className="w-4 h-4" style={{ color: ACCENT }} />
                 }
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-800 truncate">{r.name}</p>
+                <p className="text-sm font-semibold text-base-content truncate">{r.name}</p>
                 <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
                   {gridDef ? 'Grid' : 'Graph'} · {count} practice{count === 1 ? '' : 's'}
                 </p>
@@ -89,8 +90,6 @@ export function SharedChartPage() {
           )
         })
       )}
-
-      <p className="text-xs text-center mt-4" style={{ color: '#d1d5db' }}>{t('charts.madeWith')}</p>
     </div>
   )
 }

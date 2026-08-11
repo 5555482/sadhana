@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { practicesApi } from '../../api/practices'
+import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 interface MonthCalendarProps {
   selectedDate: Date
@@ -32,11 +33,11 @@ function monthStartOffset(monthStart: Date): number {
 }
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.96)',
+  background: '#141416',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255,255,255,0.85)',
-  boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
 }
 
 export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendarProps) {
@@ -104,13 +105,13 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
 
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
-          <span className="text-base font-bold text-gray-800">{monthLabel}</span>
+          <span className="text-base font-bold text-base-content">{monthLabel}</span>
           <div className="flex gap-1">
             <button
               type="button"
               onClick={() => setMonthStart(prev => addMonths(prev, -1))}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-              style={{ background: 'rgba(0,0,0,0.05)', border: 'none', color: '#6b7280' }}
+              style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'rgba(255,255,255,0.60)' }}
             >
               ‹
             </button>
@@ -118,7 +119,7 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
               type="button"
               onClick={() => setMonthStart(prev => addMonths(prev, 1))}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-              style={{ background: 'rgba(0,0,0,0.05)', border: 'none', color: '#6b7280' }}
+              style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'rgba(255,255,255,0.60)' }}
             >
               ›
             </button>
@@ -157,10 +158,10 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
                   className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all"
                   style={
                     sel
-                      ? { background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)', color: '#fff', boxShadow: '0 2px 8px rgba(1,163,134,0.35)', border: 'none' }
+                      ? { background: ACCENT_GRADIENT, color: '#fff', boxShadow: '0 2px 8px rgba(200,114,74,0.35)', border: 'none' }
                       : tod
-                      ? { color: '#01a386', fontWeight: 700, background: 'transparent', border: 'none' }
-                      : { color: '#374151', background: 'transparent', border: 'none' }
+                      ? { color: ACCENT, fontWeight: 700, background: 'transparent', border: 'none' }
+                      : { color: '#f5f4f2', background: 'transparent', border: 'none' }
                   }
                 >
                   {day}
@@ -171,12 +172,12 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
         </div>
 
         {/* Footer */}
-        <div className="mt-3 pt-2" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="mt-3 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <button
             type="button"
             onClick={selectToday}
             className="text-sm font-bold"
-            style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer' }}
+            style={{ color: ACCENT, background: 'none', border: 'none', cursor: 'pointer' }}
           >
             Today
           </button>

@@ -79,7 +79,7 @@ export function RegisterPage() {
             <Link
               to="/login"
               className="text-sm font-medium hover:underline"
-              style={{ color: '#01a386' }}
+              style={{ color: '#c8724a' }}
             >
               {t('auth.signIn')}
             </Link>
@@ -93,7 +93,7 @@ export function RegisterPage() {
                 onClick={handleResend}
                 disabled={resending}
                 className="text-sm font-medium hover:underline"
-                style={{ color: '#01a386', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ color: '#c8724a', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 {resending ? '…' : t('auth.resendEmail')}
               </button>
@@ -107,7 +107,7 @@ export function RegisterPage() {
               </h1>
               <p className="text-xs text-base-content/50 mt-2">
                 {t('auth.hasAccount')}{' '}
-                <Link to="/login" className="font-medium hover:underline" style={{ color: '#01a386' }}>
+                <Link to="/login" className="font-medium hover:underline" style={{ color: '#c8724a' }}>
                   {t('auth.signIn')}
                 </Link>
               </p>
@@ -145,9 +145,9 @@ export function RegisterPage() {
                 disabled={loading}
                 className="w-full h-12 rounded-full text-sm font-semibold transition-all flex items-center justify-center gap-2"
                 style={{
-                  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-                  color: '#134e4a',
-                  boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+                  background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+                  color: '#0b0b0d',
+                  boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
                 }}
               >
                 {loading && <span className="loading loading-spinner loading-sm" />}

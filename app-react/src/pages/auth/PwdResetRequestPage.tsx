@@ -59,7 +59,7 @@ export function PwdResetRequestPage() {
             Check your inbox.
           </h1>
           <p className="text-sm text-base-content/60">{t('auth.resetSent')}</p>
-          <Link to="/login" className="text-sm font-medium hover:underline" style={{ color: '#01a386' }}>
+          <Link to="/login" className="text-sm font-medium hover:underline" style={{ color: '#c8724a' }}>
             {t('auth.signIn')}
           </Link>
         </div>
@@ -104,9 +104,9 @@ export function PwdResetRequestPage() {
           disabled={loading || !email}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-            color: '#134e4a',
-            boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            color: '#0b0b0d',
+            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             opacity: loading || !email ? 0.6 : 1,
             cursor: loading || !email ? 'not-allowed' : 'pointer',
           }}
@@ -118,7 +118,7 @@ export function PwdResetRequestPage() {
 
       <p className="text-center text-xs text-base-content/40">
         Remember it?{' '}
-        <Link to="/login" className="font-medium hover:underline" style={{ color: '#01a386' }}>
+        <Link to="/login" className="font-medium hover:underline" style={{ color: '#c8724a' }}>
           {t('auth.signIn')}
         </Link>
       </p>
