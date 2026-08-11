@@ -129,7 +129,7 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
         {/* Weekday header */}
         <div className="grid grid-cols-7 mb-1">
           {weekdays.map(d => (
-            <div key={d} className="text-center text-xs font-medium text-gray-400 py-1">{d}</div>
+            <div key={d} className="text-center text-xs font-medium text-base-content/60 py-1">{d}</div>
           ))}
         </div>
 

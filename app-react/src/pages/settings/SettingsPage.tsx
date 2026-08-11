@@ -91,7 +91,7 @@ export function SettingsPage() {
           <FaCog className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold text-base-content leading-tight">{user?.name || t('nav.settings')}</h1>
+          <h1 className="text-base font-bold font-serif text-base-content leading-tight">{user?.name || t('nav.settings')}</h1>
           <p className="text-xs text-gray-400 mt-0.5">{t('settings.subtitle')}</p>
         </div>
       </div>

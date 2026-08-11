@@ -9,7 +9,7 @@ import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
 import type {
   YatraPractice, PracticeDataType,
   ColourZonesConfig, ColourBound, ZoneColour, PracticeValue,
-  DailyScoreConfig, BonusRule,
+  DailyScoreConfig,
 } from '../../types/api'
 
 // ── Constants ─────────────────────────────────────────────────────────────────

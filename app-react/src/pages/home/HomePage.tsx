@@ -52,7 +52,7 @@ export function DateContextLabel({ dateStr }: { dateStr: string }) {
   }
 
   return (
-    <p className="text-[11px] font-semibold uppercase tracking-widest px-1"
+    <p className="text-[11px] font-semibold font-serif uppercase tracking-widest px-1"
        style={{ color: '#92400e' }}>
       {label}
     </p>
@@ -172,7 +172,7 @@ export function HomePage() {
           {/* Empty state */}
           {!practicesQuery.isLoading && !practicesQuery.isError && activePractices.length === 0 && (
             <div className="text-center py-12 flex flex-col items-center gap-4">
-              <p className="text-gray-500 text-sm">{t('home.noPractices')}</p>
+              <p className="text-base-content/60 text-sm">{t('home.noPractices')}</p>
 
               {/* Seed defaults */}
               <button

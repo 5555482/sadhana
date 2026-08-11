@@ -1,5 +1,5 @@
 import { apiClient } from './client'
-import type { Yatra, UserPractice, PracticeDataType, YatraDataResponse, YatraUserPracticeItem, YatraPractice, YatraUser, YatraStatisticsConfig } from '../types/api'
+import type { Yatra, PracticeDataType, YatraDataResponse, YatraUserPracticeItem, YatraPractice, YatraUser, YatraStatisticsConfig } from '../types/api'
 
 export const yatrasApi = {
   async getYatras(): Promise<Yatra[]> {

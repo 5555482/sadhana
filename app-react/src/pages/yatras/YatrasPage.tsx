@@ -553,7 +553,7 @@ export function YatrasPage() {
                 <FaUsers className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-base font-bold text-base-content leading-tight">{t('yatras.newTitle')}</p>
+                <p className="text-base font-bold font-serif text-base-content leading-tight">{t('yatras.newTitle')}</p>
                 <p className="text-xs text-gray-400">{t('yatras.newSubtitle')}</p>
               </div>
             </div>

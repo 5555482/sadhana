@@ -103,17 +103,6 @@ function traceLabel(type_: TraceType): string {
   return '?'
 }
 
-function TraceTypeBadge({ type_ }: { type_: TraceType }) {
-  const { t } = useTranslation()
-  const key = traceLabel(type_)
-  const color = key === 'Bar' ? '#6366f1' : key === 'Dot' ? '#d97706' : ACCENT
-  return (
-    <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md flex-shrink-0" style={{ background: `${color}18`, color }}>
-      {t(`charts.trace${key}`)}
-    </span>
-  )
-}
-
 /** Simple type-agnostic value extractor used only by toCSV (no data_type context). */
 function csvValueToNumber(raw: unknown): number | null {
   if (raw === null || raw === undefined) return null
@@ -781,7 +770,7 @@ export function ChartsPage() {
             <FaChartLine className="w-4 h-4 text-white" />
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="text-base font-bold text-gray-800 leading-tight">{t('charts.title')}</h1>
+            <h1 className="text-base font-bold font-serif text-base-content leading-tight">{t('charts.title')}</h1>
           </div>
           {/* Report picker */}
           <ReportPicker reports={reports} selectedId={selectedId} onSelect={setSelectedId} />
