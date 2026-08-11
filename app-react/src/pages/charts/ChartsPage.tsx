@@ -31,7 +31,7 @@ import {
   formatMinutesAsHHMM,
   type ChartDataRow,
 } from './chartLogic'
-import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER, TEXT, TEXT_MUTED } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
   background: SURFACE_2,
@@ -361,9 +361,9 @@ function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; pr
       <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>{t('charts.date')}</th>
+            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: `1px solid ${BORDER}` }}>{t('charts.date')}</th>
             {practiceNames.map((name) => (
-              <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+              <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: `1px solid ${BORDER}` }}>
                 {name}
               </th>
             ))}
@@ -372,9 +372,9 @@ function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; pr
         <tbody>
           {chartData.map((row, i) => (
             <tr key={row.cob} style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.015)' }}>
-              <td className="px-2 py-1.5 text-gray-500 whitespace-nowrap">{fmt(row.cob)}</td>
+              <td className="px-2 py-1.5 text-base-content/60 whitespace-nowrap">{fmt(row.cob)}</td>
               {practiceNames.map((name) => (
-                <td key={name} className="px-2 py-1.5 text-right text-gray-700">
+                <td key={name} className="px-2 py-1.5 text-right text-base-content/80">
                   {row[name] == null ? '—' : String(row[name])}
                 </td>
               ))}
@@ -430,8 +430,8 @@ function ReportPicker({
         onClick={() => setOpen(o => !o)}
         className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold transition-all"
         style={{
-          background: 'rgba(0,0,0,0.05)',
-          color: '#374151',
+          background: 'rgba(255,255,255,0.05)',
+          color: TEXT,
           border: 'none',
           maxWidth: 150,
         }}
@@ -452,9 +452,9 @@ function ReportPicker({
               className="w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors"
               style={{
                 background: selectedId === opt.id ? 'rgba(200,114,74,0.06)' : 'transparent',
-                color: selectedId === opt.id ? ACCENT : '#374151',
+                color: selectedId === opt.id ? ACCENT : TEXT,
                 border: 'none',
-                borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.04)',
+                borderTop: i === 0 ? 'none' : `1px solid ${BORDER}`,
                 fontWeight: selectedId === opt.id ? 600 : 400,
               }}
             >
@@ -571,7 +571,7 @@ function ReportCard({
           }
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-800 truncate">{report.name}</p>
+          <p className="text-sm font-semibold text-base-content truncate">{report.name}</p>
           <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
             {t(isGridType ? 'charts.kindGrid' : 'charts.kindGraph')} · {t('charts.practiceCount', { count: currentIds.length })}
           </p>
@@ -593,7 +593,7 @@ function ReportCard({
       </div>
 
       {open && (
-        <div style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+        <div style={{ borderTop: `1px solid ${BORDER}` }}>
 
           {/* Report name input */}
           <div className="px-4 pt-3 pb-1">
@@ -603,8 +603,8 @@ function ReportCard({
               value={localName}
               onChange={e => setLocalName(e.target.value)}
               onBlur={() => { if (localName.trim() && localName !== report.name) renameMutation.mutate(localName.trim()) }}
-              className="w-full text-sm font-semibold text-gray-800 rounded-xl px-3 h-9 outline-none"
-              style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)' }}
+              className="w-full text-sm font-semibold text-base-content rounded-xl px-3 h-9 outline-none"
+              style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}` }}
             />
           </div>
 
@@ -615,8 +615,8 @@ function ReportCard({
               <select
                 value={(report.definition as { Graph: GraphReport }).Graph.bar_layout}
                 onChange={e => changeBarLayout(e.target.value as BarLayout)}
-                className="w-full text-sm text-gray-800 rounded-xl px-3 h-9 outline-none"
-                style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)' }}
+                className="w-full text-sm text-base-content rounded-xl px-3 h-9 outline-none"
+                style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}` }}
               >
                 <option value="Grouped">{t('charts.barLayoutGrouped')}</option>
                 <option value="Stacked">{t('charts.barLayoutStacked')}</option>
@@ -627,32 +627,32 @@ function ReportCard({
 
           {/* Trace / practice list */}
           {currentIds.length > 0 ? (
-            <div className="px-4 py-2 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}>
+            <div className="px-4 py-2 flex flex-col gap-2" style={{ borderTop: `1px solid ${BORDER}` }}>
               {isGrid(report.definition)
                 ? report.definition.Grid.practices.map(pid => (
                     <div key={pid} className="flex items-center gap-2 py-0.5">
-                      <span className="flex-1 text-xs text-gray-600">{practiceMap[pid] ?? pid}</span>
-                      <button onClick={() => removeItem(pid)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}>
+                      <span className="flex-1 text-xs text-base-content/80">{practiceMap[pid] ?? pid}</span>
+                      <button onClick={() => removeItem(pid)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.06)', color: '#9ca3af', border: 'none' }}>
                         <LuX className="w-3 h-3" />
                       </button>
                     </div>
                   ))
                 : currentTraces.map(trace => (
-                    <div key={trace.practice} className="flex flex-col gap-1 py-1" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                    <div key={trace.practice} className="flex flex-col gap-1 py-1" style={{ borderBottom: `1px solid ${BORDER}` }}>
                       <div className="flex items-center gap-2">
                         {/* Type select */}
                         <select
                           value={traceTypeValue(trace.type_)}
                           onChange={e => changeTrace(trace.practice, { type_: typeFromSelect(e.target.value) })}
                           className="text-xs rounded-lg px-2 h-6 outline-none flex-shrink-0"
-                          style={{ background: 'rgba(0,0,0,0.05)', border: 'none', color: '#374151' }}
+                          style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: TEXT }}
                         >
                           <option value="Line">{t('charts.traceLine')}</option>
                           <option value="Bar">{t('charts.traceBar')}</option>
                           <option value="Dot">{t('charts.traceDot')}</option>
                         </select>
-                        <span className="flex-1 text-xs font-semibold text-gray-700">{practiceMap[trace.practice] ?? trace.practice}</span>
-                        <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg flex-shrink-0" style={{ background: 'rgba(0,0,0,0.05)', color: '#9ca3af', border: 'none' }}>
+                        <span className="flex-1 text-xs font-semibold text-base-content">{practiceMap[trace.practice] ?? trace.practice}</span>
+                        <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg flex-shrink-0" style={{ background: 'rgba(255,255,255,0.06)', color: '#9ca3af', border: 'none' }}>
                           <LuX className="w-3 h-3" />
                         </button>
                       </div>
@@ -665,10 +665,10 @@ function ReportCard({
                           onBlur={e => changeTrace(trace.practice, { label: e.target.value.trim() || null })}
                           placeholder={t('charts.traceCustomLabel')}
                           className="flex-1 text-xs rounded-lg px-2 h-6 outline-none"
-                          style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.06)', color: '#374151' }}
+                          style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, color: TEXT }}
                         />
                         {/* Show average */}
-                        <label className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0 cursor-pointer">
+                        <label className="flex items-center gap-1 text-xs text-base-content/60 flex-shrink-0 cursor-pointer">
                           <input
                             type="checkbox"
                             checked={trace.show_average}
@@ -688,12 +688,12 @@ function ReportCard({
           )}
 
           {/* Add practice row — unchanged */}
-          <div className="px-4 pb-3 flex items-center gap-2" style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.625rem' }}>
+          <div className="px-4 pb-3 flex items-center gap-2" style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '0.625rem' }}>
             <select
               value={addPracticeId}
               onChange={e => setAddPracticeId(e.target.value)}
               className="flex-1 text-sm rounded-xl px-3 h-9 focus:outline-none"
-              style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: addPracticeId ? '#1f2937' : '#9ca3af' }}
+              style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, color: addPracticeId ? TEXT : TEXT_MUTED }}
             >
               <option value="">{t('charts.addPractice')}</option>
               {practices.filter(p => p.is_active && !currentIds.includes(p.id)).map(p => (
@@ -705,7 +705,7 @@ function ReportCard({
                 value={addTraceType}
                 onChange={e => setAddTraceType(e.target.value as 'Line' | 'Bar' | 'Dot')}
                 className="text-sm rounded-xl px-2 h-9 focus:outline-none flex-shrink-0"
-                style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#374151' }}
+                style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, color: TEXT }}
               >
                 <option value="Line">{t('charts.traceLine')}</option>
                 <option value="Bar">{t('charts.traceBar')}</option>
@@ -828,10 +828,10 @@ export function ChartsPage() {
           <div
             className="rounded-2xl px-5 py-12 flex flex-col items-center gap-5"
             style={{
-              background: 'rgba(255,255,255,0.90)',
+              background: SURFACE_2,
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.80)',
+              border: `1px solid ${BORDER}`,
               boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
             }}
           >
@@ -842,8 +842,8 @@ export function ChartsPage() {
               <LuChartLine className="w-6 h-6" style={{ color: ACCENT }} />
             </div>
             <div className="text-center">
-              <p className="text-sm font-semibold text-gray-800">{t('charts.emptyTitle')}</p>
-              <p className="text-xs text-gray-400 mt-1">{t('charts.emptySubtitle')}</p>
+              <p className="text-sm font-semibold text-base-content">{t('charts.emptyTitle')}</p>
+              <p className="text-xs text-base-content/60 mt-1">{t('charts.emptySubtitle')}</p>
             </div>
             <Link
               to="/charts/new"

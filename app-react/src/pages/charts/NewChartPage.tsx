@@ -308,7 +308,7 @@ export function NewChartPage() {
             <button
               onClick={() => setStep(0)}
               className="flex-1 h-12 rounded-full text-sm font-semibold"
-              style={{ background: 'rgba(255,255,255,0.85)', color: '#374151', border: '1px solid rgba(0,0,0,0.12)' }}
+              style={{ background: 'rgba(255,255,255,0.06)', color: TEXT, border: `1px solid ${BORDER}` }}
             >
               {t('common.back')}
             </button>
