@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { FaChevronLeft } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
+import { ACCENT, SURFACE_GLASS, TEXT_FAINT, BORDER } from '../../theme/tokens'
 
 interface TopBarProps {
   title?: string
@@ -20,17 +21,17 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
     <header
       className={`fixed top-0 left-0 right-0 h-14 items-center px-4 z-40 gap-3 ${showBack || showClose ? 'flex' : 'hidden sm:flex'}`}
       style={{
-        background: 'rgba(255, 255, 255, 0.70)',
+        background: SURFACE_GLASS,
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+        borderBottom: `1px solid ${BORDER}`,
       }}
     >
       {showClose ? (
         <button
           onClick={() => navigate(-1)}
           aria-label="Close"
-          className="btn btn-ghost btn-sm btn-circle text-gray-500"
+          className="btn btn-ghost btn-sm btn-circle text-base-content/70"
         >
           <LuX className="w-5 h-5" />
         </button>
@@ -38,7 +39,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
-          className="btn btn-ghost btn-sm btn-circle text-gray-700"
+          className="btn btn-ghost btn-sm btn-circle text-base-content/80"
         >
           <FaChevronLeft className="w-4 h-4" />
         </button>
@@ -47,14 +48,14 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
           <img
             src="/logo.png"
             className="h-8 w-8 object-contain"
-            style={{ filter: 'brightness(0)' }}
+            style={{ filter: 'brightness(0) invert(1)' }}
             alt="Sadhana"
           />
         </Link>
       )}
 
       {(showBack || showClose) && title && (
-        <h1 className="font-semibold text-base text-gray-800 flex-1">{title}</h1>
+        <h1 className="font-serif font-semibold text-base text-base-content flex-1">{title}</h1>
       )}
 
       {!showBack && !showClose && (
@@ -72,13 +73,13 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
                   {/* Below sm: icon only */}
                   <Icon
                     className="w-4 h-4 sm:hidden transition-colors"
-                    style={{ color: isActive ? '#01a386' : 'rgba(0,0,0,0.40)' }}
+                    style={{ color: isActive ? ACCENT : TEXT_FAINT }}
                   />
                   {/* sm and above: text label */}
                   <span
                     className="hidden sm:inline transition-colors"
                     style={{
-                      color: isActive ? '#01a386' : 'rgba(0,0,0,0.40)',
+                      color: isActive ? ACCENT : TEXT_FAINT,
                       fontWeight: isActive ? 600 : 500,
                     }}
                   >
@@ -87,7 +88,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
                   {/* Active dot */}
                   <span
                     className="w-1 h-1 rounded-full transition-all"
-                    style={{ background: isActive ? '#01a386' : 'transparent' }}
+                    style={{ background: isActive ? ACCENT : 'transparent' }}
                   />
                 </>
               )}

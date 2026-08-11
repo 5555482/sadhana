@@ -4,14 +4,15 @@ import { FaSlidersH, FaPlus, FaSignOutAlt } from 'react-icons/fa'
 import { navItems } from './navItems'
 import { useAuthStore } from '../../store/authStore'
 import { useUiStore } from '../../store/uiStore'
+import { ACCENT, ACCENT_GRADIENT, ACCENT_SHADOW, SURFACE_GLASS, TEXT_FAINT, BORDER } from '../../theme/tokens'
 
 const CENTER_CLASS = 'flex items-center justify-center rounded-full no-underline'
 const CENTER_STYLE: React.CSSProperties = {
   width: '52px',
   height: '52px',
   marginTop: '-14px',
-  background: 'linear-gradient(135deg, #02c9a3 0%, #01a386 100%)',
-  boxShadow: '0 4px 20px rgba(1,163,134,0.40)',
+  background: ACCENT_GRADIENT,
+  boxShadow: `0 4px 20px ${ACCENT_SHADOW}`,
 }
 
 function Tab({ to, navKey, icon: Icon, exact }: (typeof navItems)[number]) {
@@ -26,7 +27,7 @@ function Tab({ to, navKey, icon: Icon, exact }: (typeof navItems)[number]) {
       {({ isActive }) => (
         <Icon
           className="w-6 h-6 transition-colors"
-          style={{ color: isActive ? '#01a386' : 'rgba(0,0,0,0.40)' }}
+          style={{ color: isActive ? ACCENT : TEXT_FAINT }}
         />
       )}
     </NavLink>
@@ -66,7 +67,7 @@ export function BottomNav() {
         className={CENTER_CLASS}
         style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
       >
-        <FaSignOutAlt className="w-5 h-5 text-white" />
+        <FaSignOutAlt className="w-5 h-5 text-[#0b0b0d]" />
       </button>
     )
   } else if (onYatras) {
@@ -78,7 +79,7 @@ export function BottomNav() {
         className={CENTER_CLASS}
         style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
       >
-        <FaPlus className="w-5 h-5 text-white" />
+        <FaPlus className="w-5 h-5 text-[#0b0b0d]" />
       </button>
     )
   } else {
@@ -89,7 +90,7 @@ export function BottomNav() {
         className={CENTER_CLASS}
         style={CENTER_STYLE}
       >
-        {onCharts ? <FaPlus className="w-5 h-5 text-white" /> : <FaSlidersH className="w-5 h-5 text-white" />}
+        {onCharts ? <FaPlus className="w-5 h-5 text-[#0b0b0d]" /> : <FaSlidersH className="w-5 h-5 text-[#0b0b0d]" />}
       </Link>
     )
   }
@@ -99,10 +100,10 @@ export function BottomNav() {
       aria-label="Main navigation"
       className="fixed bottom-0 left-0 right-0 z-40 sm:hidden flex items-stretch"
       style={{
-        background: 'rgba(255, 255, 255, 0.70)',
+        background: SURFACE_GLASS,
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+        borderTop: `1px solid ${BORDER}`,
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
