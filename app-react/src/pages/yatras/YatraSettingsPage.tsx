@@ -269,9 +269,9 @@ export function YatraSettingsPage() {
           >
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: 'rgba(99,102,241,0.10)' }}
+              style={{ background: 'rgba(200,114,74,0.10)' }}
             >
-              <FaCog className="w-4 h-4" style={{ color: '#6366f1' }} />
+              <FaCog className="w-4 h-4" style={{ color: '#c8724a' }} />
             </div>
             <span className="flex-1 text-sm font-semibold text-base-content">{t('yatras.adminSettings')}</span>
             <span className="text-xs" style={{ color: '#d1d5db' }}>›</span>

@@ -252,8 +252,8 @@ export function YatraAdminSettingsPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
-            boxShadow: '0 4px 16px rgba(124,58,237,0.28)',
+            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            boxShadow: '0 4px 16px rgba(200,114,74,0.28)',
           }}
         >
           <FaShieldAlt className="w-5 h-5 text-white" />
@@ -407,7 +407,7 @@ export function YatraAdminSettingsPage() {
             <div key={m.user_id} className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
               <div
                 className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
-                style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)' }}
               >
                 {m.user_name.charAt(0).toUpperCase()}
               </div>
@@ -418,8 +418,8 @@ export function YatraAdminSettingsPage() {
                 disabled={toggleAdmin.isPending}
                 className="text-xs font-semibold px-2 py-0.5 rounded-full transition-colors"
                 style={{
-                  background: m.is_admin ? 'rgba(124,58,237,0.12)' : 'rgba(255,255,255,0.06)',
-                  color: m.is_admin ? '#7c3aed' : '#9ca3af',
+                  background: m.is_admin ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.06)',
+                  color: m.is_admin ? '#c8724a' : '#9ca3af',
                   border: 'none',
                   cursor: 'pointer',
                 }}
@@ -455,7 +455,7 @@ export function YatraAdminSettingsPage() {
         <div className="flex flex-col gap-3">
           {/* Visibility */}
           <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
-            <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#6366f1' }} />
+            <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#c8724a' }} />
             <span className="flex-1 text-sm font-medium text-base-content">{t('yatras.visibleTo')}</span>
             <select
               value={statsVisibleToAll ? 'Everyone' : 'Admins'}
@@ -548,12 +548,12 @@ export function YatraAdminSettingsPage() {
             type="button"
             onClick={addStat}
             className="rounded-2xl px-4 py-3.5 flex items-center gap-3 w-full"
-            style={{ ...glass, borderStyle: 'dashed', borderColor: 'rgba(99,102,241,0.30)', background: 'rgba(99,102,241,0.03)', cursor: 'pointer', border: '1px dashed rgba(99,102,241,0.30)' }}
+            style={{ ...glass, borderStyle: 'dashed', borderColor: 'rgba(200,114,74,0.30)', background: 'rgba(200,114,74,0.03)', cursor: 'pointer', border: '1px dashed rgba(200,114,74,0.30)' }}
           >
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.10)' }}>
-              <FaPlus className="w-3 h-3" style={{ color: '#6366f1' }} />
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(200,114,74,0.10)' }}>
+              <FaPlus className="w-3 h-3" style={{ color: '#c8724a' }} />
             </div>
-            <span className="text-sm font-semibold" style={{ color: '#6366f1' }}>{t('yatras.addStatistic')}</span>
+            <span className="text-sm font-semibold" style={{ color: '#c8724a' }}>{t('yatras.addStatistic')}</span>
           </button>
         </div>
       )}

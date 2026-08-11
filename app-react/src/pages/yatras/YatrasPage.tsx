@@ -414,7 +414,7 @@ export function YatrasPage() {
                           }}
                         >
                           {val !== undefined && val !== null ? formatValue(val) : (
-                            <span style={{ color: 'rgba(0,0,0,0.20)' }}>—</span>
+                            <span style={{ color: 'rgba(255,255,255,0.20)' }}>—</span>
                           )}
                         </td>
                       ))}

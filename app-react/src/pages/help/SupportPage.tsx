@@ -83,8 +83,8 @@ export function SupportPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
-            boxShadow: '0 4px 16px rgba(99,102,241,0.28)',
+            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            boxShadow: '0 4px 16px rgba(200,114,74,0.28)',
           }}
         >
           <LuMessageSquare className="w-5 h-5 text-white" />
@@ -156,10 +156,10 @@ export function SupportPage() {
           disabled={mutation.isPending || !canSubmit}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
-            color: 'white',
+            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            color: '#0b0b0d',
             border: 'none',
-            boxShadow: '0 4px 20px rgba(99,102,241,0.35)',
+            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             opacity: mutation.isPending || !canSubmit ? 0.55 : 1,
             transition: 'opacity 0.15s',
           }}

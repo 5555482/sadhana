@@ -8,16 +8,16 @@ import { useAuthStore } from '../../store/authStore'
 import { AuthBackground } from '../../components/layout/AuthBackground'
 
 const glassCard: React.CSSProperties = {
-  background: 'rgba(255, 255, 255, 0.60)',
+  background: 'rgba(20,20,22,0.72)',
   backdropFilter: 'blur(36px)',
   WebkitBackdropFilter: 'blur(36px)',
-  border: '1px solid rgba(255, 255, 255, 0.80)',
-  boxShadow: '0 12px 48px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.9)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  boxShadow: '0 12px 48px rgba(0,0,0,0.5)',
 }
 
 const inputStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.6)',
-  border: '1px solid rgba(0,0,0,0.10)',
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid rgba(255,255,255,0.10)',
 }
 
 function GlassShell({ children }: { children: React.ReactNode }) {
@@ -58,8 +58,8 @@ function FieldInput({
           readOnly={readOnly}
           className="w-full h-12 px-4 rounded-xl text-base-content placeholder:text-base-content/30 text-sm focus:outline-none transition-colors disabled:opacity-60"
           style={{ ...inputStyle, paddingRight: isPassword ? '3.5rem' : undefined }}
-          onFocus={e => { if (!readOnly) e.target.style.borderColor = 'rgba(99,102,241,0.5)' }}
-          onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.10)')}
+          onFocus={e => { if (!readOnly) e.target.style.borderColor = 'rgba(200,114,74,0.5)' }}
+          onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.10)')}
         />
         {isPassword && (
           <button

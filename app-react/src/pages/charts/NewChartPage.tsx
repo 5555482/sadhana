@@ -211,7 +211,7 @@ export function NewChartPage() {
               background: ACCENT_GRADIENT,
               color: 'white',
               border: 'none',
-              boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
               opacity: canNext0 ? 1 : 0.45,
             }}
           >
@@ -320,7 +320,7 @@ export function NewChartPage() {
                 background: ACCENT_GRADIENT,
                 color: 'white',
                 border: 'none',
-                boxShadow: '0 4px 20px rgba(45,212,191,0.35)',
+                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
                 opacity: canSave && !mutation.isPending ? 1 : 0.45,
               }}
             >
