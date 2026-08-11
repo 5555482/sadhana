@@ -253,7 +253,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         {isFetching && !isLoading && (
           <div
             className="absolute inset-0 rounded-2xl flex items-center justify-center z-10"
-            style={{ background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(4px)' }}
+            style={{ background: 'rgba(20,20,22,0.65)', backdropFilter: 'blur(4px)' }}
           >
             <span className="loading loading-spinner loading-md" style={{ color: ACCENT }} />
           </div>
@@ -269,10 +269,11 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         ) : (
           <ResponsiveContainer width="100%" height={290}>
             <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.10)" />
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 10, fill: '#9ca3af' }}
+                stroke="rgba(255,255,255,0.20)"
+                tick={{ fontSize: 10, fill: 'rgba(245,244,242,0.55)' }}
                 tickLine={false}
                 axisLine={false}
                 interval="preserveStartEnd"
@@ -282,7 +283,8 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                   yAxisId="num"
                   orientation="left"
                   domain={[0, 'auto']}
-                  tick={{ fontSize: 10, fill: '#9ca3af' }}
+                  stroke="rgba(255,255,255,0.20)"
+                  tick={{ fontSize: 10, fill: 'rgba(245,244,242,0.55)' }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(v: number) => (numAxisAllDuration ? `${v} min` : String(v))}
@@ -292,7 +294,8 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                 <YAxis
                   yAxisId="time"
                   orientation="right"
-                  tick={{ fontSize: 10, fill: '#9ca3af' }}
+                  stroke="rgba(255,255,255,0.20)"
+                  tick={{ fontSize: 10, fill: 'rgba(245,244,242,0.55)' }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={formatMinutesAsHHMM}
@@ -302,19 +305,21 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                 <YAxis yAxisId="unit" hide domain={[0, 1.1]} />
               )}
               <Tooltip
-                contentStyle={{ fontSize: 11, borderRadius: 10, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+                contentStyle={{ fontSize: 11, borderRadius: 10, background: '#141416', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#f5f4f2' }}
+                labelStyle={{ color: '#f5f4f2' }}
+                itemStyle={{ color: '#f5f4f2' }}
               />
               <Legend
                 verticalAlign="bottom"
                 align="center"
-                wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default' }}
+                wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default', color: '#f5f4f2' }}
                 onClick={(data) => {
                   if (traces.length <= 1) return
                   const name = data.value as string
                   setSelectedPractice(prev => prev === name ? null : name)
                 }}
                 formatter={(value) => (
-                  <span style={{ color: selectedPractice && selectedPractice !== value ? '#d1d5db' : '#374151' }}>
+                  <span style={{ color: selectedPractice && selectedPractice !== value ? 'rgba(245,244,242,0.35)' : '#f5f4f2' }}>
                     {value}
                   </span>
                 )}
