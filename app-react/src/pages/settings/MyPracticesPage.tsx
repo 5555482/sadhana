@@ -24,11 +24,11 @@ import { useToast } from '../../hooks/useToast'
 import { ACCENT_GRADIENT } from '../../theme/tokens'
 
 const TYPE_META: Record<string, { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>, color: string, bg: string, tKey: string }> = {
-  Bool:     { icon: LuToggleRight, color: '#c8724a', bg: 'rgba(200,114,74,0.10)',   tKey: 'practice.typeBool'     },
-  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  tKey: 'practice.typeInt'      },
-  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  tKey: 'practice.typeDuration' },
-  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  tKey: 'practice.typeTime'     },
-  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', tKey: 'practice.typeText'     },
+  Bool:     { icon: LuToggleRight, color: '#e8905a', bg: 'rgba(232,144,90,0.16)',   tKey: 'practice.typeBool'     },
+  Int:      { icon: LuHash,        color: '#818cf8', bg: 'rgba(129,140,248,0.16)',  tKey: 'practice.typeInt'      },
+  Duration: { icon: LuTimer,       color: '#fbbf24', bg: 'rgba(251,191,36,0.16)',  tKey: 'practice.typeDuration' },
+  Time:     { icon: LuClock,       color: '#60a5fa', bg: 'rgba(96,165,250,0.16)',  tKey: 'practice.typeTime'     },
+  Text:     { icon: LuType,        color: '#fb7185', bg: 'rgba(251,113,133,0.16)', tKey: 'practice.typeText'     },
 }
 
 function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete: (id: string) => void }) {
@@ -91,7 +91,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
         <Link
           to={`/user/practice/${practice.id}/edit`}
           className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
-          style={{ color: 'rgba(0,0,0,0.30)' }}
+          style={{ color: 'rgba(245,244,242,0.6)' }}
         >
           <FaEdit className="w-3.5 h-3.5" />
         </Link>
@@ -99,7 +99,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
         {/* Delete */}
         <button
           className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
-          style={{ color: 'rgba(225,29,72,0.50)' }}
+          style={{ color: 'rgba(244,63,94,0.85)' }}
           onClick={() => (document.getElementById(modalId) as HTMLDialogElement)?.showModal()}
         >
           <FaTrash className="w-3.5 h-3.5" />

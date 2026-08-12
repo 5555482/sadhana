@@ -1,16 +1,15 @@
 export function AuthBackground() {
   return (
     <div className="fixed inset-0 -z-10" style={{ background: '#1e2b45' }}>
-      {/* Giga-style cinematic backdrop: the misty lake-temple photo reads
-          clearly across the top of the viewport and fades into the solid navy
-          base by mid-screen. */}
+      {/* Cinematic backdrop: the photo fills the full width (cover) and fades
+          into the solid navy base lower down. */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage: "url('/bg.jpg')",
-          backgroundSize: 'contain',
+          backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center top',
+          backgroundPosition: 'center',
           opacity: 1,
         }}
       />

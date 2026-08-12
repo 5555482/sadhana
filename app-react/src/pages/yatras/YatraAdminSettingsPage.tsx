@@ -48,10 +48,10 @@ const TYPE_META: Record<string, {
   tKey: string
 }> = {
   Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(200,114,74,0.10)',   tKey: 'practice.typeBool'     },
-  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)',  tKey: 'practice.typeInt'      },
-  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)',  tKey: 'practice.typeDuration' },
-  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)',  tKey: 'practice.typeTime'     },
-  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)', tKey: 'practice.typeText'     },
+  Int:      { icon: LuHash,        color: '#818cf8', bg: 'rgba(129,140,248,0.16)',  tKey: 'practice.typeInt'      },
+  Duration: { icon: LuTimer,       color: '#fbbf24', bg: 'rgba(251,191,36,0.16)',  tKey: 'practice.typeDuration' },
+  Time:     { icon: LuClock,       color: '#60a5fa', bg: 'rgba(96,165,250,0.16)',  tKey: 'practice.typeTime'     },
+  Text:     { icon: LuType,        color: '#fb7185', bg: 'rgba(251,113,133,0.16)', tKey: 'practice.typeText'     },
 }
 
 const AGGREGATIONS: { value: Aggregation; label: string }[] = [

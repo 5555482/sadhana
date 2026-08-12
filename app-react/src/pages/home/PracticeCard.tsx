@@ -19,11 +19,11 @@ const TYPE_META: Record<string, {
   color: string
   bg: string
 }> = {
-  Bool:     { icon: LuToggleRight, color: '#c8724a', bg: 'rgba(200,114,74,0.10)'   },
-  Int:      { icon: LuHash,        color: '#6366f1', bg: 'rgba(99,102,241,0.10)'  },
-  Duration: { icon: LuTimer,       color: '#d97706', bg: 'rgba(245,158,11,0.10)'  },
-  Time:     { icon: LuClock,       color: '#3b82f6', bg: 'rgba(59,130,246,0.10)'  },
-  Text:     { icon: LuType,        color: '#6b7280', bg: 'rgba(107,114,128,0.10)' },
+  Bool:     { icon: LuToggleRight, color: '#e8905a', bg: 'rgba(232,144,90,0.16)'   },
+  Int:      { icon: LuHash,        color: '#818cf8', bg: 'rgba(129,140,248,0.16)'  },
+  Duration: { icon: LuTimer,       color: '#fbbf24', bg: 'rgba(251,191,36,0.16)'  },
+  Time:     { icon: LuClock,       color: '#60a5fa', bg: 'rgba(96,165,250,0.16)'  },
+  Text:     { icon: LuType,        color: '#fb7185', bg: 'rgba(251,113,133,0.16)' },
 }
 
 /* Format total minutes → "45 min" | "1h" | "1h 30m" */

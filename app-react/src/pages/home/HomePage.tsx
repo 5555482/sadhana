@@ -27,7 +27,7 @@ export function SectionLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-2 px-1">
       <p className="text-xs font-semibold uppercase tracking-widest flex-shrink-0"
-         style={{ color: '#92400e' }}>
+         style={{ color: '#fbbf24' }}>
         {label}
       </p>
       <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.20)' }} />
@@ -53,7 +53,7 @@ export function DateContextLabel({ dateStr }: { dateStr: string }) {
 
   return (
     <p className="text-[11px] font-semibold font-serif uppercase tracking-widest px-1"
-       style={{ color: '#92400e' }}>
+       style={{ color: '#fbbf24' }}>
       {label}
     </p>
   )
@@ -127,7 +127,7 @@ export function HomePage() {
             style={{
               background: 'rgba(251,191,36,0.10)',
               border: '1px solid rgba(251,191,36,0.25)',
-              color: '#92400e',
+              color: '#fbbf24',
             }}
           >
             <LuWifiOff className="w-4 h-4 flex-shrink-0" style={{ color: '#d97706' }} />
