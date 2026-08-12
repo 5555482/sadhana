@@ -14,7 +14,7 @@ type ReportKind = 'Graph' | 'Grid'
 type GraphTraceType = 'Line' | 'Bar' | 'Dot'
 
 const glass: React.CSSProperties = {
-  background: SURFACE_2,
+  background: 'rgba(255,255,255,0.06)',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   border: `1px solid ${BORDER}`,

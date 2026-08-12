@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MonthCalendar } from './MonthCalendar'
-import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, BORDER } from '../../theme/tokens'
 
 interface WeekCalendarProps {
   date: Date
@@ -120,7 +120,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
     <div
       className="rounded-2xl select-none overflow-hidden"
       style={{
-        background: SURFACE_2,
+        background: 'rgba(255,255,255,0.06)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: `1px solid ${BORDER}`,

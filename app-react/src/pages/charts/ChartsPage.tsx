@@ -31,10 +31,10 @@ import {
   formatMinutesAsHHMM,
   type ChartDataRow,
 } from './chartLogic'
-import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER, TEXT, TEXT_MUTED } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, BORDER, TEXT, TEXT_MUTED } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: SURFACE_2,
+  background: 'rgba(255,255,255,0.06)',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   border: `1px solid ${BORDER}`,
@@ -828,7 +828,7 @@ export function ChartsPage() {
           <div
             className="rounded-2xl px-5 py-12 flex flex-col items-center gap-5"
             style={{
-              background: SURFACE_2,
+              background: 'rgba(255,255,255,0.06)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
               border: `1px solid ${BORDER}`,

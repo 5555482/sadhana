@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { LuCircleHelp, LuChevronDown, LuChevronUp, LuMessageSquare, LuX } from 'react-icons/lu'
-import { ACCENT, ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: SURFACE_2,
+  background: 'rgba(255,255,255,0.06)',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   border: `1px solid ${BORDER}`,

@@ -6,10 +6,10 @@ import { LuX } from 'react-icons/lu'
 import { practicesApi } from '../../api/practices'
 import { PracticeForm } from '../../components/PracticeForm'
 import { Spinner } from '../../components/ui/Spinner'
-import { ACCENT_GRADIENT, SURFACE_2, BORDER } from '../../theme/tokens'
+import { ACCENT_GRADIENT, BORDER } from '../../theme/tokens'
 
 const cardStyle: React.CSSProperties = {
-  background: SURFACE_2,
+  background: 'rgba(255,255,255,0.06)',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   border: `1px solid ${BORDER}`,
