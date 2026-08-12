@@ -1,16 +1,16 @@
 export function AuthBackground() {
   return (
     <div className="fixed inset-0 -z-10" style={{ background: '#0b0b0d' }}>
-      {/* Giga-style cinematic backdrop: the landscape reads clearly across the
-          top of the viewport and fades into solid near-black by mid-screen. */}
+      {/* Giga-style cinematic backdrop: the Varanasi ghats photo reads clearly
+          across the top of the viewport and fades into solid near-black by
+          mid-screen. */}
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage:
-            "image-set(url('/bg.webp') type('image/webp'), url('/bg.jpg') type('image/jpeg'))",
+          backgroundImage: "url('/bg.jpg')",
           backgroundSize: 'cover',
-          backgroundPosition: 'center top',
-          opacity: 0.85,
+          backgroundPosition: 'center 42%',
+          opacity: 0.9,
         }}
       />
       <div
