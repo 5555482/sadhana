@@ -8,16 +8,17 @@ export function AuthBackground() {
         className="absolute inset-0"
         style={{
           backgroundImage: "url('/bg.jpg')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 42%',
-          opacity: 0.9,
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center top',
+          opacity: 1,
         }}
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(30,43,69,0.20) 0%, rgba(30,43,69,0.45) 30%, rgba(30,43,69,0.85) 55%, #1e2b45 78%)',
+            'linear-gradient(180deg, rgba(30,43,69,0.12) 0%, rgba(30,43,69,0.27) 40%, rgba(30,43,69,0.55) 72%, #1e2b45 96%)',
         }}
       />
     </div>
