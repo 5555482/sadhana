@@ -8,26 +8,26 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-base-100: #0b0b0d;
-  --color-base-200: #141416;
-  --color-base-300: #1e1e21;
+  --color-base-100: #141c28;
+  --color-base-200: #1b2532;
+  --color-base-300: #26313f;
   --color-base-content: #f5f4f2;
   --color-primary: #c8724a;
-  --color-primary-content: #0b0b0d;
+  --color-primary-content: #141c28;
   --color-secondary: #a8b0bf;
-  --color-secondary-content: #0b0b0d;
+  --color-secondary-content: #141c28;
   --color-accent: #d68a63;
-  --color-accent-content: #0b0b0d;
-  --color-neutral: #1e1e21;
+  --color-accent-content: #141c28;
+  --color-neutral: #26313f;
   --color-neutral-content: #f5f4f2;
   --color-info: #5aa9e6;
-  --color-info-content: #0b0b0d;
+  --color-info-content: #141c28;
   --color-success: #3fb98f;
-  --color-success-content: #0b0b0d;
+  --color-success-content: #141c28;
   --color-warning: #e0a336;
-  --color-warning-content: #0b0b0d;
+  --color-warning-content: #141c28;
   --color-error: #f2607b;
-  --color-error-content: #0b0b0d;
+  --color-error-content: #141c28;
   --radius-selector: 0.5rem;
   --radius-field: 0.25rem;
   --radius-box: 0.5rem;

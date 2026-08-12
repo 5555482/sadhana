@@ -27,7 +27,7 @@ export function ToastContainer() {
             transition={{ duration: 0.18 }}
             className="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl min-w-[220px] max-w-xs"
             style={{
-              background: 'rgba(20,20,22,0.95)',
+              background: 'rgba(27,37,50,0.95)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
               border: `1px solid ${BORDER}`,

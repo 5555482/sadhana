@@ -67,7 +67,7 @@ export function BottomNav() {
         className={CENTER_CLASS}
         style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
       >
-        <FaSignOutAlt className="w-5 h-5 text-[#0b0b0d]" />
+        <FaSignOutAlt className="w-5 h-5 text-[#141c28]" />
       </button>
     )
   } else if (onYatras) {
@@ -79,7 +79,7 @@ export function BottomNav() {
         className={CENTER_CLASS}
         style={{ ...CENTER_STYLE, border: 'none', cursor: 'pointer' }}
       >
-        <FaPlus className="w-5 h-5 text-[#0b0b0d]" />
+        <FaPlus className="w-5 h-5 text-[#141c28]" />
       </button>
     )
   } else {
@@ -90,7 +90,7 @@ export function BottomNav() {
         className={CENTER_CLASS}
         style={CENTER_STYLE}
       >
-        {onCharts ? <FaPlus className="w-5 h-5 text-[#0b0b0d]" /> : <FaSlidersH className="w-5 h-5 text-[#0b0b0d]" />}
+        {onCharts ? <FaPlus className="w-5 h-5 text-[#141c28]" /> : <FaSlidersH className="w-5 h-5 text-[#141c28]" />}
       </Link>
     )
   }

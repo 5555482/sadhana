@@ -33,7 +33,7 @@ function monthStartOffset(monthStart: Date): number {
 }
 
 const glass: React.CSSProperties = {
-  background: '#141416',
+  background: '#1b2532',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
   border: '1px solid rgba(255,255,255,0.10)',

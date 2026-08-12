@@ -221,7 +221,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
             background: ACCENT_GRADIENT,
-            color: '#0b0b0d',
+            color: '#141c28',
             border: 'none',
             appearance: 'none' as React.CSSProperties['appearance'],
             boxShadow: '0 4px 20px rgba(200,114,74,0.35)',

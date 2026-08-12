@@ -74,7 +74,7 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
       <form
         onSubmit={handleSubmit}
         className="relative rounded-2xl p-5 w-72 flex flex-col gap-4"
-        style={{ background: '#141416', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.10)' }}
+        style={{ background: '#1b2532', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.10)' }}
       >
         <h3 className="text-sm font-semibold text-base-content">{t('home.addMinutes')}</h3>
         <div className="flex flex-col gap-1">

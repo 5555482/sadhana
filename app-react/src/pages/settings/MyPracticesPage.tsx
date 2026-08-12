@@ -48,7 +48,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
       ref={setNodeRef}
       style={{
         ...style,
-        background: '#141416',
+        background: '#1b2532',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         border: '1px solid rgba(255,255,255,0.10)',
@@ -166,7 +166,7 @@ export function MyPracticesPage() {
         <div
           className="rounded-2xl px-5 py-5 flex items-center gap-4"
           style={{
-            background: '#141416',
+            background: '#1b2532',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             border: '1px solid rgba(255,255,255,0.10)',

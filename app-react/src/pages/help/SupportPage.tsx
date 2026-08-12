@@ -157,7 +157,7 @@ export function SupportPage() {
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
             background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
-            color: '#0b0b0d',
+            color: '#141c28',
             border: 'none',
             boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             opacity: mutation.isPending || !canSubmit ? 0.55 : 1,

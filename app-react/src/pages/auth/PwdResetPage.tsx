@@ -18,7 +18,7 @@ function GlassShell({ children }: { children: React.ReactNode }) {
       <div
         className="relative w-full max-w-sm rounded-3xl px-8 py-10 flex flex-col gap-5"
         style={{
-          background: 'rgba(20,20,22,0.72)',
+          background: 'rgba(27,37,50,0.72)',
           backdropFilter: 'blur(36px)',
           WebkitBackdropFilter: 'blur(36px)',
           border: '1px solid rgba(255,255,255,0.10)',
@@ -123,7 +123,7 @@ export function PwdResetPage() {
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
             background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
-            color: '#0b0b0d',
+            color: '#141c28',
             boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
             opacity: loading || !password || !confirmPassword ? 0.6 : 1,
             cursor: loading || !password || !confirmPassword ? 'not-allowed' : 'pointer',

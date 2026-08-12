@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { FaChevronLeft } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
-import { ACCENT, SURFACE_GLASS, TEXT_FAINT, BORDER } from '../../theme/tokens'
+import { ACCENT, TEXT_FAINT } from '../../theme/tokens'
 
 interface TopBarProps {
   title?: string
@@ -21,10 +21,9 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
     <header
       className={`fixed top-0 left-0 right-0 h-14 items-center px-4 z-40 gap-3 ${showBack || showClose ? 'flex' : 'hidden sm:flex'}`}
       style={{
-        background: SURFACE_GLASS,
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: `1px solid ${BORDER}`,
+        // Transparent over the backdrop (Giga-style) — no solid bar; a faint
+        // top scrim keeps the nav/logo legible over the photo.
+        background: 'linear-gradient(180deg, rgba(20,28,40,0.55) 0%, rgba(20,28,40,0) 100%)',
       }}
     >
       {showClose ? (
