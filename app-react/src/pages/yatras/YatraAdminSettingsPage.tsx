@@ -16,7 +16,7 @@ import type { YatraStatisticConfig, Aggregation, TimeRange, YatraPractice } from
 import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: '#273656',
+  background: 'rgba(255,255,255,0.06)',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   border: '1px solid rgba(255,255,255,0.10)',
