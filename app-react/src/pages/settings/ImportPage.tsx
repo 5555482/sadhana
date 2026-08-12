@@ -70,7 +70,7 @@ export function ImportPage() {
         </div>
         <div>
           <h1 className="text-base font-bold text-base-content">{t('import.title')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">{t('import.subtitle')}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">{t('import.subtitle')}</p>
         </div>
       </div>
 
@@ -82,7 +82,7 @@ export function ImportPage() {
               className="h-1 rounded-full"
               style={{ background: i <= step ? ACCENT : 'rgba(255,255,255,0.15)' }}
             />
-            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : '#9ca3af' }}>
+            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : 'rgba(245,244,242,0.7)' }}>
               {label}
             </span>
           </div>
@@ -110,20 +110,20 @@ export function ImportPage() {
             >
               {file
                 ? <LuFileText className="w-5 h-5" style={{ color: ACCENT }} />
-                : <LuUpload className="w-5 h-5" style={{ color: '#9ca3af' }} />
+                : <LuUpload className="w-5 h-5" style={{ color: 'rgba(245,244,242,0.7)' }} />
               }
             </div>
             {file ? (
               <div className="text-center">
                 <p className="text-sm font-semibold" style={{ color: ACCENT }}>{file.name}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{t('import.clickToChange')}</p>
+                <p className="text-xs text-base-content/70 mt-0.5">{t('import.clickToChange')}</p>
               </div>
             ) : (
               <div className="text-center">
                 <p className="text-sm font-semibold text-base-content">
                   {isDragActive ? t('import.drop') : t('import.dropOrClick')}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">{t('import.csvOnly')}</p>
+                <p className="text-xs text-base-content/70 mt-0.5">{t('import.csvOnly')}</p>
               </div>
             )}
           </div>
@@ -157,7 +157,7 @@ export function ImportPage() {
         <div className="flex flex-col gap-3">
           <div className="rounded-2xl overflow-hidden" style={glass}>
             <div className="px-4 py-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('import.mapColumns')}</p>
+              <p className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('import.mapColumns')}</p>
             </div>
             {preview.columns.map((col, i) => (
               <div
@@ -167,7 +167,7 @@ export function ImportPage() {
               >
                 <div className="w-1/3">
                   <p className="text-sm font-semibold text-base-content truncate">{col}</p>
-                  <p className="text-xs text-gray-400 truncate">{preview.sample_rows[0]?.[i] ?? '—'}</p>
+                  <p className="text-xs text-base-content/70 truncate">{preview.sample_rows[0]?.[i] ?? '—'}</p>
                 </div>
                 <span style={{ color: '#d1d5db' }}>→</span>
                 <input
@@ -243,7 +243,7 @@ export function ImportPage() {
           </div>
           <div className="text-center">
             <p className="text-base font-bold text-base-content">{t('import.complete')}</p>
-            <p className="text-sm text-gray-400 mt-1">{t('import.rowsImported', { count: result.imported_count })}</p>
+            <p className="text-sm text-base-content/70 mt-1">{t('import.rowsImported', { count: result.imported_count })}</p>
           </div>
           <button
             onClick={() => navigate('/settings')}

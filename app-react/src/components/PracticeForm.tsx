@@ -106,7 +106,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
       >
         {/* Name */}
         <div className="rounded-2xl p-5 flex flex-col gap-2" style={cardStyle}>
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+          <label className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">
             {t('practice.name')}
           </label>
           <input
@@ -123,7 +123,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
 
         {/* Data type */}
         <div className="rounded-2xl p-5 flex flex-col gap-3" style={cardStyle}>
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+          <label className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">
             {t('practice.type')}
           </label>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
@@ -155,7 +155,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
         {/* Dropdown variants — Text type only */}
         {dataType === 'Text' && (
           <div className="rounded-2xl p-5 flex flex-col gap-2" style={cardStyle}>
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+            <label className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">
               {t('practice.dropdownVariants')}
             </label>
             <textarea
@@ -209,7 +209,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
                 />
               </div>
             </button>
-            <p className="text-xs text-gray-400 leading-relaxed">{t('practice.isRequiredHint')}</p>
+            <p className="text-xs text-base-content/70 leading-relaxed">{t('practice.isRequiredHint')}</p>
           </div>
         )}
 

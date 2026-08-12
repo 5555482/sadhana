@@ -127,7 +127,7 @@ export function NewChartPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content leading-tight">{t('charts.newReport')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Step {step + 1} of {STEP_LABELS.length}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">Step {step + 1} of {STEP_LABELS.length}</p>
         </div>
         <Link
           to="/charts"
@@ -147,7 +147,7 @@ export function NewChartPage() {
               className="h-1 rounded-full transition-all duration-300"
               style={{ background: i <= step ? ACCENT : 'rgba(255,255,255,0.15)' }}
             />
-            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : '#9ca3af' }}>
+            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : 'rgba(245,244,242,0.7)' }}>
               {label}
             </span>
           </div>
@@ -159,7 +159,7 @@ export function NewChartPage() {
         <div className="flex flex-col gap-3">
           {/* Name */}
           <div className="rounded-2xl px-5 py-4 flex flex-col gap-2" style={glass}>
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('charts.reportName')}</label>
+            <label className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('charts.reportName')}</label>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
@@ -174,7 +174,7 @@ export function NewChartPage() {
 
           {/* Kind: Graph vs Grid */}
           <div className="rounded-2xl p-4 flex flex-col gap-3" style={glass}>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('charts.reportType')}</span>
+            <span className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('charts.reportType')}</span>
             <div className="flex gap-3">
               {([
                 ['Graph', 'kindGraph', 'kindGraphDesc', FaChartLine],
@@ -191,10 +191,10 @@ export function NewChartPage() {
                         border: active ? '1.5px solid rgba(200,114,74,0.40)' : `1.5px solid ${BORDER}`,
                       }}
                     >
-                      <Icon className="w-5 h-5" style={{ color: active ? ACCENT : '#9ca3af' }} />
+                      <Icon className="w-5 h-5" style={{ color: active ? ACCENT : 'rgba(245,244,242,0.7)' }} />
                       <div>
                         <div className="text-sm font-semibold" style={{ color: active ? ACCENT : '#f5f4f2' }}>{t(`charts.${labelKey}`)}</div>
-                        <div className="text-xs text-center" style={{ color: '#9ca3af' }}>{t(`charts.${descKey}`)}</div>
+                        <div className="text-xs text-center" style={{ color: 'rgba(245,244,242,0.7)' }}>{t(`charts.${descKey}`)}</div>
                       </div>
                     </button>
                   )
@@ -224,7 +224,7 @@ export function NewChartPage() {
       {step === 1 && (
         <div className="flex flex-col gap-2">
           <div className="rounded-2xl px-4 py-3 flex flex-col gap-1.5" style={glass}>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest pb-1">
+            <p className="text-xs font-semibold text-base-content/70 uppercase tracking-widest pb-1">
               {kind === 'Grid' ? t('charts.selectPractices') : t('charts.selectWithType')}
             </p>
             <div className="flex gap-3 pb-1">
@@ -240,7 +240,7 @@ export function NewChartPage() {
                 type="button"
                 onClick={clearAll}
                 className="text-xs font-semibold"
-                style={{ color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ color: 'rgba(245,244,242,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 {t('charts.clearAll')}
               </button>
@@ -285,7 +285,7 @@ export function NewChartPage() {
                             background: (traceTypes[p.id] ?? 'Line') === tt.value
                               ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.05)',
                             color: (traceTypes[p.id] ?? 'Line') === tt.value
-                              ? ACCENT : '#6b7280',
+                              ? ACCENT : 'rgba(245,244,242,0.65)',
                             border: (traceTypes[p.id] ?? 'Line') === tt.value
                               ? '1px solid rgba(200,114,74,0.30)' : '1px solid transparent',
                           }}
@@ -300,7 +300,7 @@ export function NewChartPage() {
             })}
 
             {activePractices.length === 0 && (
-              <p className="text-sm text-gray-400 py-4 text-center">{t('charts.noPractices')}</p>
+              <p className="text-sm text-base-content/70 py-4 text-center">{t('charts.noPractices')}</p>
             )}
           </div>
 

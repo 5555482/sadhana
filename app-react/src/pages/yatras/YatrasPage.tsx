@@ -118,7 +118,7 @@ function trendSymbol(arrow: UserYatraDataRow['trend_arrow']): string {
 function trendColor(arrow: UserYatraDataRow['trend_arrow']): string {
   if (arrow === 'Up')   return '#16a34a'
   if (arrow === 'Down') return '#dc2626'
-  return '#9ca3af'
+  return 'rgba(245,244,242,0.7)'
 }
 
 // ── Component ─────────────────────────────────────────────────────────────
@@ -248,7 +248,7 @@ export function YatrasPage() {
               ))}
             </select>
           ) : (
-            <span className="flex-1 text-sm text-gray-400">{t('yatras.noYet')}</span>
+            <span className="flex-1 text-sm text-base-content/70">{t('yatras.noYet')}</span>
           )}
 
           {selectedYatra && (
@@ -299,7 +299,7 @@ export function YatrasPage() {
             </div>
             <div className="text-center">
               <p className="text-sm font-medium text-base-content">{t('yatras.noYet')}</p>
-              <p className="text-xs text-gray-400 mt-1">{t('yatras.createCircle')}</p>
+              <p className="text-xs text-base-content/70 mt-1">{t('yatras.createCircle')}</p>
             </div>
             <button
               onClick={handleCreate}
@@ -333,7 +333,7 @@ export function YatrasPage() {
             ))}
             <button
               onClick={dismissLegend}
-              className="ml-auto w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-gray-500"
+              className="ml-auto w-5 h-5 flex items-center justify-center rounded-full text-base-content/70 hover:text-base-content/70"
               style={{ background: 'rgba(255,255,255,0.06)', border: 'none', cursor: 'pointer' }}
               aria-label="Dismiss legend"
             >
@@ -356,11 +356,11 @@ export function YatrasPage() {
                 </colgroup>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)' }}>
                       Sadhaka
                     </th>
                     {showStability && (
-                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
+                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)' }}>
                         7d
                       </th>
                     )}
@@ -368,7 +368,7 @@ export function YatrasPage() {
                       <th
                         key={p.id}
                         className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide"
-                        style={{ color: '#9ca3af' }}
+                        style={{ color: 'rgba(245,244,242,0.7)' }}
                       >
                         <span className="block max-w-[80px] mx-auto truncate" title={p.practice}>
                           {p.practice}
@@ -382,7 +382,7 @@ export function YatrasPage() {
                     <tr>
                       <td
                         colSpan={data.practices.length + (showStability ? 2 : 1)}
-                        className="px-4 py-10 text-center text-sm text-gray-400"
+                        className="px-4 py-10 text-center text-sm text-base-content/70"
                       >
                         {t('yatras.noEntries')}
                       </td>
@@ -433,7 +433,7 @@ export function YatrasPage() {
               className="px-4 py-3"
               style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}
             >
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af' }}>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)' }}>
                 {t('yatras.stability')}
               </span>
             </div>
@@ -441,14 +441,14 @@ export function YatrasPage() {
               <table className="text-xs" style={{ minWidth: 'max-content', width: '100%' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                    <th className="px-4 py-1.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#9ca3af', width: '35%' }}>
+                    <th className="px-4 py-1.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)', width: '35%' }}>
                       {t('yatras.stability')}
                     </th>
                     {heatmapDays.map((day, i) => (
                       <th
                         key={i}
                         className="py-1.5 text-center text-[10px] font-medium"
-                        style={{ color: '#9ca3af' }}
+                        style={{ color: 'rgba(245,244,242,0.7)' }}
                       >
                         {day}
                       </th>
@@ -488,7 +488,7 @@ export function YatrasPage() {
         {/* Statistics */}
         {data && data.statistics.length > 0 && (
           <div className="rounded-2xl px-4 py-4 flex flex-col gap-1" style={glass}>
-            <span className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#9ca3af' }}>
+            <span className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(245,244,242,0.7)' }}>
               {t('yatras.statistics')}
             </span>
             {data.statistics.map((stat, i) => (
@@ -497,7 +497,7 @@ export function YatrasPage() {
                 className="flex justify-between items-center py-1.5"
                 style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.06)' : undefined }}
               >
-                <span className="text-sm text-gray-600">{stat.label}</span>
+                <span className="text-sm text-base-content/70">{stat.label}</span>
                 <span className="text-sm font-bold text-base-content">
                   {stat.value !== null ? formatValue(stat.value) : '—'}
                 </span>
@@ -554,7 +554,7 @@ export function YatrasPage() {
               </div>
               <div>
                 <p className="text-base font-bold font-serif text-base-content leading-tight">{t('yatras.newTitle')}</p>
-                <p className="text-xs text-gray-400">{t('yatras.newSubtitle')}</p>
+                <p className="text-xs text-base-content/70">{t('yatras.newSubtitle')}</p>
               </div>
             </div>
 

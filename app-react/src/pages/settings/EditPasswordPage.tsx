@@ -40,7 +40,7 @@ function PasswordField({ id, label, value, onChange }: { id: string; label: stri
   const [show, setShow] = useState(false)
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{label}</label>
+      <label htmlFor={id} className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{label}</label>
       <div className="relative">
         <input
           id={id}
@@ -109,7 +109,7 @@ export function EditPasswordPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content">{t('settings.changePassword')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Update your login password</p>
+          <p className="text-xs text-base-content/70 mt-0.5">Update your login password</p>
         </div>
         <Link
           to="/settings"

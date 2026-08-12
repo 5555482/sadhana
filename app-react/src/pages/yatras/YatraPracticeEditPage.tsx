@@ -272,7 +272,7 @@ export function YatraPracticeEditPage() {
 
         {/* Name */}
         <div className="rounded-2xl px-4 py-3.5" style={glass}>
-          <label htmlFor="practice-name" className="text-xs text-gray-400 block mb-1">{t('practice.name')}</label>
+          <label htmlFor="practice-name" className="text-xs text-base-content/70 block mb-1">{t('practice.name')}</label>
           <input
             id="practice-name"
             type="text"
@@ -286,7 +286,7 @@ export function YatraPracticeEditPage() {
 
         {/* Data type (read-only) */}
         <div className="rounded-2xl px-4 py-3.5" style={glass}>
-          <label className="text-xs text-gray-400 block mb-1">{t('practice.type')}</label>
+          <label className="text-xs text-base-content/70 block mb-1">{t('practice.type')}</label>
           <p className="text-sm font-semibold text-base-content">{t(`practice.type${dt}`)}</p>
         </div>
 
@@ -295,15 +295,15 @@ export function YatraPracticeEditPage() {
           <div className="rounded-2xl overflow-hidden" style={glass}>
             {/* Header */}
             <div className="px-4 py-3 border-b border-white/[0.06]">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('yatras.colourZones')}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{t('yatras.colourZonesDesc')}</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-base-content/70">{t('yatras.colourZones')}</p>
+              <p className="text-xs text-base-content/70 mt-0.5">{t('yatras.colourZonesDesc')}</p>
             </div>
 
             <div className="px-4 py-3 flex flex-col gap-3">
 
               {/* Number of zones */}
               <div>
-                <label htmlFor="zone-count" className="text-xs text-gray-400 block mb-1">{t('yatras.numZones')}</label>
+                <label htmlFor="zone-count" className="text-xs text-base-content/70 block mb-1">{t('yatras.numZones')}</label>
                 <select
                   id="zone-count"
                   value={zonesEnabled ? numZones : 0}
@@ -321,7 +321,7 @@ export function YatraPracticeEditPage() {
                 <>
                   {/* Better direction */}
                   <div>
-                    <label htmlFor="better-direction" className="text-xs text-gray-400 block mb-1">{t('yatras.betterWhen')}</label>
+                    <label htmlFor="better-direction" className="text-xs text-base-content/70 block mb-1">{t('yatras.betterWhen')}</label>
                     <select
                       id="better-direction"
                       value={zones.better_direction}
@@ -358,7 +358,7 @@ export function YatraPracticeEditPage() {
 
                   {/* No value colour */}
                   <div>
-                    <label htmlFor="no-value-colour" className="text-xs text-gray-400 block mb-1">{t('yatras.whenNoValue')}</label>
+                    <label htmlFor="no-value-colour" className="text-xs text-base-content/70 block mb-1">{t('yatras.whenNoValue')}</label>
                     <select
                       id="no-value-colour"
                       value={zones.no_value_colour}
@@ -375,7 +375,7 @@ export function YatraPracticeEditPage() {
                   {/* Preview */}
                   {preview.length > 0 && (
                     <div>
-                      <label className="text-xs text-gray-400 block mb-1.5">{t('yatras.zonePreview')}</label>
+                      <label className="text-xs text-base-content/70 block mb-1.5">{t('yatras.zonePreview')}</label>
                       <div className="flex gap-1.5">
                         {preview.map((cell, i) => (
                           <div
@@ -387,7 +387,7 @@ export function YatraPracticeEditPage() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">{t('yatras.sampleValues')}</p>
+                      <p className="text-xs text-base-content/70 mt-1">{t('yatras.sampleValues')}</p>
                     </div>
                   )}
                 </>
@@ -400,14 +400,14 @@ export function YatraPracticeEditPage() {
         {DAILY_SCORE_TYPES.includes(dt) && (
           <div className="rounded-2xl overflow-hidden" style={glass}>
             <div className="px-4 py-3 border-b border-white/[0.06]">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('yatras.dailyScore')}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{t('yatras.dailyScoreDesc')}</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-base-content/70">{t('yatras.dailyScore')}</p>
+              <p className="text-xs text-base-content/70 mt-0.5">{t('yatras.dailyScoreDesc')}</p>
             </div>
             <div className="px-4 py-3 flex flex-col gap-3">
 
               {/* Better direction */}
               <div>
-                <label htmlFor="ds-better" className="text-xs text-gray-400 block mb-1">{t('yatras.betterWhen')}</label>
+                <label htmlFor="ds-better" className="text-xs text-base-content/70 block mb-1">{t('yatras.betterWhen')}</label>
                 <select
                   id="ds-better"
                   value={dailyScore.better_direction}
@@ -422,7 +422,7 @@ export function YatraPracticeEditPage() {
 
               {/* Mandatory threshold */}
               <div>
-                <label htmlFor="ds-mandatory" className="text-xs text-gray-400 block mb-1">{t('yatras.mandatoryValue')}</label>
+                <label htmlFor="ds-mandatory" className="text-xs text-base-content/70 block mb-1">{t('yatras.mandatoryValue')}</label>
                 <input
                   id="ds-mandatory"
                   type={dt === 'Int' ? 'number' : 'text'}
@@ -434,12 +434,12 @@ export function YatraPracticeEditPage() {
                   style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                   min={dt === 'Int' ? 0 : undefined}
                 />
-                <p className="text-xs text-gray-400 mt-1">{t('yatras.mandatoryDesc')}</p>
+                <p className="text-xs text-base-content/70 mt-1">{t('yatras.mandatoryDesc')}</p>
               </div>
 
               {/* Bonus threshold */}
               <div>
-                <label htmlFor="ds-bonus" className="text-xs text-gray-400 block mb-1">{t('yatras.bonusValue')}</label>
+                <label htmlFor="ds-bonus" className="text-xs text-base-content/70 block mb-1">{t('yatras.bonusValue')}</label>
                 <input
                   id="ds-bonus"
                   type={dt === 'Int' ? 'number' : 'text'}
@@ -451,7 +451,7 @@ export function YatraPracticeEditPage() {
                   style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
                   min={dt === 'Int' ? 0 : undefined}
                 />
-                <p className="text-xs text-gray-400 mt-1">{t('yatras.bonusDesc')}</p>
+                <p className="text-xs text-base-content/70 mt-1">{t('yatras.bonusDesc')}</p>
               </div>
 
             </div>

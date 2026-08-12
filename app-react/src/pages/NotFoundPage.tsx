@@ -26,7 +26,7 @@ export function NotFoundPage() {
         <div>
           <p className="text-5xl font-bold text-gray-200">404</p>
           <p className="text-base font-semibold text-base-content mt-2">{t('notFound.title')}</p>
-          <p className="text-sm text-gray-400 mt-1">{t('notFound.message')}</p>
+          <p className="text-sm text-base-content/70 mt-1">{t('notFound.message')}</p>
         </div>
         <Link
           to="/"

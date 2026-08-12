@@ -62,7 +62,7 @@ export function EditUserPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content">{t('settings.editProfile')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Update your display name</p>
+          <p className="text-xs text-base-content/70 mt-0.5">Update your display name</p>
         </div>
         <Link
           to="/settings"
@@ -77,7 +77,7 @@ export function EditUserPage() {
       {/* Form */}
       <div className="rounded-2xl px-5 py-5 flex flex-col gap-4" style={glass}>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="display-name" className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.name')}</label>
+          <label htmlFor="display-name" className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('auth.name')}</label>
           <input
             id="display-name"
             value={name}
@@ -89,18 +89,18 @@ export function EditUserPage() {
           />
           <p
             className="text-[10px] text-right"
-            style={{ color: name.length >= 50 ? '#e11d48' : name.length >= 45 ? '#d97706' : '#9ca3af' }}
+            style={{ color: name.length >= 50 ? '#e11d48' : name.length >= 45 ? '#d97706' : 'rgba(245,244,242,0.7)' }}
           >
             {name.length}/50
           </p>
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="user-email" className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.email')}</label>
+          <label htmlFor="user-email" className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('auth.email')}</label>
           <input
             id="user-email"
             value={user?.email ?? ''}
             readOnly
-            style={{ ...inputStyle, background: 'rgba(255,255,255,0.04)', color: '#9ca3af', cursor: 'default' }}
+            style={{ ...inputStyle, background: 'rgba(255,255,255,0.04)', color: 'rgba(245,244,242,0.7)', cursor: 'default' }}
           />
         </div>
 

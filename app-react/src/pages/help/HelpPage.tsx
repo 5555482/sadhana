@@ -26,7 +26,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         <span className="flex-1 text-sm font-semibold text-base-content">{q}</span>
         {open
           ? <LuChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />
-          : <LuChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: '#9ca3af' }} />
+          : <LuChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: 'rgba(245,244,242,0.7)' }} />
         }
       </button>
       {open && (
@@ -64,7 +64,7 @@ export function HelpPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content">{t('help.title')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">{t('help.subtitle')}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">{t('help.subtitle')}</p>
         </div>
         <Link
           to="/settings"

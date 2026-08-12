@@ -40,7 +40,7 @@ export function YatraJoinPage() {
     return (
       <div className="px-4 py-6 max-w-lg mx-auto">
         <div className="rounded-2xl px-5 py-12 flex flex-col items-center gap-4 text-center" style={glass}>
-          <p className="text-sm font-semibold text-gray-500">{t('yatras.notFound')}</p>
+          <p className="text-sm font-semibold text-base-content/70">{t('yatras.notFound')}</p>
           <button
             onClick={() => navigate('/yatras')}
             className="text-sm font-medium"
@@ -70,7 +70,7 @@ export function YatraJoinPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content">{t('yatras.join')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">{t('yatras.invited')}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">{t('yatras.invited')}</p>
         </div>
         <button
           onClick={() => navigate(-1)}
@@ -96,12 +96,12 @@ export function YatraJoinPage() {
         <div>
           <h2 className="text-xl font-bold text-base-content">{data.name}</h2>
           {data.member_count != null && (
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-base-content/70 mt-1">
               {data.member_count} member{data.member_count === 1 ? '' : 's'}
             </p>
           )}
         </div>
-        <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+        <p className="text-sm text-base-content/70 leading-relaxed max-w-xs">
           {t('yatras.joinCircle')}
         </p>
       </div>
@@ -131,7 +131,7 @@ export function YatraJoinPage() {
           background: 'rgba(255,255,255,0.08)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          color: '#6b7280',
+          color: 'rgba(245,244,242,0.65)',
           border: '1.5px solid rgba(255,255,255,0.10)',
           cursor: 'pointer',
         }}

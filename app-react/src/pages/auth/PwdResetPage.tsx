@@ -41,7 +41,7 @@ function PasswordField({ id, label, value, onChange, autoComplete }: {
   const [show, setShow] = useState(false)
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{label}</label>
+      <label htmlFor={id} className="text-xs font-medium text-base-content/70 uppercase tracking-wider">{label}</label>
       <div className="relative">
         <input
           id={id}

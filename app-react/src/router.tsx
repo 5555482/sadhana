@@ -15,7 +15,7 @@ function RootError() {
     <div className="min-h-screen flex items-center justify-center p-8 text-center">
       <div>
         <p className="text-lg font-semibold text-error mb-2">Something went wrong</p>
-        <p className="text-sm text-base-content/50">{message}</p>
+        <p className="text-sm text-base-content/70">{message}</p>
         <button className="btn btn-sm mt-4" onClick={() => window.location.href = '/'}>Go home</button>
       </div>
     </div>

@@ -34,7 +34,7 @@ export function YatraPracticeNewPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content leading-tight">{t('practice.new')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">{t('yatras.addToGroup')}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">{t('yatras.addToGroup')}</p>
         </div>
         <button
           onClick={back}

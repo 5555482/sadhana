@@ -84,7 +84,7 @@ export function RegisterPage() {
               {t('auth.signIn')}
             </Link>
             {resendCountdown > 0 ? (
-              <p className="text-xs" style={{ color: '#9ca3af' }}>
+              <p className="text-xs" style={{ color: 'rgba(245,244,242,0.7)' }}>
                 {t('auth.resendIn', { seconds: resendCountdown })}
               </p>
             ) : (
@@ -105,7 +105,7 @@ export function RegisterPage() {
               <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide" style={{ whiteSpace: 'pre-line' }}>
                 {t('auth.headlineRegister')}
               </h1>
-              <p className="text-xs text-base-content/50 mt-2">
+              <p className="text-xs text-base-content/70 mt-2">
                 {t('auth.hasAccount')}{' '}
                 <Link to="/login" className="font-medium hover:underline" style={{ color: '#c8724a' }}>
                   {t('auth.signIn')}
@@ -115,7 +115,7 @@ export function RegisterPage() {
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="email" className="text-xs font-medium text-base-content/50 uppercase tracking-wider">
+                <label htmlFor="email" className="text-xs font-medium text-base-content/70 uppercase tracking-wider">
                   {t('auth.email')}
                 </label>
                 <input

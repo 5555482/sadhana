@@ -143,7 +143,7 @@ export function YatraSettingsPage() {
             <h1 className="text-base font-bold text-base-content leading-tight truncate">
               {yatraQuery.data?.name ?? '…'}
             </h1>
-            <p className="text-xs text-gray-400 mt-0.5">{t('nav.settings')}</p>
+            <p className="text-xs text-base-content/70 mt-0.5">{t('nav.settings')}</p>
           </div>
           <Link
             to="/yatras"
@@ -160,7 +160,7 @@ export function YatraSettingsPage() {
         {/* Info text */}
         {!isLoading && (
           <div className="rounded-2xl px-4 py-3" style={glass}>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-base-content/70">
               {t('yatras.mapHint')}
             </p>
           </div>
@@ -192,7 +192,7 @@ export function YatraSettingsPage() {
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-gray-400 leading-none mb-0.5">{t('yatras.groupPractice')}</p>
+                <p className="text-xs text-base-content/70 leading-none mb-0.5">{t('yatras.groupPractice')}</p>
                 <p className="text-sm font-semibold text-base-content truncate">
                   {item.yatra_practice.practice}
                 </p>
@@ -208,7 +208,7 @@ export function YatraSettingsPage() {
                 style={{
                   background: 'rgba(255,255,255,0.06)',
                   border: '1.5px solid rgba(255,255,255,0.10)',
-                  color: currentValue ? ACCENT : '#9ca3af',
+                  color: currentValue ? ACCENT : 'rgba(245,244,242,0.7)',
                   maxWidth: '10rem',
                   fontWeight: currentValue ? 600 : 400,
                 }}
@@ -224,7 +224,7 @@ export function YatraSettingsPage() {
 
         {!isLoading && mappingsQuery.data?.length === 0 && (
           <div className="rounded-2xl px-4 py-8 text-center" style={glass}>
-            <p className="text-sm text-gray-400">{t('yatras.noPracticesYatra')}</p>
+            <p className="text-sm text-base-content/70">{t('yatras.noPracticesYatra')}</p>
             {isAdminQuery.data && (
               <Link
                 to={`/yatra/${id}/admin/settings`}

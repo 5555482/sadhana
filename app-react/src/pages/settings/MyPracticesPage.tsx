@@ -184,7 +184,7 @@ export function MyPracticesPage() {
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="text-base font-bold text-base-content leading-tight">{t('settings.myPractices')}</h1>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="text-xs text-base-content/70 mt-0.5">
               {items.length > 0
                 ? t('practice.listSubtitle', { count: items.length })
                 : t('practice.empty')}
@@ -212,7 +212,7 @@ export function MyPracticesPage() {
         </DndContext>
 
         {items.length === 0 && (
-          <p className="text-center text-gray-400 text-sm py-8">{t('practice.empty')}</p>
+          <p className="text-center text-base-content/70 text-sm py-8">{t('practice.empty')}</p>
         )}
       </div>
 

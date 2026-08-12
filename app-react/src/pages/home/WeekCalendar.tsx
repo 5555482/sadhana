@@ -88,7 +88,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
           className="text-xs leading-none"
           style={{
             fontWeight: selected ? 700 : 400,
-            color: selected ? ACCENT : '#9ca3af',
+            color: selected ? ACCENT : 'rgba(245,244,242,0.7)',
           }}
         >
           {narrowDay}
@@ -136,7 +136,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
           type="button"
           onClick={() => setCalendarOpen(true)}
           className="text-xs font-semibold tracking-wide uppercase focus:outline-none"
-          style={{ color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+          style={{ color: 'rgba(245,244,242,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
           {monthYear}
         </button>

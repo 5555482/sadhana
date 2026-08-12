@@ -53,7 +53,7 @@ function SectionCard({
   return (
     <div className="rounded-2xl overflow-hidden" style={glass}>
       <div className="px-4 pt-4 pb-2">
-        <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9ca3af' }}>
+        <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(245,244,242,0.7)' }}>
           {title}
         </span>
       </div>
@@ -92,7 +92,7 @@ export function SettingsPage() {
         </div>
         <div>
           <h1 className="text-base font-bold font-serif text-base-content leading-tight">{user?.name || t('nav.settings')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">{t('settings.subtitle')}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">{t('settings.subtitle')}</p>
         </div>
       </div>
 

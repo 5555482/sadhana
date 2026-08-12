@@ -92,7 +92,7 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
             style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
           />
           {focused && (
-            <p className="text-[10px] text-center" style={{ color: '#9ca3af' }}>
+            <p className="text-[10px] text-center" style={{ color: 'rgba(245,244,242,0.7)' }}>
               {t('home.durationHint')}
             </p>
           )}
@@ -279,14 +279,14 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           aria-label={`${practice.practice} duration`}
           placeholder="—"
           className="focus:outline-none text-sm flex-shrink-0"
-          style={{ ...field, width: '5.5rem', height: '2.25rem', color: durVal > 0 ? ACCENT : '#9ca3af' }}
+          style={{ ...field, width: '5.5rem', height: '2.25rem', color: durVal > 0 ? ACCENT : 'rgba(245,244,242,0.7)' }}
           onFocus={(e) => { fieldFocus(e); e.target.value = durRef.current > 0 ? String(durRef.current) : ''; setTimeout(() => e.target.select(), 0) }}
           onBlur={(e) => {
             fieldBlur(e)
             const v = parseInt(e.target.value, 10)
             durRef.current = isNaN(v) || v < 0 ? 0 : v
             e.target.value = fmtDur(durRef.current)
-            e.target.style.color = durRef.current > 0 ? ACCENT : '#9ca3af'
+            e.target.style.color = durRef.current > 0 ? ACCENT : 'rgba(245,244,242,0.7)'
             save({ Duration: durRef.current })
           }}
           onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
@@ -300,7 +300,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
             defaultValue={intVal ? String(intVal) : ''}
             aria-label={practice.practice}
             className="focus:outline-none text-sm cursor-pointer"
-            style={{ ...field, width: '5rem', height: '2.25rem', padding: '0 0.5rem', textAlign: 'left', fontWeight: 500, color: intVal > 0 ? ACCENT : '#9ca3af' }}
+            style={{ ...field, width: '5rem', height: '2.25rem', padding: '0 0.5rem', textAlign: 'left', fontWeight: 500, color: intVal > 0 ? ACCENT : 'rgba(245,244,242,0.7)' }}
             onChange={(e) => { const n = parseInt(e.target.value, 10); if (!isNaN(n)) save({ Int: n }) }}
           >
             <option value="">—</option>
@@ -315,7 +315,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
             aria-label={practice.practice}
             placeholder="—"
             className="focus:outline-none text-sm flex-shrink-0"
-            style={{ ...field, width: '4rem', height: '2.25rem', color: intVal > 0 ? ACCENT : '#9ca3af' }}
+            style={{ ...field, width: '4rem', height: '2.25rem', color: intVal > 0 ? ACCENT : 'rgba(245,244,242,0.7)' }}
             onFocus={fieldFocus}
             onBlur={(e) => {
               fieldBlur(e)
@@ -335,7 +335,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           aria-label={practice.practice}
           placeholder="HH:MM"
           className="focus:outline-none text-sm"
-          style={{ ...field, width: '5rem', height: '2.25rem', color: timeStr ? ACCENT : '#9ca3af' }}
+          style={{ ...field, width: '5rem', height: '2.25rem', color: timeStr ? ACCENT : 'rgba(245,244,242,0.7)' }}
           onFocus={fieldFocus}
           onChange={(e) => setTimeStr(formatTimeInput(e.target.value))}
           onBlur={(e) => {
@@ -356,7 +356,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           rows={3}
           maxLength={1024}
           className="focus:outline-none text-sm w-full resize-none"
-          style={{ ...field, textAlign: 'left', fontWeight: 500, padding: '0.5rem 0.625rem', color: textVal ? ACCENT : '#9ca3af' }}
+          style={{ ...field, textAlign: 'left', fontWeight: 500, padding: '0.5rem 0.625rem', color: textVal ? ACCENT : 'rgba(245,244,242,0.7)' }}
           onFocus={fieldFocus}
           onBlur={(e) => { fieldBlur(e); save({ Text: e.target.value }) }}
         />

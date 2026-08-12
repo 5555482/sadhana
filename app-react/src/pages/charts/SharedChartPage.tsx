@@ -34,7 +34,7 @@ export function SharedChartPage() {
   if (isError) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-sm text-gray-400">{t('charts.notFound')}</p>
+        <p className="text-sm text-base-content/70">{t('charts.notFound')}</p>
       </div>
     )
   }
@@ -54,14 +54,14 @@ export function SharedChartPage() {
         </div>
         <div>
           <h1 className="text-base font-bold text-base-content">{t('charts.shared')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-base-content/70 mt-0.5">
             {reports.length} report{reports.length === 1 ? '' : 's'}
           </p>
         </div>
       </div>
 
       {reports.length === 0 ? (
-        <p className="text-center text-sm text-gray-400 py-12">{t('charts.noShared')}</p>
+        <p className="text-center text-sm text-base-content/70 py-12">{t('charts.noShared')}</p>
       ) : (
         reports.map(r => {
           const def = r.definition
@@ -82,7 +82,7 @@ export function SharedChartPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-base-content truncate">{r.name}</p>
-                <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(245,244,242,0.7)' }}>
                   {gridDef ? 'Grid' : 'Graph'} · {count} practice{count === 1 ? '' : 's'}
                 </p>
               </div>

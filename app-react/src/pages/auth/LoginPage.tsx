@@ -61,7 +61,7 @@ export function LoginPage() {
           <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide" style={{ whiteSpace: 'pre-line' }}>
             {t('auth.headline')}
           </h1>
-          <p className="text-xs text-base-content/50 mt-2">
+          <p className="text-xs text-base-content/70 mt-2">
             {t('auth.noAccount')}{' '}
             <Link to="/register" className="font-medium hover:underline" style={{ color: '#c8724a' }}>
               {t('auth.signUp')}
@@ -72,7 +72,7 @@ export function LoginPage() {
         {/* Email + password form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{t('auth.email')}</label>
+            <label htmlFor="email" className="text-xs font-medium text-base-content/70 uppercase tracking-wider">{t('auth.email')}</label>
             <input
               id="email"
               type="email"
@@ -91,7 +91,7 @@ export function LoginPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="password" className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{t('auth.password')}</label>
+            <label htmlFor="password" className="text-xs font-medium text-base-content/70 uppercase tracking-wider">{t('auth.password')}</label>
             <div className="relative">
               <input
                 id="password"
@@ -123,7 +123,7 @@ export function LoginPage() {
           )}
 
           <div className="text-center -mt-1">
-            <Link to="/reset" className="text-sm text-base-content/40 hover:text-primary transition-colors">
+            <Link to="/reset" className="text-sm text-base-content/70 hover:text-primary transition-colors">
               {t('auth.forgotPassword')}
             </Link>
           </div>
@@ -148,7 +148,7 @@ export function LoginPage() {
         {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.10)' }} />
-          <span className="text-xs text-base-content/40 font-medium">{t('auth.orContinueWith')}</span>
+          <span className="text-xs text-base-content/70 font-medium">{t('auth.orContinueWith')}</span>
           <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.10)' }} />
         </div>
 

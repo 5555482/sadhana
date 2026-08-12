@@ -91,7 +91,7 @@ export function SupportPage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content">{t('support.title')}</h1>
-          <p className="text-xs text-gray-400 mt-0.5">{t('support.subtitle')}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">{t('support.subtitle')}</p>
         </div>
         <Link
           to="/help"
@@ -110,7 +110,7 @@ export function SupportPage() {
       >
         <div className="rounded-2xl px-5 py-5 flex flex-col gap-4" style={glass}>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('support.name')}</label>
+            <label className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('support.name')}</label>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
@@ -121,7 +121,7 @@ export function SupportPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('auth.email')}</label>
+            <label className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('auth.email')}</label>
             <input
               type="email"
               value={email}
@@ -133,7 +133,7 @@ export function SupportPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{t('support.message')}</label>
+            <label className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">{t('support.message')}</label>
             <textarea
               value={message}
               onChange={e => setMessage(e.target.value)}

@@ -27,7 +27,7 @@ function Inner({ onSuccess, onError }: Props) {
     <button
       type="button"
       onClick={() => login()}
-      className="flex items-center w-full h-12 rounded-full text-base-content text-sm font-medium transition-all px-5 gap-4 hover:bg-white/80"
+      className="flex items-center w-full h-12 rounded-full text-[#1f2937] text-sm font-medium transition-all px-5 gap-4 hover:bg-white/80"
       style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.10)' }}
     >
       <GoogleIcon />
@@ -43,7 +43,7 @@ export function GoogleLoginButton({ onSuccess, onError }: Props) {
       <button
         type="button"
         onClick={() => onError()}
-        className="flex items-center w-full h-12 rounded-full text-base-content text-sm font-medium transition-all px-5 gap-4 hover:bg-white/80"
+        className="flex items-center w-full h-12 rounded-full text-[#1f2937] text-sm font-medium transition-all px-5 gap-4 hover:bg-white/80"
         style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.10)' }}
       >
         <GoogleIcon />

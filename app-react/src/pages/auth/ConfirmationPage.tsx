@@ -47,7 +47,7 @@ function FieldInput({
   const isPassword = type === 'password'
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-base-content/50 uppercase tracking-wider">{label}</label>
+      <label className="text-xs font-medium text-base-content/70 uppercase tracking-wider">{label}</label>
       <div className="relative">
         <input
           type={isPassword && showPwd ? 'text' : type}
@@ -145,7 +145,7 @@ export function ConfirmationPage() {
         <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
           Create your<br />account.
         </h1>
-        <p className="text-xs text-base-content/50 mt-2">{email}</p>
+        <p className="text-xs text-base-content/70 mt-2">{email}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

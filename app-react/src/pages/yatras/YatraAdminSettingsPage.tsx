@@ -87,7 +87,7 @@ function isGoodForPractice(agg: Aggregation, dt: string): boolean {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: '#6b7280' }}>
+    <span className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: 'rgba(245,244,242,0.65)' }}>
       {children}
     </span>
   )
@@ -112,8 +112,8 @@ function SectionToggle({
       <SectionLabel>{label}</SectionLabel>
       <span className="flex-1" />
       {open
-        ? <FaChevronDown className="w-3 h-3" style={{ color: '#6b7280' }} />
-        : <FaChevronRight className="w-3 h-3" style={{ color: '#6b7280' }} />
+        ? <FaChevronDown className="w-3 h-3" style={{ color: 'rgba(245,244,242,0.65)' }} />
+        : <FaChevronRight className="w-3 h-3" style={{ color: 'rgba(245,244,242,0.65)' }} />
       }
     </button>
   )
@@ -262,7 +262,7 @@ export function YatraAdminSettingsPage() {
           <h1 className="text-base font-bold text-base-content leading-tight truncate">
             {yatraQuery.data.name}
           </h1>
-          <p className="text-xs text-gray-400 mt-0.5">{t('yatras.adminSettings')}</p>
+          <p className="text-xs text-base-content/70 mt-0.5">{t('yatras.adminSettings')}</p>
         </div>
         <Link
           to={`/yatra/${id}/settings`}
@@ -279,7 +279,7 @@ export function YatraAdminSettingsPage() {
       <div className="rounded-2xl px-4 py-4 flex flex-col gap-3" style={glass}>
         {/* Name */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="yatra-name" className="text-xs font-medium text-gray-500">{t('yatras.yatraName')}</label>
+          <label htmlFor="yatra-name" className="text-xs font-medium text-base-content/70">{t('yatras.yatraName')}</label>
           <input
             id="yatra-name"
             style={inputStyle}
@@ -311,7 +311,7 @@ export function YatraAdminSettingsPage() {
             />
           </div>
         </label>
-        <p className="text-xs text-gray-400 -mt-1">
+        <p className="text-xs text-base-content/70 -mt-1">
           {t('yatras.stabilityDesc')}
         </p>
       </div>
@@ -328,7 +328,7 @@ export function YatraAdminSettingsPage() {
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{ background: copied ? 'rgba(200,114,74,0.10)' : 'rgba(255,255,255,0.06)' }}
         >
-          <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : '#6b7280' }} />
+          <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : 'rgba(245,244,242,0.65)' }} />
         </div>
         <span className="flex-1 text-sm font-semibold text-base-content">
           {copied ? t('yatras.inviteCopied') : t('yatras.copyInvite')}
@@ -419,7 +419,7 @@ export function YatraAdminSettingsPage() {
                 className="text-xs font-semibold px-2 py-0.5 rounded-full transition-colors"
                 style={{
                   background: m.is_admin ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.06)',
-                  color: m.is_admin ? '#c8724a' : '#9ca3af',
+                  color: m.is_admin ? '#c8724a' : 'rgba(245,244,242,0.7)',
                   border: 'none',
                   cursor: 'pointer',
                 }}
@@ -444,7 +444,7 @@ export function YatraAdminSettingsPage() {
             </div>
           ))}
           {members.length === 0 && (
-            <p className="text-center text-sm text-gray-400 py-4">{t('yatras.noMembers')}</p>
+            <p className="text-center text-sm text-base-content/70 py-4">{t('yatras.noMembers')}</p>
           )}
         </div>
       )}
@@ -473,7 +473,7 @@ export function YatraAdminSettingsPage() {
             return (
               <div key={idx} className="rounded-2xl px-4 py-4 flex flex-col gap-3" style={glass}>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                  <span className="text-xs font-semibold text-base-content/70 uppercase tracking-widest">
                     {stat.label || `Stat ${idx + 1}`}
                   </span>
                   <button
@@ -487,7 +487,7 @@ export function YatraAdminSettingsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-medium text-gray-500">{t('yatras.statLabel')}</label>
+                  <label className="text-xs font-medium text-base-content/70">{t('yatras.statLabel')}</label>
                   <input
                     style={inputStyle}
                     placeholder={t('yatras.statLabelPlaceholder')}
@@ -500,7 +500,7 @@ export function YatraAdminSettingsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-medium text-gray-500">{t('yatras.statPractice')}</label>
+                  <label className="text-xs font-medium text-base-content/70">{t('yatras.statPractice')}</label>
                   <select
                     style={selectStyle}
                     value={stat.practice_id}
@@ -516,7 +516,7 @@ export function YatraAdminSettingsPage() {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-gray-500">{t('yatras.statAggregation')}</label>
+                    <label className="text-xs font-medium text-base-content/70">{t('yatras.statAggregation')}</label>
                     <select
                       style={selectStyle}
                       value={stat.aggregation}
@@ -528,7 +528,7 @@ export function YatraAdminSettingsPage() {
                     </select>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-gray-500">{t('yatras.statTimeRange')}</label>
+                    <label className="text-xs font-medium text-base-content/70">{t('yatras.statTimeRange')}</label>
                     <select
                       style={selectStyle}
                       value={stat.time_range}

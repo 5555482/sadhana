@@ -73,14 +73,14 @@ export function PwdResetRequestPage() {
         <h1 className="text-xl font-serif font-extralight text-base-content leading-snug tracking-wide">
           Reset your<br />password.
         </h1>
-        <p className="text-xs text-base-content/50 mt-2">
+        <p className="text-xs text-base-content/70 mt-2">
           Enter your email and we'll send a reset link.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-xs font-medium text-base-content/50 uppercase tracking-wider">
+          <label htmlFor="email" className="text-xs font-medium text-base-content/70 uppercase tracking-wider">
             {t('auth.email')}
           </label>
           <input
@@ -116,7 +116,7 @@ export function PwdResetRequestPage() {
         </button>
       </form>
 
-      <p className="text-center text-xs text-base-content/40">
+      <p className="text-center text-xs text-base-content/70">
         Remember it?{' '}
         <Link to="/login" className="font-medium hover:underline" style={{ color: '#c8724a' }}>
           {t('auth.signIn')}

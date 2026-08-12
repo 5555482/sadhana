@@ -209,7 +209,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
     <div className="rounded-2xl overflow-hidden" style={glass}>
       {/* Duration strip */}
       <div className="px-4 pt-3 pb-2 flex gap-1.5 flex-wrap items-center" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-        <span className="text-xs font-semibold text-gray-400 mr-1">{t('charts.duration')}</span>
+        <span className="text-xs font-semibold text-base-content/70 mr-1">{t('charts.duration')}</span>
         {DURATIONS.map(d => (
           <button
             key={d.value}
@@ -217,7 +217,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
             className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
             style={{
               background: duration === d.value ? ACCENT : 'rgba(0,0,0,0.05)',
-              color: duration === d.value ? 'white' : '#6b7280',
+              color: duration === d.value ? 'white' : 'rgba(245,244,242,0.65)',
               border: 'none',
             }}
           >
@@ -229,7 +229,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
             onClick={handleDownload}
             title={t('charts.download')}
             className="ml-auto h-7 px-2.5 flex items-center gap-1 rounded-lg text-xs font-semibold flex-shrink-0"
-            style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
+            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(245,244,242,0.65)', border: 'none' }}
           >
             <LuDownload className="w-3.5 h-3.5" />
             {t('charts.download')}
@@ -251,7 +251,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
           <div className="flex justify-center py-12"><Spinner /></div>
         ) : chartData.length === 0 || practiceNames.length === 0 ? (
           <div className="flex flex-col items-center py-12 gap-2">
-            <p className="text-sm text-gray-400">{t('charts.noData')}</p>
+            <p className="text-sm text-base-content/70">{t('charts.noData')}</p>
           </div>
         ) : isGridReport ? (
           <GridTable chartData={chartData} practiceNames={practiceNames} />
@@ -361,9 +361,9 @@ function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; pr
       <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: `1px solid ${BORDER}` }}>{t('charts.date')}</th>
+            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: 'rgba(245,244,242,0.7)', borderBottom: `1px solid ${BORDER}` }}>{t('charts.date')}</th>
             {practiceNames.map((name) => (
-              <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: '#9ca3af', borderBottom: `1px solid ${BORDER}` }}>
+              <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: 'rgba(245,244,242,0.7)', borderBottom: `1px solid ${BORDER}` }}>
                 {name}
               </th>
             ))}
@@ -458,7 +458,7 @@ function ReportPicker({
                 fontWeight: selectedId === opt.id ? 600 : 400,
               }}
             >
-              <span style={{ color: selectedId === opt.id ? ACCENT : '#9ca3af' }}>{opt.icon}</span>
+              <span style={{ color: selectedId === opt.id ? ACCENT : 'rgba(245,244,242,0.7)' }}>{opt.icon}</span>
               <span className="truncate">{opt.label}</span>
               {selectedId === opt.id && <LuCheck className="w-3.5 h-3.5 ml-auto flex-shrink-0" />}
             </button>
@@ -572,7 +572,7 @@ function ReportCard({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-base-content truncate">{report.name}</p>
-          <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(245,244,242,0.7)' }}>
             {t(isGridType ? 'charts.kindGrid' : 'charts.kindGraph')} · {t('charts.practiceCount', { count: currentIds.length })}
           </p>
         </div>
@@ -586,7 +586,7 @@ function ReportCard({
         <button
           onClick={() => setOpen(o => !o)}
           className="w-7 h-7 flex items-center justify-center rounded-xl flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: '#6b7280', border: 'none' }}
+          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(245,244,242,0.65)', border: 'none' }}
         >
           {open ? <LuChevronUp className="w-4 h-4" /> : <LuChevronDown className="w-4 h-4" />}
         </button>
@@ -597,7 +597,7 @@ function ReportCard({
 
           {/* Report name input */}
           <div className="px-4 pt-3 pb-1">
-            <label className="text-xs text-gray-400 block mb-1">{t('charts.reportName')}</label>
+            <label className="text-xs text-base-content/70 block mb-1">{t('charts.reportName')}</label>
             <input
               type="text"
               value={localName}
@@ -611,7 +611,7 @@ function ReportCard({
           {/* Bar layout (Graph only) */}
           {!isGridType && (
             <div className="px-4 pb-2">
-              <label className="text-xs text-gray-400 block mb-1">{t('charts.barLayout')}</label>
+              <label className="text-xs text-base-content/70 block mb-1">{t('charts.barLayout')}</label>
               <select
                 value={(report.definition as { Graph: GraphReport }).Graph.bar_layout}
                 onChange={e => changeBarLayout(e.target.value as BarLayout)}
@@ -632,7 +632,7 @@ function ReportCard({
                 ? report.definition.Grid.practices.map(pid => (
                     <div key={pid} className="flex items-center gap-2 py-0.5">
                       <span className="flex-1 text-xs text-base-content/80">{practiceMap[pid] ?? pid}</span>
-                      <button onClick={() => removeItem(pid)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.06)', color: '#9ca3af', border: 'none' }}>
+                      <button onClick={() => removeItem(pid)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(245,244,242,0.7)', border: 'none' }}>
                         <LuX className="w-3 h-3" />
                       </button>
                     </div>
@@ -652,7 +652,7 @@ function ReportCard({
                           <option value="Dot">{t('charts.traceDot')}</option>
                         </select>
                         <span className="flex-1 text-xs font-semibold text-base-content">{practiceMap[trace.practice] ?? trace.practice}</span>
-                        <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg flex-shrink-0" style={{ background: 'rgba(255,255,255,0.06)', color: '#9ca3af', border: 'none' }}>
+                        <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg flex-shrink-0" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(245,244,242,0.7)', border: 'none' }}>
                           <LuX className="w-3 h-3" />
                         </button>
                       </div>
@@ -684,7 +684,7 @@ function ReportCard({
               }
             </div>
           ) : (
-            <p className="px-4 py-2 text-xs text-gray-400">{t('charts.noPracticesAdded')}</p>
+            <p className="px-4 py-2 text-xs text-base-content/70">{t('charts.noPracticesAdded')}</p>
           )}
 
           {/* Add practice row — unchanged */}
@@ -778,7 +778,7 @@ export function ChartsPage() {
           <button
             onClick={copyShareLink}
             className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold flex-shrink-0"
-            style={{ background: shareCopied ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.06)', color: shareCopied ? ACCENT : '#6b7280', border: 'none' }}
+            style={{ background: shareCopied ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.06)', color: shareCopied ? ACCENT : 'rgba(245,244,242,0.65)', border: 'none' }}
           >
             {shareCopied ? <LuCheck className="w-3.5 h-3.5" /> : <LuCopy className="w-3.5 h-3.5" />}
             {shareCopied ? t('charts.copied') : t('charts.share')}
@@ -800,8 +800,8 @@ export function ChartsPage() {
               className="w-full px-4 py-3 flex items-center gap-2 text-left"
               style={{ background: 'transparent', border: 'none' }}
             >
-              <span className="text-xs font-semibold text-gray-500 flex-1">{t('charts.manage')} ({reports.length})</span>
-              {manageOpen ? <LuChevronUp className="w-4 h-4 text-gray-400" /> : <LuChevronDown className="w-4 h-4 text-gray-400" />}
+              <span className="text-xs font-semibold text-base-content/70 flex-1">{t('charts.manage')} ({reports.length})</span>
+              {manageOpen ? <LuChevronUp className="w-4 h-4 text-base-content/70" /> : <LuChevronDown className="w-4 h-4 text-base-content/70" />}
             </button>
             <AnimatePresence>
               {manageOpen && (

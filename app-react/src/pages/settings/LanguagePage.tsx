@@ -36,7 +36,7 @@ export function LanguagePage() {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="text-base font-bold text-base-content">Language</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Choose your preferred language</p>
+          <p className="text-xs text-base-content/70 mt-0.5">Choose your preferred language</p>
         </div>
         <Link
           to="/settings"
@@ -65,7 +65,7 @@ export function LanguagePage() {
             >
               <div className="flex-1">
                 <p className="text-sm font-semibold" style={{ color: active ? ACCENT : TEXT }}>{native}</p>
-                <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>{label}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(245,244,242,0.7)' }}>{label}</p>
               </div>
               {active && <LuCheck className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />}
             </button>
