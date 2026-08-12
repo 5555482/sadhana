@@ -16,7 +16,7 @@ export function AppShell() {
       <AuthBackground />
       <div
         className="fixed inset-0 -z-10 pointer-events-none"
-        style={{ background: 'rgba(11,11,13,0.30)' }}
+        style={{ background: 'rgba(11,11,13,0.15)' }}
       />
       <TopBar />
       <main
