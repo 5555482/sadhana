@@ -11,7 +11,7 @@ import type { PracticeDataType } from '../../types/api'
 import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: '#1b2532',
+  background: '#273656',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   border: '1px solid rgba(255,255,255,0.10)',

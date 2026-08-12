@@ -11,7 +11,7 @@ import type { UserYatraDataRow, ColourZonesConfig, ZoneColour } from '../../type
 import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: '#1b2532',
+  background: '#273656',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
   border: '1px solid rgba(255,255,255,0.10)',
@@ -537,7 +537,7 @@ export function YatrasPage() {
           <div
             className="w-full max-w-sm rounded-3xl p-6 flex flex-col gap-4"
             style={{
-              background: '#1b2532',
+              background: '#273656',
               backdropFilter: 'blur(24px)',
               WebkitBackdropFilter: 'blur(24px)',
               boxShadow: '0 24px 48px rgba(0,0,0,0.18)',

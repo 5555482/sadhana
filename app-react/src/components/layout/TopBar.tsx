@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { FaChevronLeft } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
-import { ACCENT, TEXT_FAINT } from '../../theme/tokens'
+import { ACCENT } from '../../theme/tokens'
 
 interface TopBarProps {
   title?: string
@@ -23,7 +23,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
       style={{
         // Transparent over the backdrop (Giga-style) — no solid bar; a faint
         // top scrim keeps the nav/logo legible over the photo.
-        background: 'linear-gradient(180deg, rgba(20,28,40,0.55) 0%, rgba(20,28,40,0) 100%)',
+        background: 'linear-gradient(180deg, rgba(30,43,69,0.55) 0%, rgba(30,43,69,0) 100%)',
       }}
     >
       {showClose ? (
@@ -72,13 +72,13 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
                   {/* Below sm: icon only */}
                   <Icon
                     className="w-4 h-4 sm:hidden transition-colors"
-                    style={{ color: isActive ? ACCENT : TEXT_FAINT }}
+                    style={{ color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)' }}
                   />
                   {/* sm and above: text label */}
                   <span
                     className="hidden sm:inline transition-colors"
                     style={{
-                      color: isActive ? ACCENT : TEXT_FAINT,
+                      color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)',
                       fontWeight: isActive ? 600 : 500,
                     }}
                   >

@@ -242,7 +242,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         {isFetching && !isLoading && (
           <div
             className="absolute inset-0 rounded-2xl flex items-center justify-center z-10"
-            style={{ background: 'rgba(27,37,50,0.65)', backdropFilter: 'blur(4px)' }}
+            style={{ background: 'rgba(39,54,86,0.65)', backdropFilter: 'blur(4px)' }}
           >
             <span className="loading loading-spinner loading-md" style={{ color: ACCENT }} />
           </div>
@@ -294,7 +294,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
                 <YAxis yAxisId="unit" hide domain={[0, 1.1]} />
               )}
               <Tooltip
-                contentStyle={{ fontSize: 11, borderRadius: 10, background: '#1b2532', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#f5f4f2' }}
+                contentStyle={{ fontSize: 11, borderRadius: 10, background: '#273656', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#f5f4f2' }}
                 labelStyle={{ color: '#f5f4f2' }}
                 itemStyle={{ color: '#f5f4f2' }}
               />

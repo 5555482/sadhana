@@ -1,6 +1,6 @@
 export function AuthBackground() {
   return (
-    <div className="fixed inset-0 -z-10" style={{ background: '#141c28' }}>
+    <div className="fixed inset-0 -z-10" style={{ background: '#1e2b45' }}>
       {/* Giga-style cinematic backdrop: the misty lake-temple photo reads
           clearly across the top of the viewport and fades into the solid navy
           base by mid-screen. */}
@@ -17,7 +17,7 @@ export function AuthBackground() {
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(20,28,40,0.20) 0%, rgba(20,28,40,0.45) 30%, rgba(20,28,40,0.85) 55%, #141c28 78%)',
+            'linear-gradient(180deg, rgba(30,43,69,0.20) 0%, rgba(30,43,69,0.45) 30%, rgba(30,43,69,0.85) 55%, #1e2b45 78%)',
         }}
       />
     </div>
