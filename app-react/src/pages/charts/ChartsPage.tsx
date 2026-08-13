@@ -737,7 +737,7 @@ function ReportCard({
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
-export function ChartsPage() {
+export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
   const { t } = useTranslation()
   const user = useAuthStore(s => s.user)
   const { data: reports = [], isLoading: reportsLoading } = useQuery({ queryKey: ['reports'], queryFn: chartsApi.getReports })
@@ -760,7 +760,7 @@ export function ChartsPage() {
 
   return (
     <>
-      <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
+      <div className={embedded ? 'flex flex-col gap-3' : 'px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24'}>
         {/* Header — z-index needed so ReportPicker dropdown appears above the chart panel */}
         <div className="rounded-2xl px-5 py-4 flex items-center gap-3" style={{ ...glass, position: 'relative', zIndex: 100 }}>
           <div
@@ -861,14 +861,16 @@ export function ChartsPage() {
         )}
       </div>
 
-      <Link
-        to="/charts/new"
-        aria-label="New report"
-        className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center"
-        style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(200,114,74,0.45)' }}
-      >
-        <FaPlus className="w-5 h-5 text-white" />
-      </Link>
+      {!embedded && (
+        <Link
+          to="/charts/new"
+          aria-label="New report"
+          className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center"
+          style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(200,114,74,0.45)' }}
+        >
+          <FaPlus className="w-5 h-5 text-white" />
+        </Link>
+      )}
     </>
   )
 }
