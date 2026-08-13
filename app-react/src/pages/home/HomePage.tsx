@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
 import { LuWifiOff } from 'react-icons/lu'
 import { FaPlus, FaSlidersH } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
@@ -213,10 +214,16 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* Yatras — scroll down to see (all sizes) */}
-      <div className="px-4 pb-8 max-w-lg mx-auto w-full lg:max-w-[1400px] lg:px-6 mt-2">
+      {/* Yatras — a centered section that reveals on scroll (Giga-style) */}
+      <motion.section
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.55, ease: 'easeOut' }}
+        className="px-4 pb-14 pt-8 lg:pt-16 max-w-2xl lg:max-w-4xl mx-auto w-full"
+      >
         <YatrasPage embedded />
-      </div>
+      </motion.section>
 
       {/* Desktop FABs — manage & add practices, bottom-LEFT (mobile uses the bottom nav) */}
       <div className="fixed left-4 bottom-6 z-30 hidden sm:flex flex-col gap-3">
