@@ -118,10 +118,10 @@ export function SettingsPage() {
         <MenuItem label={t('settings.help')}     to="/help"              icon={LuCircleHelp} />
       </SectionCard>
 
-      {/* Logout — desktop only; on mobile the bottom-nav center button handles it */}
+      {/* Logout — lives in the settings surface (now a glass popup) */}
       <button
         onClick={() => setShowLogoutConfirm(true)}
-        className="w-full h-12 rounded-full text-sm font-semibold hidden sm:flex items-center justify-center gap-2"
+        className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
         style={{
           background: 'rgba(255,255,255,0.08)',
           backdropFilter: 'blur(12px)',

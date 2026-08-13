@@ -7,9 +7,16 @@ import { create } from 'zustand'
 interface UiState {
   yatraCreateNonce: number
   requestYatraCreate: () => void
+  // Settings opens as a glass modal overlay instead of routing to /settings.
+  settingsOpen: boolean
+  openSettings: () => void
+  closeSettings: () => void
 }
 
 export const useUiStore = create<UiState>((set) => ({
   yatraCreateNonce: 0,
   requestYatraCreate: () => set((s) => ({ yatraCreateNonce: s.yatraCreateNonce + 1 })),
+  settingsOpen: false,
+  openSettings: () => set({ settingsOpen: true }),
+  closeSettings: () => set({ settingsOpen: false }),
 }))

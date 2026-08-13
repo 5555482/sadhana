@@ -5,6 +5,7 @@ import { FaChevronLeft } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
 import { ACCENT } from '../../theme/tokens'
+import { useUiStore } from '../../store/uiStore'
 
 interface TopBarProps {
   title?: string
@@ -16,6 +17,7 @@ interface TopBarProps {
 export const TopBar = React.memo(function TopBar({ title, showBack, showClose, right }: TopBarProps) {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const openSettings = useUiStore((s) => s.openSettings)
 
   return (
     <header
@@ -64,6 +66,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
               key={to}
               to={to}
               end={exact}
+              onClick={navKey === 'settings' ? (e) => { e.preventDefault(); openSettings() } : undefined}
               aria-label={t(`nav.${navKey}`)}
               className={`flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium ${navKey === 'charts' ? 'lg:hidden' : ''}`}
             >

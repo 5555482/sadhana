@@ -15,12 +15,13 @@ const CENTER_STYLE: React.CSSProperties = {
   boxShadow: `0 4px 20px ${ACCENT_SHADOW}`,
 }
 
-function Tab({ to, navKey, icon: Icon, exact }: (typeof navItems)[number]) {
+function Tab({ to, navKey, icon: Icon, exact, onClick }: (typeof navItems)[number] & { onClick?: () => void }) {
   const { t } = useTranslation()
   return (
     <NavLink
       to={to}
       end={exact}
+      onClick={onClick ? (e) => { e.preventDefault(); onClick() } : undefined}
       aria-label={t(`nav.${navKey}`)}
       className="flex-1 flex items-center justify-center min-h-[56px] no-underline"
     >
@@ -47,6 +48,7 @@ export function BottomNav() {
   const navigate = useNavigate()
   const logout = useAuthStore((s) => s.logout)
   const requestYatraCreate = useUiStore((s) => s.requestYatraCreate)
+  const openSettings = useUiStore((s) => s.openSettings)
 
   // Center button is context-aware per route:
   //   /charts   → new report
@@ -114,7 +116,7 @@ export function BottomNav() {
       <div className="flex-1 flex justify-center items-start">{center}</div>
 
       <Tab {...yatras} />
-      <Tab {...settings} />
+      <Tab {...settings} onClick={openSettings} />
     </nav>
   )
 }

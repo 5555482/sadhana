@@ -5,6 +5,7 @@ import { navItems } from './navItems'
 import { AuthBackground } from './AuthBackground'
 import { ToastContainer } from '../ui/Toast'
 import { PageTransition } from './PageTransition'
+import { SettingsModal } from './SettingsModal'
 
 export function AppShell() {
   const location = useLocation()
@@ -33,6 +34,7 @@ export function AppShell() {
         </PageTransition>
       </main>
       {showBottomNav && <BottomNav />}
+      <SettingsModal />
       <ToastContainer />
     </div>
   )
