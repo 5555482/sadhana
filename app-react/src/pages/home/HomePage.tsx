@@ -214,13 +214,14 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* Yatras — a centered section that reveals on scroll (Giga-style) */}
+      {/* Yatras — full dashboard width (aligns with the practices/charts grid),
+          revealed on scroll (Giga-style) */}
       <motion.section
         initial={{ opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.55, ease: 'easeOut' }}
-        className="px-4 pb-14 pt-8 lg:pt-16 max-w-2xl lg:max-w-4xl mx-auto w-full"
+        className="px-4 pb-14 pt-8 lg:pt-16 lg:px-6 max-w-lg lg:max-w-[1400px] mx-auto w-full"
       >
         <YatrasPage embedded />
       </motion.section>
