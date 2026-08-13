@@ -123,7 +123,7 @@ function trendColor(arrow: UserYatraDataRow['trend_arrow']): string {
 
 // ── Component ─────────────────────────────────────────────────────────────
 
-export function YatrasPage() {
+export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
   const { t } = useTranslation()
   const qc = useQueryClient()
 
@@ -223,7 +223,7 @@ export function YatrasPage() {
 
   return (
     <>
-      <div className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3">
+      <div className={embedded ? 'flex flex-col gap-3' : 'px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3'}>
 
         {/* Yatra selector header */}
         <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
@@ -509,17 +509,19 @@ export function YatrasPage() {
       </div>
 
       {/* FAB — Create yatra */}
-      <button
-        onClick={handleCreate}
-        aria-label="Create yatra"
-        className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center border-none cursor-pointer"
-        style={{
-          background: ACCENT_GRADIENT,
-          boxShadow: '0 4px 24px rgba(200,114,74,0.45)',
-        }}
-      >
-        <FaPlus className="w-5 h-5 text-white" />
-      </button>
+      {!embedded && (
+        <button
+          onClick={handleCreate}
+          aria-label="Create yatra"
+          className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center border-none cursor-pointer"
+          style={{
+            background: ACCENT_GRADIENT,
+            boxShadow: '0 4px 24px rgba(200,114,74,0.45)',
+          }}
+        >
+          <FaPlus className="w-5 h-5 text-white" />
+        </button>
+      )}
 
       {/* Create yatra modal */}
       {showCreate && (

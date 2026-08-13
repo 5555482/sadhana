@@ -8,6 +8,7 @@ import { practicesApi } from '../../api/practices'
 import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 import { PracticeCard } from './PracticeCard'
 import { ChartsPage } from '../charts/ChartsPage'
+import { YatrasPage } from '../yatras/YatrasPage'
 import { WeekCalendar, getWeekDays } from './WeekCalendar'
 import { ErrorBanner } from '../../components/ui/ErrorBanner'
 import useNetworkStatus from '../../hooks/useNetworkStatus'
@@ -210,6 +211,11 @@ export function HomePage() {
         <div className="hidden lg:block lg:col-span-2">
           <ChartsPage embedded />
         </div>
+      </div>
+
+      {/* Yatras — scroll down to see (all sizes) */}
+      <div className="px-4 pb-8 max-w-lg mx-auto w-full lg:max-w-[1400px] lg:px-6 mt-2">
+        <YatrasPage embedded />
       </div>
 
       {/* Desktop FABs — manage & add practices (mobile uses the bottom nav) */}
