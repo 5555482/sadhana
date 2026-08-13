@@ -380,7 +380,7 @@ export function YatraPracticeEditPage() {
                         {preview.map((cell, i) => (
                           <div
                             key={i}
-                            className="flex-1 rounded-xl py-2 text-center text-xs font-semibold text-gray-700"
+                            className="flex-1 rounded-xl py-2 text-center text-xs font-semibold text-white"
                             style={{ background: ZONE_BG[cell.colour] }}
                           >
                             {cell.label}

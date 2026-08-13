@@ -56,7 +56,7 @@ function FieldInput({
           placeholder={placeholder}
           autoComplete={autoComplete}
           readOnly={readOnly}
-          className="w-full h-12 px-4 rounded-xl text-base-content placeholder:text-base-content/30 text-sm focus:outline-none transition-colors disabled:opacity-60"
+          className="w-full h-12 px-4 rounded-xl text-base-content placeholder:text-base-content/45 text-sm focus:outline-none transition-colors disabled:opacity-60"
           style={{ ...inputStyle, paddingRight: isPassword ? '3.5rem' : undefined }}
           onFocus={e => { if (!readOnly) e.target.style.borderColor = 'rgba(200,114,74,0.5)' }}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.10)')}

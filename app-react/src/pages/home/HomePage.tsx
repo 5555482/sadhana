@@ -130,7 +130,7 @@ export function HomePage() {
               color: '#fbbf24',
             }}
           >
-            <LuWifiOff className="w-4 h-4 flex-shrink-0" style={{ color: '#d97706' }} />
+            <LuWifiOff className="w-4 h-4 flex-shrink-0" style={{ color: '#fbbf24' }} />
             {t('home.offline')}
           </div>
         )}
