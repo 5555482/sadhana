@@ -127,9 +127,10 @@ interface ChartPanelProps {
   report: Report | null  // null = show all practices
   practices: UserPractice[]
   practiceMap: Record<string, string>
+  chartHeight?: number
 }
 
-function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
+function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: ChartPanelProps) {
   const { t, i18n } = useTranslation()
   const locale = i18n.language || 'en'
   const [duration, setDuration] = useState<ReportDuration>('Month')
@@ -256,7 +257,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         ) : isGridReport ? (
           <GridTable chartData={chartData} practiceNames={practiceNames} />
         ) : (
-          <ResponsiveContainer width="100%" height={290}>
+          <ResponsiveContainer width="100%" height={chartHeight}>
             <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.10)" />
               <XAxis
@@ -790,6 +791,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           report={selectedReport}
           practices={practices}
           practiceMap={practiceMap}
+          chartHeight={embedded ? 520 : 290}
         />
 
         {/* Manage reports section */}
