@@ -122,7 +122,7 @@ export function HomePage() {
   return (
     <>
       {/* Desktop: practices (1/3) alongside charts (2/3). Mobile: practices only. */}
-      <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:max-w-[1400px] lg:mx-auto lg:px-6 lg:py-4">
+      <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:items-start lg:max-w-[1400px] lg:mx-auto lg:px-6 lg:py-4">
       <div className="px-4 py-4 max-w-lg mx-auto w-full lg:max-w-none lg:mx-0 lg:px-0 lg:py-0 lg:col-span-1 flex flex-col gap-3">
         {/* Offline banner */}
         {!isOnline && (
@@ -206,8 +206,8 @@ export function HomePage() {
         </div>
       </div>
 
-        {/* Charts (2/3) — desktop only */}
-        <div className="hidden lg:block lg:col-span-2 py-4">
+        {/* Charts (2/3) — desktop only; top-aligned with the practices column */}
+        <div className="hidden lg:block lg:col-span-2">
           <ChartsPage embedded />
         </div>
       </div>

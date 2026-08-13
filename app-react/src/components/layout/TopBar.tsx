@@ -65,7 +65,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
               to={to}
               end={exact}
               aria-label={t(`nav.${navKey}`)}
-              className="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium"
+              className={`flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium ${navKey === 'charts' ? 'lg:hidden' : ''}`}
             >
               {({ isActive }) => (
                 <>
