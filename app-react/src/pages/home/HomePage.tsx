@@ -218,8 +218,8 @@ export function HomePage() {
         <YatrasPage embedded />
       </div>
 
-      {/* Desktop FABs — manage & add practices (mobile uses the bottom nav) */}
-      <div className="fixed right-4 bottom-6 z-30 hidden sm:flex flex-col gap-3">
+      {/* Desktop FABs — manage & add practices, bottom-LEFT (mobile uses the bottom nav) */}
+      <div className="fixed left-4 bottom-6 z-30 hidden sm:flex flex-col gap-3">
         <Link
           to="/user/practices"
           aria-label={t('settings.myPractices')}
