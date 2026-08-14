@@ -1,9 +1,10 @@
 import React from 'react'
-import { useNavigate, NavLink, Link } from 'react-router-dom'
+import { useNavigate, useLocation, NavLink, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaChevronLeft } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
+import { HomeHeaderActions } from './HomeHeaderActions'
 import { ACCENT } from '../../theme/tokens'
 import { useUiStore } from '../../store/uiStore'
 
@@ -16,6 +17,7 @@ interface TopBarProps {
 
 export const TopBar = React.memo(function TopBar({ title, showBack, showClose, right }: TopBarProps) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { t } = useTranslation()
   const openSettings = useUiStore((s) => s.openSettings)
 
@@ -57,6 +59,12 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
 
       {(showBack || showClose) && title && (
         <h1 className="font-serif font-semibold text-base text-base-content flex-1">{title}</h1>
+      )}
+
+      {!showBack && !showClose && location.pathname === '/' && (
+        <div className="ml-2">
+          <HomeHeaderActions />
+        </div>
       )}
 
       {!showBack && !showClose && (
