@@ -55,6 +55,8 @@
     "goHome": "На главную"
   },
   "home": {
+    "reportsMenu": "Отчёты",
+    "viewYatras": "Просмотр ятр",
     "practicesMenu": "Практики",
     "addPractice": "Добавить практику",
     "editPractices": "Изменить практики",

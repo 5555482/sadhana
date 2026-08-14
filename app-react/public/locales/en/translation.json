@@ -55,6 +55,8 @@
     "goHome": "Go home"
   },
   "home": {
+    "reportsMenu": "Reports",
+    "viewYatras": "View yatras",
     "practicesMenu": "Practices",
     "addPractice": "Add new practice",
     "editPractices": "Edit practices",
