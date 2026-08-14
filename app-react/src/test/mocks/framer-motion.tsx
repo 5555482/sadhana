@@ -52,3 +52,12 @@ export const useMotionValue = (initial: number) => ({
 })
 
 export const useTransform = () => ({ get: () => 0 })
+
+export const useScroll = () => ({ scrollYProgress: useMotionValue(0) })
+
+// Reduced-motion is toggled from tests via __setReducedMotion; default is off.
+let __reducedMotion = false
+export const __setReducedMotion = (v: boolean) => {
+  __reducedMotion = v
+}
+export const useReducedMotion = () => __reducedMotion
