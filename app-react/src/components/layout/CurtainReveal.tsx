@@ -6,12 +6,10 @@ interface CurtainRevealProps {
   base: ReactNode
   /** Panel that rises up and covers the base like a curtain. */
   overlay: ReactNode
-  /** Optional fixed-position controls (e.g. FABs) that fade out as the curtain covers the base. */
-  fab?: ReactNode
   className?: string
 }
 
-export function CurtainReveal({ base, overlay, fab, className }: CurtainRevealProps) {
+export function CurtainReveal({ base, overlay, className }: CurtainRevealProps) {
   const reduce = useReducedMotion()
   const overlayRef = useRef<HTMLDivElement>(null)
 
@@ -24,17 +22,18 @@ export function CurtainReveal({ base, overlay, fab, className }: CurtainRevealPr
   })
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94])
   const filter = useTransform(scrollYProgress, [0, 1], ['brightness(1)', 'brightness(0.55)'])
-  const fabOpacity = useTransform(scrollYProgress, [0.4, 0.6], [1, 0])
 
   return (
     <div className={'relative' + (className ? ' ' + className : '')}>
-      {/* Base — pinned one-screen panel */}
+      {/* Base — pinned one-screen panel. The inner area scrolls when the dashboard
+          is taller than one screen, and chains to the window at its boundary so the
+          page keeps scrolling and the curtain can rise (no overscroll-contain). */}
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <motion.div
           className="h-full"
           style={reduce ? undefined : { scale, filter, transformOrigin: 'center 40%' }}
         >
-          <div className="h-full overflow-y-auto overscroll-contain">{base}</div>
+          <div className="h-full overflow-y-auto">{base}</div>
         </motion.div>
       </div>
 
@@ -53,11 +52,6 @@ export function CurtainReveal({ base, overlay, fab, className }: CurtainRevealPr
           <div className="max-w-lg lg:max-w-[1400px] mx-auto w-full">{overlay}</div>
         </div>
       </div>
-
-      {/* FABs — fade out as the curtain covers the base (they act on the now-hidden dashboard) */}
-      {fab && (
-        <motion.div style={reduce ? undefined : { opacity: fabOpacity }}>{fab}</motion.div>
-      )}
     </div>
   )
 }

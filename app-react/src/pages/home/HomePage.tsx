@@ -1,7 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
-import { FaPlus, FaSlidersH } from 'react-icons/fa'
-import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 import { CurtainReveal } from '../../components/layout/CurtainReveal'
 import { DashboardPanel } from './DashboardPanel'
 import { YatrasPage } from '../yatras/YatrasPage'
@@ -47,48 +44,7 @@ export function DateContextLabel({ dateStr }: { dateStr: string }) {
 }
 
 export function HomePage() {
-  const { t } = useTranslation()
-
   return (
-    <CurtainReveal
-      base={<DashboardPanel />}
-      overlay={<YatrasPage embedded />}
-      fab={
-        <>
-          <div className="fixed left-4 bottom-6 z-30 hidden sm:flex flex-col gap-3">
-            <Link
-              to="/user/practices"
-              aria-label={t('settings.myPractices')}
-              className="w-14 h-14 rounded-full flex items-center justify-center"
-              style={{
-                background: 'rgba(255,255,255,0.10)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
-              }}
-            >
-              <FaSlidersH className="w-5 h-5" style={{ color: ACCENT }} />
-            </Link>
-            <Link
-              to="/user/practice/new"
-              aria-label={t('practice.new')}
-              className="w-14 h-14 rounded-full flex items-center justify-center"
-              style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(200,114,74,0.45)' }}
-            >
-              <FaPlus className="w-5 h-5 text-white" />
-            </Link>
-          </div>
-          <Link
-            to="/charts/new"
-            aria-label="New report"
-            className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center"
-            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(200,114,74,0.45)' }}
-          >
-            <FaPlus className="w-5 h-5 text-white" />
-          </Link>
-        </>
-      }
-    />
+    <CurtainReveal base={<DashboardPanel />} overlay={<YatrasPage embedded />} />
   )
 }

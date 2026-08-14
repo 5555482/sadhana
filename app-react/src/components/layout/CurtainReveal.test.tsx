@@ -25,13 +25,6 @@ describe('CurtainReveal', () => {
     expect(container.querySelector('.rounded-t-3xl')).not.toBeNull()
   })
 
-  it('renders the optional fab slot', () => {
-    render(
-      <CurtainReveal base={<div>BASE</div>} overlay={<div>OVER</div>} fab={<button>FAB</button>} />,
-    )
-    expect(screen.getByRole('button', { name: 'FAB' })).toBeInTheDocument()
-  })
-
   it('still renders both panels under reduced motion', () => {
     __setReducedMotion(true)
     render(<CurtainReveal base={<div>BASE_RM</div>} overlay={<div>OVER_RM</div>} />)
