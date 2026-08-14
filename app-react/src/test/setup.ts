@@ -71,6 +71,9 @@ if (!i18n.isInitialized) {
           },
           home: {
             noPractices: 'No practices yet',
+            practicesMenu: 'Practices',
+            addPractice: 'Add new practice',
+            editPractices: 'Edit practices',
             addStarters: 'Add starter practices',
             addCustom: 'or create a custom one',
             addFirst: 'Add your first practice',

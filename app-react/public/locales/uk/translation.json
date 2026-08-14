@@ -55,6 +55,9 @@
     "goHome": "На головну"
   },
   "home": {
+    "practicesMenu": "Практики",
+    "addPractice": "Додати практику",
+    "editPractices": "Редагувати практики",
     "noPractices": "Практик поки немає",
     "addStarters": "Додати базові практики",
     "addCustom": "або створити власну",

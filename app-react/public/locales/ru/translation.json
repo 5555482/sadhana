@@ -55,6 +55,9 @@
     "goHome": "На главную"
   },
   "home": {
+    "practicesMenu": "Практики",
+    "addPractice": "Добавить практику",
+    "editPractices": "Изменить практики",
     "noPractices": "Практик пока нет",
     "addStarters": "Добавить базовые практики",
     "addCustom": "или создать свою",
