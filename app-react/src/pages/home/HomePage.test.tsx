@@ -66,6 +66,15 @@ describe('HomePage', () => {
     await screen.findByText('Meditation')
     expect(screen.queryByText('Nothing was logged on this day')).not.toBeInTheDocument()
   })
+
+  it('renders the yatras section as the curtain overlay below the dashboard', async () => {
+    wrap(<HomePage />)
+    // Dashboard (base) content renders…
+    await screen.findByText('Meditation')
+    // …and the yatras overlay surface is present (rounded-top curtain).
+    const { container } = wrap(<HomePage />)
+    expect(container.querySelector('.rounded-t-3xl')).not.toBeNull()
+  })
 })
 
 describe('SectionLabel', () => {
