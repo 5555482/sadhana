@@ -67,10 +67,10 @@ describe('HomePage', () => {
     expect(screen.queryByText('Nothing was logged on this day')).not.toBeInTheDocument()
   })
 
-  it('renders the yatras section as the curtain overlay below the dashboard', async () => {
+  it('renders the yatras section below the dashboard on the same page', async () => {
     const { container } = wrap(<HomePage />)
     await screen.findByText('Meditation')
-    expect(container.querySelector('.rounded-t-3xl')).not.toBeNull()
+    expect(container.querySelector('#home-yatras')).not.toBeNull()
   })
 })
 

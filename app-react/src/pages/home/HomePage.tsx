@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { CurtainReveal } from '../../components/layout/CurtainReveal'
 import { DashboardPanel } from './DashboardPanel'
 import { YatrasPage } from '../yatras/YatrasPage'
 
@@ -45,6 +44,14 @@ export function DateContextLabel({ dateStr }: { dateStr: string }) {
 
 export function HomePage() {
   return (
-    <CurtainReveal base={<DashboardPanel />} overlay={<YatrasPage embedded />} />
+    <>
+      <DashboardPanel />
+      <section
+        id="home-yatras"
+        className="px-4 pb-14 pt-8 lg:pt-12 lg:px-6 max-w-lg lg:max-w-[1400px] mx-auto w-full"
+      >
+        <YatrasPage embedded />
+      </section>
+    </>
   )
 }
