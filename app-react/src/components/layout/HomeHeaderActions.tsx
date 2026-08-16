@@ -12,18 +12,17 @@ export function HomeHeaderActions() {
   ]
   const yatras: HeaderMenuItem[] = [
     { label: t('yatras.createNewYatra'), onClick: requestYatraCreate },
-    { label: t('home.viewYatras'), to: '/yatras' },
-  ]
-  const reports: HeaderMenuItem[] = [
-    { label: t('charts.newReport'), to: '/charts/new' },
-    { label: t('charts.manage'), to: '/charts' },
+    {
+      label: t('home.viewYatras'),
+      onClick: () =>
+        document.getElementById('home-yatras')?.scrollIntoView({ behavior: 'smooth' }),
+    },
   ]
 
   return (
     <div className="flex items-center gap-2">
       <HeaderMenu label={t('home.practicesMenu')} items={practices} />
       <HeaderMenu label={t('nav.yatras')} items={yatras} />
-      <HeaderMenu label={t('home.reportsMenu')} items={reports} />
     </div>
   )
 }

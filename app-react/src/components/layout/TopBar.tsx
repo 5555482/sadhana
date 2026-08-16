@@ -50,7 +50,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         <Link to="/" className="flex items-center no-underline">
           <img
             src="/logo.png"
-            className="h-8 w-8 object-contain"
+            className="h-[35px] w-[35px] object-contain"
             style={{ filter: 'brightness(0) invert(1)' }}
             alt="Sadhana"
           />
@@ -61,50 +61,54 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         <h1 className="font-serif font-semibold text-base text-base-content flex-1">{title}</h1>
       )}
 
-      {!showBack && !showClose && location.pathname === '/' && (
-        <div className="ml-2">
-          <HomeHeaderActions />
-        </div>
-      )}
-
       {!showBack && !showClose && (
-        <nav className="ml-auto hidden sm:flex items-center gap-1" aria-label="Main navigation">
-          {navItems.map(({ to, navKey, icon: Icon, exact }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={exact}
-              onClick={navKey === 'settings' ? (e) => { e.preventDefault(); openSettings() } : undefined}
-              aria-label={t(`nav.${navKey}`)}
-              className={`flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium ${navKey === 'charts' ? 'lg:hidden' : ''}`}
-            >
-              {({ isActive }) => (
-                <>
-                  {/* Below sm: icon only */}
-                  <Icon
-                    className="w-4 h-4 sm:hidden transition-colors"
-                    style={{ color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)' }}
-                  />
-                  {/* sm and above: text label */}
-                  <span
-                    className="hidden sm:inline transition-colors"
-                    style={{
-                      color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)',
-                      fontWeight: isActive ? 600 : 500,
-                    }}
+        <div className="ml-auto hidden sm:flex items-center gap-2">
+          {location.pathname === '/' && <HomeHeaderActions />}
+          <nav className="flex items-center gap-1" aria-label="Main navigation">
+            {navItems
+              .filter(({ navKey }) => navKey !== 'yatras')
+              .map(({ to, navKey, icon: Icon, exact }) => {
+                const iconOnly = navKey === 'settings'
+                return (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    end={exact}
+                    onClick={navKey === 'settings' ? (e) => { e.preventDefault(); openSettings() } : undefined}
+                    aria-label={t(`nav.${navKey}`)}
+                    className={`flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium ${navKey === 'charts' ? 'lg:hidden' : ''}`}
                   >
-                    {t(`nav.${navKey}`)}
-                  </span>
-                  {/* Active dot */}
-                  <span
-                    className="w-1 h-1 rounded-full transition-all"
-                    style={{ background: isActive ? ACCENT : 'transparent' }}
-                  />
-                </>
-              )}
-            </NavLink>
-          ))}
-        </nav>
+                    {({ isActive }) => (
+                      <>
+                        {/* icon: always for Settings, otherwise only below sm */}
+                        <Icon
+                          className={`w-4 h-4 transition-colors ${iconOnly ? '' : 'sm:hidden'}`}
+                          style={{ color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)' }}
+                        />
+                        {/* text label: sm+ for non-Settings items */}
+                        {!iconOnly && (
+                          <span
+                            className="hidden sm:inline transition-colors"
+                            style={{
+                              color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)',
+                              fontWeight: isActive ? 600 : 500,
+                            }}
+                          >
+                            {t(`nav.${navKey}`)}
+                          </span>
+                        )}
+                        {/* Active dot */}
+                        <span
+                          className="w-1 h-1 rounded-full transition-all"
+                          style={{ background: isActive ? ACCENT : 'transparent' }}
+                        />
+                      </>
+                    )}
+                  </NavLink>
+                )
+              })}
+          </nav>
+        </div>
       )}
 
       {right && (
