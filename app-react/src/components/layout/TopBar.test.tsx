@@ -12,24 +12,16 @@ function wrapAt(path: string) {
 }
 
 describe('TopBar', () => {
-  it('shows the home actions on the home route', () => {
+  it('shows Home, the home actions, and Settings-as-text on the home route; no Yatras nav link', () => {
     wrapAt('/')
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Practices/ })).toBeInTheDocument()
+    expect(screen.getByText('Settings')).toBeInTheDocument() // reverted to a text label
+    expect(screen.queryByRole('link', { name: 'Yatras' })).not.toBeInTheDocument()
   })
 
   it('hides the home actions on other routes', () => {
     wrapAt('/yatras')
     expect(screen.queryByRole('button', { name: /Practices/ })).not.toBeInTheDocument()
-  })
-
-  it('does not render a Yatras link in the desktop nav', () => {
-    wrapAt('/')
-    expect(screen.queryByRole('link', { name: 'Yatras' })).not.toBeInTheDocument()
-  })
-
-  it('renders Settings as an icon (aria-label, no visible text)', () => {
-    wrapAt('/')
-    expect(screen.getByRole('link', { name: 'Settings' })).toBeInTheDocument()
-    expect(screen.queryByText('Settings')).not.toBeInTheDocument()
   })
 })
