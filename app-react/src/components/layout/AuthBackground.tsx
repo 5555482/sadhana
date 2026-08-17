@@ -6,9 +6,9 @@ export function AuthBackground() {
         className="absolute inset-0"
         style={{
           backgroundImage: "url('/bg.webp')",
-          backgroundSize: 'cover',
+          backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center top',
         }}
       />
       {/* Dark filter (static-site style: darker top/bottom, lighter middle) —
@@ -17,7 +17,7 @@ export function AuthBackground() {
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.55) 100%)',
+            'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.45) 100%)',
         }}
       />
     </div>

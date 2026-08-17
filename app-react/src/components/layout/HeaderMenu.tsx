@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { FaChevronDown } from 'react-icons/fa'
 
@@ -7,31 +8,45 @@ export type HeaderMenuItem =
   | { label: string; onClick: () => void }
 
 const pill =
-  'h-9 px-3 rounded-full text-sm font-medium flex items-center gap-1.5 transition-colors no-underline'
+  'h-9 px-3 rounded-full text-sm font-medium flex items-center gap-1.5 transition-colors no-underline backdrop-blur-md'
 const glassPill = {
-  background: 'rgba(255,255,255,0.60)',
-  border: '1px solid rgba(0,0,0,0.08)',
-  color: '#1f2937',
+  background: 'rgba(255,255,255,0.12)',
+  border: '1px solid rgba(255,255,255,0.18)',
+  color: 'rgba(255,255,255,0.90)',
 } as const
 const itemClass = 'px-4 py-2.5 text-sm text-left no-underline hover:bg-white/10 w-full'
-const itemStyle = { color: '#1f2937' } as const
+const itemStyle = { color: 'rgba(255,255,255,0.90)' } as const
 
 export function HeaderMenu({ label, items }: { label: string; items: HeaderMenuItem[] }) {
   const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const [pos, setPos] = useState({ top: 0, left: 0 })
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
+  // Position the (portaled) menu just under its trigger.
+  useLayoutEffect(() => {
+    if (open && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect()
+      setPos({ top: r.bottom + 8, left: r.left })
+    }
+  }, [open])
+
+  // Close on outside click (trigger + portaled menu both count as "inside").
   useEffect(() => {
     if (!open) return
     function onDown(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+      const t = e.target as Node
+      if (btnRef.current?.contains(t) || menuRef.current?.contains(t)) return
+      setOpen(false)
     }
     document.addEventListener('mousedown', onDown)
     return () => document.removeEventListener('mousedown', onDown)
   }, [open])
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative">
       <button
+        ref={btnRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
@@ -42,48 +57,55 @@ export function HeaderMenu({ label, items }: { label: string; items: HeaderMenuI
         {label}
         <FaChevronDown className="w-3 h-3 opacity-70" />
       </button>
-      {open && (
-        <div
-          role="menu"
-          className="absolute left-0 mt-2 min-w-44 rounded-xl overflow-hidden z-50 flex flex-col"
-          style={{
-            background: 'rgba(255,255,255,0.96)',
-            border: '1px solid rgba(0,0,0,0.08)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
-          }}
-        >
-          {items.map((item) =>
-            'to' in item ? (
-              <Link
-                key={item.label}
-                role="menuitem"
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className={itemClass}
-                style={itemStyle}
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <button
-                key={item.label}
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  item.onClick()
-                  setOpen(false)
-                }}
-                className={itemClass}
-                style={itemStyle}
-              >
-                {item.label}
-              </button>
-            ),
-          )}
-        </div>
-      )}
+      {open &&
+        createPortal(
+          <div
+            ref={menuRef}
+            role="menu"
+            className="min-w-44 rounded-xl overflow-hidden flex flex-col"
+            style={{
+              position: 'fixed',
+              top: pos.top,
+              left: pos.left,
+              zIndex: 100,
+              background: 'rgba(20,28,45,0.72)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.50)',
+            }}
+          >
+            {items.map((item) =>
+              'to' in item ? (
+                <Link
+                  key={item.label}
+                  role="menuitem"
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className={itemClass}
+                  style={itemStyle}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.label}
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    item.onClick()
+                    setOpen(false)
+                  }}
+                  className={itemClass}
+                  style={itemStyle}
+                >
+                  {item.label}
+                </button>
+              ),
+            )}
+          </div>,
+          document.body,
+        )}
     </div>
   )
 }

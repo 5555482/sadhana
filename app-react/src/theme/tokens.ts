@@ -1,4 +1,4 @@
-// Shared light palette for inline styles (mirrors the DaisyUI light theme in
+// Shared dark/amber palette for inline styles (mirrors the DaisyUI dark theme in
 // index.css). Prefer DaisyUI classes (bg-base-100, text-primary, …) where a
 // className is used; use these constants where a raw inline-style value is
 // required.
@@ -9,12 +9,12 @@ export const ACCENT_SHADOW = 'rgba(200,114,74,0.40)'
 export const ACCENT_SOFT = 'rgba(200,114,74,0.12)'
 export const ACCENT_RING = 'rgba(200,114,74,0.15)'
 
-export const SURFACE_1 = '#f4f5f7'
-export const SURFACE_2 = '#e9ebef'
-export const SURFACE_3 = '#d8dbe1'
-export const SURFACE_GLASS = 'rgba(255,255,255,0.72)'
+export const SURFACE_1 = '#1e2b45'
+export const SURFACE_2 = '#273656'
+export const SURFACE_3 = '#324268'
+export const SURFACE_GLASS = 'rgba(30,43,69,0.80)'
 
-export const TEXT = '#1f2937'
-export const TEXT_MUTED = 'rgba(31,41,55,0.60)'
-export const TEXT_FAINT = 'rgba(31,41,55,0.42)'
-export const BORDER = 'rgba(0,0,0,0.08)'
+export const TEXT = '#f5f4f2'
+export const TEXT_MUTED = 'rgba(245,244,242,0.55)'
+export const TEXT_FAINT = 'rgba(245,244,242,0.40)'
+export const BORDER = 'rgba(255,255,255,0.10)'
