@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { LuWifiOff } from 'react-icons/lu'
@@ -6,11 +6,17 @@ import { Link } from 'react-router-dom'
 import { practicesApi } from '../../api/practices'
 import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
 import { PracticeCard } from './PracticeCard'
-import { ChartsPage } from '../charts/ChartsPage'
+import { Spinner } from '../../components/ui/Spinner'
 import { WeekCalendar, getWeekDays } from './WeekCalendar'
 import { ErrorBanner } from '../../components/ui/ErrorBanner'
 import useNetworkStatus from '../../hooks/useNetworkStatus'
 import type { PracticeDataType } from '../../types/api'
+
+// Charts pull in recharts (~116 KB gzip). Lazy-load them so the practices
+// column paints without waiting on that chunk.
+const ChartsPage = lazy(() =>
+  import('../charts/ChartsPage').then((m) => ({ default: m.ChartsPage })),
+)
 
 function toDateStr(d: Date) {
   return d.toISOString().split('T')[0]
@@ -163,9 +169,12 @@ export function DashboardPanel() {
         </div>
       </div>
 
-      {/* Charts (2/3) — desktop only; top-aligned with the practices column */}
+      {/* Charts (2/3) — desktop only; top-aligned with the practices column.
+          Lazy so recharts stays off the initial home critical path. */}
       <div className="hidden lg:block lg:col-span-2">
-        <ChartsPage embedded />
+        <Suspense fallback={<Spinner />}>
+          <ChartsPage embedded />
+        </Suspense>
       </div>
     </div>
   )
