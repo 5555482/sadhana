@@ -1,7 +1,7 @@
 export function AuthBackground() {
   return (
-    <div className="fixed inset-0 -z-10" style={{ background: '#f4f5f7' }}>
-      {/* The Krishna painting as a soft, light-washed backdrop. */}
+    <div className="fixed inset-0 -z-10" style={{ background: '#1a1f27' }}>
+      {/* The Krishna painting, full-bleed. */}
       <div
         className="absolute inset-0"
         style={{
@@ -11,14 +11,13 @@ export function AuthBackground() {
           backgroundPosition: 'center',
         }}
       />
-      {/* Light cream scrim — kept subtle (~28%) so the painting stays clearly visible. */}
-      <div className="absolute inset-0" style={{ background: 'rgba(244,245,247,0.28)' }} />
-      {/* Fade to the base colour toward the bottom, where content sits. */}
+      {/* Dark filter (static-site style: darker top/bottom, lighter middle) —
+          moody, but the painting still reads clearly. Tune these alphas to taste. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(244,245,247,0) 0%, rgba(244,245,247,0.12) 50%, rgba(244,245,247,0.60) 84%, #f4f5f7 100%)',
+            'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.55) 100%)',
         }}
       />
     </div>

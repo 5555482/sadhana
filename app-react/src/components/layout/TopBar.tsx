@@ -32,7 +32,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
       {({ isActive }) => (
         <span
           style={{
-            color: isActive ? '#1f2937' : 'rgba(31,41,55,0.62)',
+            color: isActive ? '#ffffff' : 'rgba(255,255,255,0.72)',
             fontWeight: isActive ? 600 : 500,
           }}
         >
@@ -51,9 +51,9 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
     <header
       className={`fixed top-0 left-0 right-0 h-14 items-center px-4 z-40 gap-3 ${showBack || showClose ? 'flex' : 'hidden sm:flex'}`}
       style={{
-        // Transparent over the backdrop (Giga-style) — a faint top scrim keeps
-        // the nav/logo legible over the photo.
-        background: 'linear-gradient(180deg, rgba(244,245,247,0.88) 0%, rgba(244,245,247,0) 100%)',
+        // Transparent over the dark backdrop — a faint dark top scrim keeps
+        // the nav/logo legible over the painting.
+        background: 'linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0) 100%)',
       }}
     >
       {showClose ? (
@@ -66,7 +66,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         </button>
       ) : (
         <Link to="/" className="flex items-center no-underline">
-          <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0)' }} alt="Sadhana" />
+          <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0) invert(1)' }} alt="Sadhana" />
         </Link>
       )}
 
