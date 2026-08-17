@@ -5,7 +5,6 @@ import { FaChevronLeft } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
 import { HomeHeaderActions } from './HomeHeaderActions'
-import { ACCENT } from '../../theme/tokens'
 import { useUiStore } from '../../store/uiStore'
 
 interface TopBarProps {
@@ -21,35 +20,24 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
   const { t } = useTranslation()
   const openSettings = useUiStore((s) => s.openSettings)
 
-  const renderNavItem = ({ to, navKey, icon: Icon, exact }: (typeof navItems)[number]) => (
+  const renderNavItem = ({ to, navKey, exact }: (typeof navItems)[number]) => (
     <NavLink
       key={to}
       to={to}
       end={exact}
       onClick={navKey === 'settings' ? (e) => { e.preventDefault(); openSettings() } : undefined}
       aria-label={t(`nav.${navKey}`)}
-      className={`flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-lg transition-colors text-sm font-medium ${navKey === 'charts' ? 'lg:hidden' : ''}`}
+      className={`h-9 inline-flex items-center px-3 rounded-full text-sm font-medium transition-colors ${navKey === 'charts' ? 'lg:hidden' : ''}`}
     >
       {({ isActive }) => (
-        <>
-          {/* Below sm: icon only */}
-          <Icon
-            className="w-4 h-4 sm:hidden transition-colors"
-            style={{ color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)' }}
-          />
-          {/* sm and above: text label */}
-          <span
-            className="hidden sm:inline transition-colors"
-            style={{ color: isActive ? '#ffffff' : 'rgba(255,255,255,0.75)', fontWeight: isActive ? 600 : 500 }}
-          >
-            {t(`nav.${navKey}`)}
-          </span>
-          {/* Active dot */}
-          <span
-            className="w-1 h-1 rounded-full transition-all"
-            style={{ background: isActive ? ACCENT : 'transparent' }}
-          />
-        </>
+        <span
+          style={{
+            color: isActive ? '#1f2937' : 'rgba(31,41,55,0.62)',
+            fontWeight: isActive ? 600 : 500,
+          }}
+        >
+          {t(`nav.${navKey}`)}
+        </span>
       )}
     </NavLink>
   )
@@ -65,7 +53,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
       style={{
         // Transparent over the backdrop (Giga-style) — a faint top scrim keeps
         // the nav/logo legible over the photo.
-        background: 'linear-gradient(180deg, rgba(30,43,69,0.55) 0%, rgba(30,43,69,0) 100%)',
+        background: 'linear-gradient(180deg, rgba(244,245,247,0.88) 0%, rgba(244,245,247,0) 100%)',
       }}
     >
       {showClose ? (
@@ -78,7 +66,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         </button>
       ) : (
         <Link to="/" className="flex items-center no-underline">
-          <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0) invert(1)' }} alt="Sadhana" />
+          <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0)' }} alt="Sadhana" />
         </Link>
       )}
 
