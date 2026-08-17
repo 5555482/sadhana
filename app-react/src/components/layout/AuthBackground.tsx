@@ -1,14 +1,14 @@
 export function AuthBackground() {
   return (
     <div className="fixed inset-0 -z-10" style={{ background: '#1a1f27' }}>
-      {/* The Krishna painting, full-bleed. */}
+      {/* Backdrop photo (bg1 — zen stones), full-bleed cover. */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage: "url('/bg.webp')",
-          backgroundSize: 'contain',
+          backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center top',
+          backgroundPosition: 'center',
         }}
       />
       {/* Dark filter (static-site style: darker top/bottom, lighter middle) —
