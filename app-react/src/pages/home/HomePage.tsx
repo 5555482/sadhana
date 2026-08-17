@@ -1,6 +1,12 @@
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DashboardPanel } from './DashboardPanel'
-import { YatrasPage } from '../yatras/YatrasPage'
+import { DeferUntilVisible } from '../../components/util/DeferUntilVisible'
+import { Spinner } from '../../components/ui/Spinner'
+
+const YatrasPage = lazy(() =>
+  import('../yatras/YatrasPage').then((m) => ({ default: m.YatrasPage })),
+)
 
 function toDateStr(d: Date) {
   return d.toISOString().split('T')[0]
@@ -50,7 +56,11 @@ export function HomePage() {
         id="home-yatras"
         className="px-4 pb-14 pt-8 lg:pt-12 lg:px-6 max-w-lg lg:max-w-[1400px] mx-auto w-full"
       >
-        <YatrasPage embedded />
+        <DeferUntilVisible>
+          <Suspense fallback={<Spinner />}>
+            <YatrasPage embedded />
+          </Suspense>
+        </DeferUntilVisible>
       </section>
     </>
   )
