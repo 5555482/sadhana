@@ -68,7 +68,7 @@ export function HeaderMenu({ label, items }: { label: string; items: HeaderMenuI
               top: pos.top,
               left: pos.left,
               zIndex: 100,
-              background: 'rgba(20,28,45,0.72)',
+              background: 'rgba(18,24,36,0.92)',
               border: '1px solid rgba(255,255,255,0.14)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
