@@ -9,11 +9,17 @@ function wrap(ui: React.ReactElement) {
 }
 
 describe('HomeHeaderActions', () => {
-  it('renders Practices and Yatras triggers but not Reports', () => {
+  it('renders Practices, Yatras and Charts triggers', () => {
     wrap(<HomeHeaderActions />)
     expect(screen.getByRole('button', { name: /Practices/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Yatras/ })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /Reports/ })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Charts/ })).toBeInTheDocument()
+  })
+
+  it('Charts menu: Add new report links to /charts/new', () => {
+    wrap(<HomeHeaderActions />)
+    fireEvent.click(screen.getByRole('button', { name: /Charts/ }))
+    expect(screen.getByRole('menuitem', { name: 'Add new report' })).toHaveAttribute('href', '/charts/new')
   })
 
   it('Practices menu links to add/edit', () => {
