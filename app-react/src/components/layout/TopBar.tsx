@@ -6,6 +6,7 @@ import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
 import { HomeHeaderActions } from './HomeHeaderActions'
 import { useUiStore } from '../../store/uiStore'
+import { ACCENT_LIGHT, ACCENT_RING, TEXT, BORDER } from '../../theme/tokens'
 
 interface TopBarProps {
   title?: string
@@ -30,9 +31,12 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
     >
       {({ isActive }) => (
         <span
+          className="inline-flex items-center h-9 px-3 rounded-full transition-colors"
           style={{
             color: isActive ? '#ffffff' : 'rgba(255,255,255,0.72)',
             fontWeight: isActive ? 400 : 300,
+            border: isActive ? `1px solid ${ACCENT_RING}` : '1px solid transparent',
+            background: isActive ? 'rgba(94,234,212,0.08)' : 'transparent',
           }}
         >
           {t(`nav.${navKey}`)}
@@ -50,11 +54,10 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
     <header
       className={`fixed top-0 left-0 right-0 h-14 items-center px-4 z-40 gap-3 ${showBack || showClose ? 'flex' : 'hidden sm:flex'}`}
       style={{
-        // Frosted bar so content scrolling underneath stays clean and the
-        // nav/logo remain legible over the backdrop.
-        background: 'linear-gradient(180deg, rgba(12,16,24,0.62) 0%, rgba(12,16,24,0.18) 100%)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        background: 'linear-gradient(180deg, rgba(9,13,18,0.78) 0%, rgba(9,13,18,0.32) 100%)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: `1px solid ${BORDER}`,
       }}
     >
       {showClose ? (
@@ -69,8 +72,8 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         <Link to="/" className="flex items-center gap-2 no-underline">
           <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0) invert(1)' }} alt="Sadhana" />
           <span className="flex items-baseline gap-1 whitespace-nowrap font-serif leading-none">
-            <span className="text-xl font-medium tracking-wide" style={{ color: '#f2f4f6' }}>Sadhana</span>
-            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: '#3aa6a0' }}>Pro</span>
+            <span className="text-xl font-medium tracking-wide" style={{ color: TEXT }}>Sadhana</span>
+            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: ACCENT_LIGHT }}>Pro</span>
           </span>
         </Link>
       )}
