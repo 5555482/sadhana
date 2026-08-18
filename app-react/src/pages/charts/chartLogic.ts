@@ -151,3 +151,38 @@ export function formatMinutesAsHHMM(min: number): string {
   const m = norm % 60
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
+
+export type ChartUnit = 'duration' | 'count' | 'time' | 'bool'
+
+/** The single-unit chart bucket a data type belongs to; null = not chartable (Text). */
+export function chartUnitFor(dt: PracticeDataType): ChartUnit | null {
+  switch (dt) {
+    case 'Duration': return 'duration'
+    case 'Int':      return 'count'
+    case 'Time':     return 'time'
+    case 'Bool':     return 'bool'
+    case 'Text':     return null
+  }
+}
+
+export interface UnitGroup<T extends { dataType: PracticeDataType }> {
+  unit: ChartUnit
+  traces: T[]
+}
+
+const UNIT_ORDER: ChartUnit[] = ['duration', 'count', 'time', 'bool']
+
+/** Split traces into per-unit groups (stable within a group), excluding Text,
+ *  ordered duration→count→time→bool. Empty groups are omitted. */
+export function groupTracesByUnit<T extends { dataType: PracticeDataType }>(
+  traces: T[],
+): UnitGroup<T>[] {
+  const map = new Map<ChartUnit, T[]>()
+  for (const tr of traces) {
+    const u = chartUnitFor(tr.dataType)
+    if (u === null) continue
+    if (!map.has(u)) map.set(u, [])
+    map.get(u)!.push(tr)
+  }
+  return UNIT_ORDER.filter((u) => map.has(u)).map((u) => ({ unit: u, traces: map.get(u)! }))
+}

@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import {
   axisKindFor, valueToNumber, computeTimeOverflow,
   buildChartData, averageForType, formatMinutesAsHHMM,
+  chartUnitFor, groupTracesByUnit,
 } from './chartLogic'
 
 describe('axisKindFor', () => {
@@ -112,5 +113,34 @@ describe('formatMinutesAsHHMM', () => {
   it('formats minutes, wrapping past a day', () => {
     expect(formatMinutesAsHHMM(390)).toBe('06:30')
     expect(formatMinutesAsHHMM(1470)).toBe('00:30')
+  })
+})
+
+describe('chartUnitFor', () => {
+  it('maps each data type to its charting unit', () => {
+    expect(chartUnitFor('Duration')).toBe('duration')
+    expect(chartUnitFor('Int')).toBe('count')
+    expect(chartUnitFor('Time')).toBe('time')
+    expect(chartUnitFor('Bool')).toBe('bool')
+  })
+  it('excludes Text (not chartable)', () => {
+    expect(chartUnitFor('Text')).toBeNull()
+  })
+})
+
+describe('groupTracesByUnit', () => {
+  it('groups traces by unit, drops Text, and orders duration→count→time→bool', () => {
+    const traces = [
+      { name: 'Water', dataType: 'Int' as const },
+      { name: 'Journal', dataType: 'Text' as const },
+      { name: 'Wake', dataType: 'Time' as const },
+      { name: 'Reading', dataType: 'Duration' as const },
+      { name: 'Cold shower', dataType: 'Bool' as const },
+      { name: 'Dishes', dataType: 'Duration' as const },
+    ]
+    const groups = groupTracesByUnit(traces)
+    expect(groups.map((g) => g.unit)).toEqual(['duration', 'count', 'time', 'bool'])
+    expect(groups[0].traces.map((t) => t.name)).toEqual(['Reading', 'Dishes'])
+    expect(groups.some((g) => g.traces.some((t) => t.name === 'Journal'))).toBe(false)
   })
 })
