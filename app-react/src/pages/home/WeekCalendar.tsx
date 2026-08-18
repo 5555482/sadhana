@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MonthCalendar } from './MonthCalendar'
-import { ACCENT, ACCENT_GRADIENT, BORDER } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, ACCENT_SHADOW, BORDER, SURFACE_PANEL } from '../../theme/tokens'
 
 interface WeekCalendarProps {
   date: Date
@@ -100,7 +100,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
               ? {
                   background: ACCENT_GRADIENT,
                   color: '#fff',
-                  boxShadow: '0 2px 8px rgba(58,166,160,0.35)',
+                  boxShadow: `0 2px 8px ${ACCENT_SHADOW}`,
                 }
               : isToday
               ? { color: ACCENT, fontWeight: 600 }
@@ -120,11 +120,11 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
     <div
       className="rounded-2xl select-none overflow-hidden"
       style={{
-        background: 'rgba(255,255,255,0.06)',
+        background: SURFACE_PANEL,
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: `1px solid ${BORDER}`,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.35)',
       }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}

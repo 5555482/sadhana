@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { practicesApi } from '../../api/practices'
-import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, ACCENT_SHADOW, BORDER, SURFACE_PANEL } from '../../theme/tokens'
 
 interface MonthCalendarProps {
   selectedDate: Date
@@ -33,10 +33,10 @@ function monthStartOffset(monthStart: Date): number {
 }
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.06)',
+  background: SURFACE_PANEL,
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255,255,255,0.10)',
+  border: `1px solid ${BORDER}`,
   boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
 }
 
@@ -158,7 +158,7 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
                   className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all"
                   style={
                     sel
-                      ? { background: ACCENT_GRADIENT, color: '#fff', boxShadow: '0 2px 8px rgba(58,166,160,0.35)', border: 'none' }
+                      ? { background: ACCENT_GRADIENT, color: '#fff', boxShadow: `0 2px 8px ${ACCENT_SHADOW}`, border: 'none' }
                       : tod
                       ? { color: ACCENT, fontWeight: 700, background: 'transparent', border: 'none' }
                       : { color: '#f2f4f6', background: 'transparent', border: 'none' }
@@ -172,7 +172,7 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
         </div>
 
         {/* Footer */}
-        <div className="mt-3 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="mt-3 pt-2" style={{ borderTop: `1px solid ${BORDER}` }}>
           <button
             type="button"
             onClick={selectToday}

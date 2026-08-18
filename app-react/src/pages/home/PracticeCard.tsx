@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useToast } from '../../hooks/useToast'
 import { practicesApi } from '../../api/practices'
 import type { UserPractice, PracticeValue, DiaryEntry } from '../../types/api'
-import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_ELEVATED, ACCENT_LIGHT, ACCENT_RING, BORDER } from '../../theme/tokens'
 
 interface PracticeCardProps {
   practice: UserPractice
@@ -46,8 +46,8 @@ const field: React.CSSProperties = {
 }
 
 function fieldFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-  e.target.style.borderColor = 'rgba(58,166,160,0.55)'
-  e.target.style.background = 'rgba(58,166,160,0.06)'
+  e.target.style.borderColor = 'rgba(45,212,191,0.55)'
+  e.target.style.background = 'rgba(45,212,191,0.08)'
 }
 function fieldBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
   e.target.style.borderColor = 'rgba(255,255,255,0.10)'
@@ -192,21 +192,21 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
     <div
       className={`rounded-2xl px-4 py-3.5 gap-3 min-h-[60px] transition-all duration-300 ${isFreeText ? 'flex flex-col items-stretch' : 'flex items-center'}`}
       style={{
-        background: 'rgba(255,255,255,0.05)',
+        background: SURFACE_ELEVATED,
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         border: errorFlash
           ? '1px solid rgba(225,29,72,0.55)'
           : flash
-          ? '1px solid rgba(58,166,160,0.50)'
+          ? `1px solid ${ACCENT_LIGHT}`
           : hasValue
-          ? '1px solid rgba(58,166,160,0.20)'
-          : '1px solid rgba(255,255,255,0.08)',
+          ? `1px solid ${ACCENT_RING}`
+          : `1px solid ${BORDER}`,
         boxShadow: errorFlash
           ? '0 2px 12px rgba(225,29,72,0.10)'
           : flash
-          ? '0 2px 12px rgba(58,166,160,0.14)'
-          : '0 2px 12px rgba(0,0,0,0.07)',
+          ? '0 2px 12px rgba(45,212,191,0.16)'
+          : '0 2px 12px rgba(0,0,0,0.20)',
       }}
     >
       {isFreeText ? (
@@ -261,7 +261,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           aria-checked={localBool}
           onClick={() => { const n = !localBool; setLocalBool(n); save({ Bool: n }) }}
           className="relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none"
-          style={{ backgroundColor: localBool ? '#3aa6a0' : 'rgba(255,255,255,0.15)' }}
+          style={{ backgroundColor: localBool ? ACCENT : 'rgba(255,255,255,0.15)' }}
         >
           <span
             className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200"
