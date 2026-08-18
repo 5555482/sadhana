@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, useLocation, NavLink, Link } from 'react-router-dom'
+import { useNavigate, NavLink, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaChevronLeft } from 'react-icons/fa'
 import { LuX } from 'react-icons/lu'
@@ -16,7 +16,6 @@ interface TopBarProps {
 
 export const TopBar = React.memo(function TopBar({ title, showBack, showClose, right }: TopBarProps) {
   const navigate = useNavigate()
-  const location = useLocation()
   const { t } = useTranslation()
   const openSettings = useUiStore((s) => s.openSettings)
 
@@ -67,8 +66,9 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
           <FaChevronLeft className="w-4 h-4" />
         </button>
       ) : (
-        <Link to="/" className="flex items-center no-underline">
+        <Link to="/" className="flex items-center gap-2 no-underline">
           <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0) invert(1)' }} alt="Sadhana" />
+          <span className="font-serif text-lg font-semibold whitespace-nowrap" style={{ color: '#ffffff' }}>Sadhana Pro</span>
         </Link>
       )}
 
@@ -79,7 +79,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
       {!showBack && !showClose && (
         <nav className="ml-auto hidden sm:flex items-center gap-2" aria-label="Main navigation">
           {homeItem && renderNavItem(homeItem)}
-          {location.pathname === '/' && <HomeHeaderActions />}
+          <HomeHeaderActions />
           {restItems.map(renderNavItem)}
         </nav>
       )}

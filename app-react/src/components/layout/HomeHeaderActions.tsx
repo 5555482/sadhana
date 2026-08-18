@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useUiStore } from '../../store/uiStore'
 import { useAuthStore } from '../../store/authStore'
@@ -9,6 +10,7 @@ import { HeaderMenu, type HeaderMenuItem } from './HeaderMenu'
 
 export function HomeHeaderActions() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const requestYatraCreate = useUiStore((s) => s.requestYatraCreate)
 
   async function downloadCsv() {
@@ -36,8 +38,11 @@ export function HomeHeaderActions() {
     { label: t('yatras.createNewYatra'), onClick: requestYatraCreate },
     {
       label: t('home.viewYatras'),
-      onClick: () =>
-        document.getElementById('home-yatras')?.scrollIntoView({ behavior: 'smooth' }),
+      onClick: () => {
+        const el = document.getElementById('home-yatras')
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+        else navigate('/')
+      },
     },
   ]
   const charts: HeaderMenuItem[] = [

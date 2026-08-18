@@ -20,8 +20,9 @@ describe('TopBar', () => {
     expect(screen.queryByRole('link', { name: 'Yatras' })).not.toBeInTheDocument()
   })
 
-  it('hides the home actions on other routes', () => {
-    wrapAt('/yatras')
-    expect(screen.queryByRole('button', { name: /Practices/ })).not.toBeInTheDocument()
+  it('shows the same header actions on other routes too', () => {
+    wrapAt('/charts/new')
+    expect(screen.getByRole('button', { name: /Practices/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Charts/ })).toBeInTheDocument()
   })
 })
