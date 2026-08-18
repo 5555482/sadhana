@@ -154,7 +154,7 @@ export function DashboardPanel() {
                   background: ACCENT_GRADIENT,
                   color: 'white',
                   border: 'none',
-                  boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+                  boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
                 }}
               >
                 {seedMutation.isPending && <span className="loading loading-spinner loading-xs" />}

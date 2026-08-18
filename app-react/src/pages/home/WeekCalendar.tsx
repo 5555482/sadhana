@@ -88,7 +88,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
           className="text-xs leading-none"
           style={{
             fontWeight: selected ? 700 : 400,
-            color: selected ? ACCENT : 'rgba(245,244,242,0.7)',
+            color: selected ? ACCENT : 'rgba(242,244,246,0.7)',
           }}
         >
           {narrowDay}
@@ -100,11 +100,11 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
               ? {
                   background: ACCENT_GRADIENT,
                   color: '#fff',
-                  boxShadow: '0 2px 8px rgba(200,114,74,0.35)',
+                  boxShadow: '0 2px 8px rgba(58,166,160,0.35)',
                 }
               : isToday
               ? { color: ACCENT, fontWeight: 600 }
-              : { color: '#f5f4f2' }
+              : { color: '#f2f4f6' }
           }
         >
           {d.getDate()}
@@ -136,7 +136,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
           type="button"
           onClick={() => setCalendarOpen(true)}
           className="text-xs font-semibold tracking-wide uppercase focus:outline-none"
-          style={{ color: 'rgba(245,244,242,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+          style={{ color: 'rgba(242,244,246,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
           {monthYear}
         </button>
@@ -147,12 +147,12 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
               onClick={() => onDateChange(new Date())}
               aria-label="Go to today"
               className="text-xs font-semibold px-2 py-0.5 rounded-full focus:outline-none"
-              style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)', border: 'none', cursor: 'pointer' }}
+              style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)', border: 'none', cursor: 'pointer' }}
             >
               {t('home.today')}
             </button>
           )}
-          <span className="text-xs font-semibold" style={{ color: '#f5f4f2' }}>
+          <span className="text-xs font-semibold" style={{ color: '#f2f4f6' }}>
             {shortDate}
           </span>
         </div>

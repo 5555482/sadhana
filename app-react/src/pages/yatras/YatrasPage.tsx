@@ -118,7 +118,7 @@ function trendSymbol(arrow: UserYatraDataRow['trend_arrow']): string {
 function trendColor(arrow: UserYatraDataRow['trend_arrow']): string {
   if (arrow === 'Up')   return '#16a34a'
   if (arrow === 'Down') return '#dc2626'
-  return 'rgba(245,244,242,0.7)'
+  return 'rgba(242,244,246,0.7)'
 }
 
 // ── Component ─────────────────────────────────────────────────────────────
@@ -231,7 +231,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
               background: ACCENT_GRADIENT,
-              boxShadow: '0 4px 12px rgba(200,114,74,0.28)',
+              boxShadow: '0 4px 12px rgba(58,166,160,0.28)',
             }}
           >
             <FaUsers className="w-4 h-4 text-white" />
@@ -256,7 +256,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               to={`/yatra/${selectedYatra.id}/settings`}
               aria-label="Yatra settings"
               className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-              style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)' }}
+              style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)' }}
             >
               <FaCog className="w-3.5 h-3.5" />
             </Link>
@@ -267,7 +267,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             onClick={() => qc.invalidateQueries({ queryKey: ['yatra-data', selectedYatra?.id, dateStr] })}
             aria-label={t('yatras.refresh')}
             className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-            style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)', border: 'none', cursor: 'pointer' }}
+            style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)', border: 'none', cursor: 'pointer' }}
           >
             <LuRefreshCw className={`w-3.5 h-3.5 ${dataQuery.isFetching ? 'animate-spin' : ''}`} />
           </button>
@@ -277,7 +277,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             onClick={handleCreate}
             aria-label="Create yatra"
             className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-            style={{ color: ACCENT, background: 'rgba(200,114,74,0.08)', border: 'none' }}
+            style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)', border: 'none' }}
           >
             <FaPlus className="w-3.5 h-3.5" />
           </button>
@@ -293,7 +293,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
           <div className="flex flex-col items-center py-16 gap-4">
             <div
               className="w-16 h-16 rounded-3xl flex items-center justify-center"
-              style={{ background: 'rgba(200,114,74,0.08)' }}
+              style={{ background: 'rgba(58,166,160,0.08)' }}
             >
               <FaUsers className="w-7 h-7" style={{ color: ACCENT }} />
             </div>
@@ -307,7 +307,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               style={{
                 background: ACCENT_GRADIENT,
                 color: 'white',
-                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+                boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
               }}
             >
               {t('yatras.createButton')}
@@ -356,11 +356,11 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
                 </colgroup>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)' }}>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(242,244,246,0.7)' }}>
                       Sadhaka
                     </th>
                     {showStability && (
-                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)' }}>
+                      <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(242,244,246,0.7)' }}>
                         7d
                       </th>
                     )}
@@ -368,7 +368,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
                       <th
                         key={p.id}
                         className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide"
-                        style={{ color: 'rgba(245,244,242,0.7)' }}
+                        style={{ color: 'rgba(242,244,246,0.7)' }}
                       >
                         <span className="block max-w-[80px] mx-auto truncate" title={p.practice}>
                           {p.practice}
@@ -409,7 +409,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
                           key={j}
                           className="px-3 py-3 text-center"
                           style={{
-                            color: '#f5f4f2',
+                            color: '#f2f4f6',
                             background: cellBackground(val, data.practices[j]?.colour_zones),
                           }}
                         >
@@ -433,7 +433,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               className="px-4 py-3"
               style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}
             >
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)' }}>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(242,244,246,0.7)' }}>
                 {t('yatras.stability')}
               </span>
             </div>
@@ -441,14 +441,14 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               <table className="text-xs" style={{ minWidth: 'max-content', width: '100%' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                    <th className="px-4 py-1.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(245,244,242,0.7)', width: '35%' }}>
+                    <th className="px-4 py-1.5 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'rgba(242,244,246,0.7)', width: '35%' }}>
                       {t('yatras.stability')}
                     </th>
                     {heatmapDays.map((day, i) => (
                       <th
                         key={i}
                         className="py-1.5 text-center text-[10px] font-medium"
-                        style={{ color: 'rgba(245,244,242,0.7)' }}
+                        style={{ color: 'rgba(242,244,246,0.7)' }}
                       >
                         {day}
                       </th>
@@ -470,7 +470,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
                           className="px-2 py-2 text-center w-8"
                           style={{
                             background: heatmapBackground(score),
-                            color: score > 0 ? '#f5f4f2' : '#d1d5db',
+                            color: score > 0 ? '#f2f4f6' : '#d1d5db',
                             fontWeight: score > 0 ? 600 : 400,
                           }}
                         >
@@ -488,7 +488,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
         {/* Statistics */}
         {data && data.statistics.length > 0 && (
           <div className="rounded-2xl px-4 py-4 flex flex-col gap-1" style={glass}>
-            <span className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(245,244,242,0.7)' }}>
+            <span className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(242,244,246,0.7)' }}>
               {t('yatras.statistics')}
             </span>
             {data.statistics.map((stat, i) => (
@@ -516,7 +516,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
           className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center border-none cursor-pointer"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 24px rgba(200,114,74,0.45)',
+            boxShadow: '0 4px 24px rgba(58,166,160,0.45)',
           }}
         >
           <FaPlus className="w-5 h-5 text-white" />
@@ -550,7 +550,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(200,114,74,0.30)' }}
+                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(58,166,160,0.30)' }}
               >
                 <FaUsers className="w-4 h-4 text-white" />
               </div>
@@ -581,8 +581,8 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               className="w-full rounded-2xl px-4 h-12 text-sm font-semibold text-base-content outline-none"
               style={{
                 background: 'rgba(255,255,255,0.06)',
-                border: '1.5px solid rgba(200,114,74,0.30)',
-                color: '#f5f4f2',
+                border: '1.5px solid rgba(58,166,160,0.30)',
+                color: '#f2f4f6',
               }}
             />
 

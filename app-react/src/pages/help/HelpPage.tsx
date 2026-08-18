@@ -26,13 +26,13 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         <span className="flex-1 text-sm font-semibold text-base-content">{q}</span>
         {open
           ? <LuChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />
-          : <LuChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: 'rgba(245,244,242,0.7)' }} />
+          : <LuChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: 'rgba(242,244,246,0.7)' }} />
         }
       </button>
       {open && (
         <div
           className="px-4 pb-4 text-sm leading-relaxed"
-          style={{ color: 'rgba(245,244,242,0.60)', borderTop: `1px solid ${BORDER}` }}
+          style={{ color: 'rgba(242,244,246,0.60)', borderTop: `1px solid ${BORDER}` }}
         >
           <p className="pt-3">{a}</p>
         </div>
@@ -57,7 +57,7 @@ export function HelpPage() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
           }}
         >
           <LuCircleHelp className="w-5 h-5 text-white" />
@@ -86,9 +86,9 @@ export function HelpPage() {
       >
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(200,114,74,0.10)' }}
+          style={{ background: 'rgba(58,166,160,0.10)' }}
         >
-          <LuMessageSquare className="w-4 h-4" style={{ color: '#c8724a' }} />
+          <LuMessageSquare className="w-4 h-4" style={{ color: '#3aa6a0' }} />
         </div>
         <span className="flex-1 text-sm font-semibold text-base-content">{t('help.contactSupport')}</span>
       </Link>

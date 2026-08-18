@@ -53,7 +53,7 @@ export function SettingsModal() {
           onClick={close}
           aria-label="Close"
           className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(255,255,255,0.08)', color: '#f5f4f2', border: 'none', cursor: 'pointer' }}
+          style={{ background: 'rgba(255,255,255,0.08)', color: '#f2f4f6', border: 'none', cursor: 'pointer' }}
         >
           <LuX className="w-5 h-5" />
         </button>

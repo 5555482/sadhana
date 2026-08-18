@@ -46,8 +46,8 @@ const field: React.CSSProperties = {
 }
 
 function fieldFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-  e.target.style.borderColor = 'rgba(200,114,74,0.55)'
-  e.target.style.background = 'rgba(200,114,74,0.06)'
+  e.target.style.borderColor = 'rgba(58,166,160,0.55)'
+  e.target.style.background = 'rgba(58,166,160,0.06)'
 }
 function fieldBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
   e.target.style.borderColor = 'rgba(255,255,255,0.10)'
@@ -74,7 +74,7 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
       <form
         onSubmit={handleSubmit}
         className="relative rounded-2xl p-5 w-72 flex flex-col gap-4"
-        style={{ background: '#273656', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.10)' }}
+        style={{ background: '#26313d', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.10)' }}
       >
         <h3 className="text-sm font-semibold text-base-content">{t('home.addMinutes')}</h3>
         <div className="flex flex-col gap-1">
@@ -92,7 +92,7 @@ export function DurationQuickAddModal({ onAdd, onClose, isPending }: { onAdd: (m
             style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.10)' }}
           />
           {focused && (
-            <p className="text-[10px] text-center" style={{ color: 'rgba(245,244,242,0.7)' }}>
+            <p className="text-[10px] text-center" style={{ color: 'rgba(242,244,246,0.7)' }}>
               {t('home.durationHint')}
             </p>
           )}
@@ -198,14 +198,14 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
         border: errorFlash
           ? '1px solid rgba(225,29,72,0.55)'
           : flash
-          ? '1px solid rgba(200,114,74,0.50)'
+          ? '1px solid rgba(58,166,160,0.50)'
           : hasValue
-          ? '1px solid rgba(200,114,74,0.20)'
+          ? '1px solid rgba(58,166,160,0.20)'
           : '1px solid rgba(255,255,255,0.08)',
         boxShadow: errorFlash
           ? '0 2px 12px rgba(225,29,72,0.10)'
           : flash
-          ? '0 2px 12px rgba(200,114,74,0.14)'
+          ? '0 2px 12px rgba(58,166,160,0.14)'
           : '0 2px 12px rgba(0,0,0,0.07)',
       }}
     >
@@ -236,7 +236,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
               className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
               style={{
                 background: localBool && practice.data_type === 'Bool'
-                  ? 'rgba(200,114,74,0.18)' : meta.bg,
+                  ? 'rgba(58,166,160,0.18)' : meta.bg,
               }}
             >
               <TypeIcon className="w-4 h-4" style={{ color: meta.color }} />
@@ -261,7 +261,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           aria-checked={localBool}
           onClick={() => { const n = !localBool; setLocalBool(n); save({ Bool: n }) }}
           className="relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none"
-          style={{ backgroundColor: localBool ? '#c8724a' : 'rgba(255,255,255,0.15)' }}
+          style={{ backgroundColor: localBool ? '#3aa6a0' : 'rgba(255,255,255,0.15)' }}
         >
           <span
             className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200"
@@ -279,14 +279,14 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           aria-label={`${practice.practice} duration`}
           placeholder="—"
           className="focus:outline-none text-sm flex-shrink-0"
-          style={{ ...field, width: '5.5rem', height: '2.25rem', color: durVal > 0 ? ACCENT : 'rgba(245,244,242,0.7)' }}
+          style={{ ...field, width: '5.5rem', height: '2.25rem', color: durVal > 0 ? ACCENT : 'rgba(242,244,246,0.7)' }}
           onFocus={(e) => { fieldFocus(e); e.target.value = durRef.current > 0 ? String(durRef.current) : ''; setTimeout(() => e.target.select(), 0) }}
           onBlur={(e) => {
             fieldBlur(e)
             const v = parseInt(e.target.value, 10)
             durRef.current = isNaN(v) || v < 0 ? 0 : v
             e.target.value = fmtDur(durRef.current)
-            e.target.style.color = durRef.current > 0 ? ACCENT : 'rgba(245,244,242,0.7)'
+            e.target.style.color = durRef.current > 0 ? ACCENT : 'rgba(242,244,246,0.7)'
             save({ Duration: durRef.current })
           }}
           onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
@@ -300,7 +300,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
             defaultValue={intVal ? String(intVal) : ''}
             aria-label={practice.practice}
             className="focus:outline-none text-sm cursor-pointer"
-            style={{ ...field, width: '5rem', height: '2.25rem', padding: '0 0.5rem', textAlign: 'left', fontWeight: 500, color: intVal > 0 ? ACCENT : 'rgba(245,244,242,0.7)' }}
+            style={{ ...field, width: '5rem', height: '2.25rem', padding: '0 0.5rem', textAlign: 'left', fontWeight: 500, color: intVal > 0 ? ACCENT : 'rgba(242,244,246,0.7)' }}
             onChange={(e) => { const n = parseInt(e.target.value, 10); if (!isNaN(n)) save({ Int: n }) }}
           >
             <option value="">—</option>
@@ -315,7 +315,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
             aria-label={practice.practice}
             placeholder="—"
             className="focus:outline-none text-sm flex-shrink-0"
-            style={{ ...field, width: '4rem', height: '2.25rem', color: intVal > 0 ? ACCENT : 'rgba(245,244,242,0.7)' }}
+            style={{ ...field, width: '4rem', height: '2.25rem', color: intVal > 0 ? ACCENT : 'rgba(242,244,246,0.7)' }}
             onFocus={fieldFocus}
             onBlur={(e) => {
               fieldBlur(e)
@@ -335,7 +335,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           aria-label={practice.practice}
           placeholder="HH:MM"
           className="focus:outline-none text-sm"
-          style={{ ...field, width: '5rem', height: '2.25rem', color: timeStr ? ACCENT : 'rgba(245,244,242,0.7)' }}
+          style={{ ...field, width: '5rem', height: '2.25rem', color: timeStr ? ACCENT : 'rgba(242,244,246,0.7)' }}
           onFocus={fieldFocus}
           onChange={(e) => setTimeStr(formatTimeInput(e.target.value))}
           onBlur={(e) => {
@@ -356,7 +356,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
           rows={3}
           maxLength={1024}
           className="focus:outline-none text-sm w-full resize-none"
-          style={{ ...field, textAlign: 'left', fontWeight: 500, padding: '0.5rem 0.625rem', color: textVal ? ACCENT : 'rgba(245,244,242,0.7)' }}
+          style={{ ...field, textAlign: 'left', fontWeight: 500, padding: '0.5rem 0.625rem', color: textVal ? ACCENT : 'rgba(242,244,246,0.7)' }}
           onFocus={fieldFocus}
           onBlur={(e) => { fieldBlur(e); save({ Text: e.target.value }) }}
         />

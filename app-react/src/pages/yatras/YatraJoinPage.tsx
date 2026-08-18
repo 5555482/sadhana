@@ -63,7 +63,7 @@ export function YatraJoinPage() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(200,114,74,0.28)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.28)',
           }}
         >
           <FaUsers className="w-5 h-5 text-white" />
@@ -88,7 +88,7 @@ export function YatraJoinPage() {
           className="w-20 h-20 rounded-3xl flex items-center justify-center text-white text-3xl font-bold"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 8px 32px rgba(200,114,74,0.30)',
+            boxShadow: '0 8px 32px rgba(58,166,160,0.30)',
           }}
         >
           {initial}
@@ -115,7 +115,7 @@ export function YatraJoinPage() {
           background: ACCENT_GRADIENT,
           color: 'white',
           border: 'none',
-          boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+          boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
           opacity: join.isPending ? 0.7 : 1,
           cursor: join.isPending ? 'default' : 'pointer',
         }}
@@ -131,7 +131,7 @@ export function YatraJoinPage() {
           background: 'rgba(255,255,255,0.08)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          color: 'rgba(245,244,242,0.65)',
+          color: 'rgba(242,244,246,0.65)',
           border: '1.5px solid rgba(255,255,255,0.10)',
           cursor: 'pointer',
         }}

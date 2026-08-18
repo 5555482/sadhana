@@ -91,7 +91,7 @@ function SortableRow({ practice, onDelete }: { practice: UserPractice; onDelete:
         <Link
           to={`/user/practice/${practice.id}/edit`}
           className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
-          style={{ color: 'rgba(245,244,242,0.6)' }}
+          style={{ color: 'rgba(242,244,246,0.6)' }}
         >
           <FaEdit className="w-3.5 h-3.5" />
         </Link>
@@ -177,7 +177,7 @@ export function MyPracticesPage() {
             className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
             style={{
               background: ACCENT_GRADIENT,
-              boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
+              boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
             }}
           >
             <FaLayerGroup className="w-5 h-5 text-white" />
@@ -223,7 +223,7 @@ export function MyPracticesPage() {
         className="fixed bottom-6 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center"
         style={{
           background: ACCENT_GRADIENT,
-          boxShadow: '0 4px 24px rgba(200,114,74,0.45)',
+          boxShadow: '0 4px 24px rgba(58,166,160,0.45)',
         }}
       >
         <FaPlus className="w-5 h-5 text-white" />

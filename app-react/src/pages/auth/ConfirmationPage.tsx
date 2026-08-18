@@ -58,7 +58,7 @@ function FieldInput({
           readOnly={readOnly}
           className="w-full h-12 px-4 rounded-xl text-base-content placeholder:text-base-content/45 text-sm focus:outline-none transition-colors disabled:opacity-60"
           style={{ ...inputStyle, paddingRight: isPassword ? '3.5rem' : undefined }}
-          onFocus={e => { if (!readOnly) e.target.style.borderColor = 'rgba(200,114,74,0.5)' }}
+          onFocus={e => { if (!readOnly) e.target.style.borderColor = 'rgba(58,166,160,0.5)' }}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.10)')}
         />
         {isPassword && (
@@ -66,7 +66,7 @@ function FieldInput({
             type="button"
             onClick={() => setShowPwd(v => !v)}
             className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
-            style={{ color: '#c8724a' }}
+            style={{ color: '#3aa6a0' }}
           >
             {showPwd ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
           </button>
@@ -120,7 +120,7 @@ export function ConfirmationPage() {
     return (
       <GlassShell>
         <div className="flex justify-center py-4">
-          <span className="loading loading-spinner loading-md" style={{ color: '#c8724a' }} />
+          <span className="loading loading-spinner loading-md" style={{ color: '#3aa6a0' }} />
         </div>
       </GlassShell>
     )
@@ -131,7 +131,7 @@ export function ConfirmationPage() {
       <GlassShell>
         <div className="flex flex-col gap-4 text-center">
           <p className="text-sm text-error">{t('auth.confirmationExpired')}</p>
-          <Link to="/register" className="text-sm font-medium hover:underline" style={{ color: '#c8724a' }}>
+          <Link to="/register" className="text-sm font-medium hover:underline" style={{ color: '#3aa6a0' }}>
             {t('auth.signUp')}
           </Link>
         </div>
@@ -178,9 +178,9 @@ export function ConfirmationPage() {
           disabled={loading}
           className="w-full h-12 rounded-full text-sm font-semibold transition-all flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
             color: '#101a30',
-            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
           }}
         >
           {loading && <span className="loading loading-spinner loading-sm" />}

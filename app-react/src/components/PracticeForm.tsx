@@ -224,7 +224,7 @@ export function PracticeForm({ mode, initialValues, onSuccess }: PracticeFormPro
             color: '#101a30',
             border: 'none',
             appearance: 'none' as React.CSSProperties['appearance'],
-            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
             opacity: name.trim() && !mutation.isPending ? 1 : 0.55,
             transition: 'opacity 0.2s',
             cursor: name.trim() && !mutation.isPending ? 'pointer' : 'not-allowed',

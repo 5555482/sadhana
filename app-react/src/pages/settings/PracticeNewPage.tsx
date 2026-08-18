@@ -24,7 +24,7 @@ export function PracticeNewPage() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
           }}
         >
           <FaSeedling className="w-6 h-6 text-white" />

@@ -29,7 +29,7 @@ export function LanguagePage() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
           }}
         >
           <LuGlobe className="w-5 h-5 text-white" />
@@ -58,14 +58,14 @@ export function LanguagePage() {
               onClick={() => i18n.changeLanguage(code)}
               className="w-full flex items-center gap-4 px-4 py-4 text-left transition-colors"
               style={{
-                background: active ? 'rgba(200,114,74,0.06)' : 'transparent',
+                background: active ? 'rgba(58,166,160,0.06)' : 'transparent',
                 border: 'none',
                 borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
               }}
             >
               <div className="flex-1">
                 <p className="text-sm font-semibold" style={{ color: active ? ACCENT : TEXT }}>{native}</p>
-                <p className="text-xs mt-0.5" style={{ color: 'rgba(245,244,242,0.7)' }}>{label}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(242,244,246,0.7)' }}>{label}</p>
               </div>
               {active && <LuCheck className="w-4 h-4 flex-shrink-0" style={{ color: ACCENT }} />}
             </button>

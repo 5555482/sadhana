@@ -158,10 +158,10 @@ export function MonthCalendar({ selectedDate, onSelect, onClose }: MonthCalendar
                   className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all"
                   style={
                     sel
-                      ? { background: ACCENT_GRADIENT, color: '#fff', boxShadow: '0 2px 8px rgba(200,114,74,0.35)', border: 'none' }
+                      ? { background: ACCENT_GRADIENT, color: '#fff', boxShadow: '0 2px 8px rgba(58,166,160,0.35)', border: 'none' }
                       : tod
                       ? { color: ACCENT, fontWeight: 700, background: 'transparent', border: 'none' }
-                      : { color: '#f5f4f2', background: 'transparent', border: 'none' }
+                      : { color: '#f2f4f6', background: 'transparent', border: 'none' }
                   }
                 >
                   {day}

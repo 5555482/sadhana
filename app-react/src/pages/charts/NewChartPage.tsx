@@ -35,7 +35,7 @@ const inputStyle: React.CSSProperties = {
 
 function onFocus(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = ACCENT
-  e.target.style.boxShadow = '0 0 0 3px rgba(200,114,74,0.15)'
+  e.target.style.boxShadow = '0 0 0 3px rgba(58,166,160,0.15)'
 }
 function onBlur(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = BORDER
@@ -120,7 +120,7 @@ export function NewChartPage() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
           }}
         >
           <FaChartLine className="w-5 h-5 text-white" />
@@ -147,7 +147,7 @@ export function NewChartPage() {
               className="h-1 rounded-full transition-all duration-300"
               style={{ background: i <= step ? ACCENT : 'rgba(255,255,255,0.15)' }}
             />
-            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : 'rgba(245,244,242,0.7)' }}>
+            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : 'rgba(242,244,246,0.7)' }}>
               {label}
             </span>
           </div>
@@ -187,14 +187,14 @@ export function NewChartPage() {
                       onClick={() => setKind(k)}
                       className="flex-1 flex flex-col items-center gap-2 py-4 rounded-xl transition-all"
                       style={{
-                        background: active ? 'rgba(200,114,74,0.08)' : 'rgba(255,255,255,0.04)',
-                        border: active ? '1.5px solid rgba(200,114,74,0.40)' : `1.5px solid ${BORDER}`,
+                        background: active ? 'rgba(58,166,160,0.08)' : 'rgba(255,255,255,0.04)',
+                        border: active ? '1.5px solid rgba(58,166,160,0.40)' : `1.5px solid ${BORDER}`,
                       }}
                     >
-                      <Icon className="w-5 h-5" style={{ color: active ? ACCENT : 'rgba(245,244,242,0.7)' }} />
+                      <Icon className="w-5 h-5" style={{ color: active ? ACCENT : 'rgba(242,244,246,0.7)' }} />
                       <div>
-                        <div className="text-sm font-semibold" style={{ color: active ? ACCENT : '#f5f4f2' }}>{t(`charts.${labelKey}`)}</div>
-                        <div className="text-xs text-center" style={{ color: 'rgba(245,244,242,0.7)' }}>{t(`charts.${descKey}`)}</div>
+                        <div className="text-sm font-semibold" style={{ color: active ? ACCENT : '#f2f4f6' }}>{t(`charts.${labelKey}`)}</div>
+                        <div className="text-xs text-center" style={{ color: 'rgba(242,244,246,0.7)' }}>{t(`charts.${descKey}`)}</div>
                       </div>
                     </button>
                   )
@@ -211,7 +211,7 @@ export function NewChartPage() {
               background: ACCENT_GRADIENT,
               color: 'white',
               border: 'none',
-              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+              boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
               opacity: canNext0 ? 1 : 0.45,
             }}
           >
@@ -240,7 +240,7 @@ export function NewChartPage() {
                 type="button"
                 onClick={clearAll}
                 className="text-xs font-semibold"
-                style={{ color: 'rgba(245,244,242,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ color: 'rgba(242,244,246,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 {t('charts.clearAll')}
               </button>
@@ -283,11 +283,11 @@ export function NewChartPage() {
                           className="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all"
                           style={{
                             background: (traceTypes[p.id] ?? 'Line') === tt.value
-                              ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.05)',
+                              ? 'rgba(58,166,160,0.12)' : 'rgba(255,255,255,0.05)',
                             color: (traceTypes[p.id] ?? 'Line') === tt.value
-                              ? ACCENT : 'rgba(245,244,242,0.65)',
+                              ? ACCENT : 'rgba(242,244,246,0.65)',
                             border: (traceTypes[p.id] ?? 'Line') === tt.value
-                              ? '1px solid rgba(200,114,74,0.30)' : '1px solid transparent',
+                              ? '1px solid rgba(58,166,160,0.30)' : '1px solid transparent',
                           }}
                         >
                           {t(`charts.${tt.tKey}`)}
@@ -320,7 +320,7 @@ export function NewChartPage() {
                 background: ACCENT_GRADIENT,
                 color: 'white',
                 border: 'none',
-                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+                boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
                 opacity: canSave && !mutation.isPending ? 1 : 0.45,
               }}
             >

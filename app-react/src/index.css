@@ -8,18 +8,18 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-base-100: #1e2b45;
-  --color-base-200: #273656;
-  --color-base-300: #324268;
-  --color-base-content: #f5f4f2;
-  --color-primary: #c8724a;
+  --color-base-100: #1c2530;
+  --color-base-200: #26313d;
+  --color-base-300: #313d4b;
+  --color-base-content: #f2f4f6;
+  --color-primary: #3aa6a0;
   --color-primary-content: #101a30;
   --color-secondary: #a8b0bf;
   --color-secondary-content: #101a30;
-  --color-accent: #d68a63;
+  --color-accent: #52b3ac;
   --color-accent-content: #101a30;
-  --color-neutral: #324268;
-  --color-neutral-content: #f5f4f2;
+  --color-neutral: #313d4b;
+  --color-neutral-content: #f2f4f6;
   --color-info: #5aa9e6;
   --color-info-content: #101a30;
   --color-success: #3fb98f;
@@ -42,11 +42,11 @@
   --color-base-200: #e9ebef;
   --color-base-300: #d8dbe1;
   --color-base-content: #1f2937;
-  --color-primary: #c8724a;
+  --color-primary: #3aa6a0;
   --color-primary-content: #ffffff;
   --color-secondary: #64748b;
   --color-secondary-content: #ffffff;
-  --color-accent: #d68a63;
+  --color-accent: #52b3ac;
   --color-accent-content: #1f2937;
   --color-neutral: #334155;
   --color-neutral-content: #f8fafc;

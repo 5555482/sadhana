@@ -79,12 +79,12 @@ export function RegisterPage() {
             <Link
               to="/login"
               className="text-sm font-medium hover:underline"
-              style={{ color: '#c8724a' }}
+              style={{ color: '#3aa6a0' }}
             >
               {t('auth.signIn')}
             </Link>
             {resendCountdown > 0 ? (
-              <p className="text-xs" style={{ color: 'rgba(245,244,242,0.7)' }}>
+              <p className="text-xs" style={{ color: 'rgba(242,244,246,0.7)' }}>
                 {t('auth.resendIn', { seconds: resendCountdown })}
               </p>
             ) : (
@@ -93,7 +93,7 @@ export function RegisterPage() {
                 onClick={handleResend}
                 disabled={resending}
                 className="text-sm font-medium hover:underline"
-                style={{ color: '#c8724a', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ color: '#3aa6a0', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 {resending ? '…' : t('auth.resendEmail')}
               </button>
@@ -107,7 +107,7 @@ export function RegisterPage() {
               </h1>
               <p className="text-xs text-base-content/70 mt-2">
                 {t('auth.hasAccount')}{' '}
-                <Link to="/login" className="font-medium hover:underline" style={{ color: '#c8724a' }}>
+                <Link to="/login" className="font-medium hover:underline" style={{ color: '#3aa6a0' }}>
                   {t('auth.signIn')}
                 </Link>
               </p>
@@ -131,7 +131,7 @@ export function RegisterPage() {
                     background: 'rgba(255,255,255,0.06)',
                     border: '1px solid rgba(255,255,255,0.10)',
                   }}
-                  onFocus={e => (e.target.style.borderColor = 'rgba(200,114,74,0.5)')}
+                  onFocus={e => (e.target.style.borderColor = 'rgba(58,166,160,0.5)')}
                   onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.10)')}
                 />
               </div>
@@ -145,9 +145,9 @@ export function RegisterPage() {
                 disabled={loading}
                 className="w-full h-12 rounded-full text-sm font-semibold transition-all flex items-center justify-center gap-2"
                 style={{
-                  background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+                  background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
                   color: '#101a30',
-                  boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+                  boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
                 }}
               >
                 {loading && <span className="loading loading-spinner loading-sm" />}

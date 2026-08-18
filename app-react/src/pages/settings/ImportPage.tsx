@@ -63,7 +63,7 @@ export function ImportPage() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
           }}
         >
           <LuUpload className="w-5 h-5 text-white" />
@@ -82,7 +82,7 @@ export function ImportPage() {
               className="h-1 rounded-full"
               style={{ background: i <= step ? ACCENT : 'rgba(255,255,255,0.15)' }}
             />
-            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : 'rgba(245,244,242,0.7)' }}>
+            <span className="text-xs font-medium" style={{ color: i === step ? ACCENT : 'rgba(242,244,246,0.7)' }}>
               {label}
             </span>
           </div>
@@ -98,19 +98,19 @@ export function ImportPage() {
             style={{
               ...glass,
               border: isDragActive
-                ? '2px dashed rgba(200,114,74,0.60)'
-                : file ? '2px solid rgba(200,114,74,0.30)' : '2px dashed rgba(255,255,255,0.12)',
-              background: isDragActive ? 'rgba(200,114,74,0.05)' : glass.background,
+                ? '2px dashed rgba(58,166,160,0.60)'
+                : file ? '2px solid rgba(58,166,160,0.30)' : '2px dashed rgba(255,255,255,0.12)',
+              background: isDragActive ? 'rgba(58,166,160,0.05)' : glass.background,
             }}
           >
             <input {...getInputProps()} />
             <div
               className="w-12 h-12 rounded-2xl flex items-center justify-center"
-              style={{ background: file ? 'rgba(200,114,74,0.10)' : 'rgba(255,255,255,0.05)' }}
+              style={{ background: file ? 'rgba(58,166,160,0.10)' : 'rgba(255,255,255,0.05)' }}
             >
               {file
                 ? <LuFileText className="w-5 h-5" style={{ color: ACCENT }} />
-                : <LuUpload className="w-5 h-5" style={{ color: 'rgba(245,244,242,0.7)' }} />
+                : <LuUpload className="w-5 h-5" style={{ color: 'rgba(242,244,246,0.7)' }} />
               }
             </div>
             {file ? (
@@ -142,7 +142,7 @@ export function ImportPage() {
               background: ACCENT_GRADIENT,
               color: 'white',
               border: 'none',
-              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+              boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
               opacity: !file || previewMutation.isPending ? 0.45 : 1,
             }}
           >
@@ -221,7 +221,7 @@ export function ImportPage() {
                 background: ACCENT_GRADIENT,
                 color: 'white',
                 border: 'none',
-                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+                boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
                 opacity: confirmMutation.isPending ? 0.55 : 1,
               }}
             >
@@ -237,7 +237,7 @@ export function ImportPage() {
         <div className="rounded-2xl px-5 py-12 flex flex-col items-center gap-5" style={glass}>
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center"
-            style={{ background: 'rgba(200,114,74,0.12)' }}
+            style={{ background: 'rgba(58,166,160,0.12)' }}
           >
             <LuCheck className="w-7 h-7" style={{ color: ACCENT }} />
           </div>
@@ -252,7 +252,7 @@ export function ImportPage() {
               background: ACCENT_GRADIENT,
               color: 'white',
               border: 'none',
-              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+              boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
             }}
           >
             {t('import.done')}

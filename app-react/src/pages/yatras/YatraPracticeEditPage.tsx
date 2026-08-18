@@ -467,7 +467,7 @@ export function YatraPracticeEditPage() {
             background: ACCENT_GRADIENT,
             color: 'white',
             border: 'none',
-            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
             opacity: saveMutation.isPending ? 0.7 : 1,
           }}
         >

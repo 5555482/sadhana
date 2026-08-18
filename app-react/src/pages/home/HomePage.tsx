@@ -58,7 +58,7 @@ export function HomePage() {
         className="px-4 pb-16 pt-10 lg:pt-16 lg:px-6 max-w-lg lg:max-w-[1400px] mx-auto w-full min-h-screen"
         style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
       >
-        <h2 className="font-serif text-2xl lg:text-3xl font-semibold mb-6" style={{ color: '#f5f4f2' }}>
+        <h2 className="font-serif text-2xl lg:text-3xl font-semibold mb-6" style={{ color: '#f2f4f6' }}>
           {t('nav.yatras')}
         </h2>
         <DeferUntilVisible>

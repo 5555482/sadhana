@@ -29,7 +29,7 @@ const inputStyle: React.CSSProperties = {
 
 function onFocus(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = ACCENT
-  e.target.style.boxShadow = '0 0 0 3px rgba(200,114,74,0.15)'
+  e.target.style.boxShadow = '0 0 0 3px rgba(58,166,160,0.15)'
 }
 function onBlurInput(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = BORDER
@@ -55,7 +55,7 @@ export function EditUserPage() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(200,114,74,0.30)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
           }}
         >
           <LuUser className="w-5 h-5 text-white" />
@@ -89,7 +89,7 @@ export function EditUserPage() {
           />
           <p
             className="text-[10px] text-right"
-            style={{ color: name.length >= 50 ? '#e11d48' : name.length >= 45 ? '#d97706' : 'rgba(245,244,242,0.7)' }}
+            style={{ color: name.length >= 50 ? '#e11d48' : name.length >= 45 ? '#d97706' : 'rgba(242,244,246,0.7)' }}
           >
             {name.length}/50
           </p>
@@ -100,7 +100,7 @@ export function EditUserPage() {
             id="user-email"
             value={user?.email ?? ''}
             readOnly
-            style={{ ...inputStyle, background: 'rgba(255,255,255,0.04)', color: 'rgba(245,244,242,0.7)', cursor: 'default' }}
+            style={{ ...inputStyle, background: 'rgba(255,255,255,0.04)', color: 'rgba(242,244,246,0.7)', cursor: 'default' }}
           />
         </div>
 
@@ -117,11 +117,11 @@ export function EditUserPage() {
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
         style={{
           background: success
-            ? 'rgba(200,114,74,0.12)'
+            ? 'rgba(58,166,160,0.12)'
             : ACCENT_GRADIENT,
           color: success ? ACCENT : 'white',
-          border: success ? '1px solid rgba(200,114,74,0.30)' : 'none',
-          boxShadow: success ? 'none' : '0 4px 20px rgba(200,114,74,0.35)',
+          border: success ? '1px solid rgba(58,166,160,0.30)' : 'none',
+          boxShadow: success ? 'none' : '0 4px 20px rgba(58,166,160,0.35)',
           opacity: mutation.isPending || !name.trim() ? 0.55 : 1,
           cursor: mutation.isPending || !name.trim() ? 'not-allowed' : 'pointer',
         }}

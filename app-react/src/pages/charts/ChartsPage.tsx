@@ -218,7 +218,7 @@ function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: Chart
             className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
             style={{
               background: duration === d.value ? ACCENT : 'rgba(0,0,0,0.05)',
-              color: duration === d.value ? 'white' : 'rgba(245,244,242,0.65)',
+              color: duration === d.value ? 'white' : 'rgba(242,244,246,0.65)',
               border: 'none',
             }}
           >
@@ -230,7 +230,7 @@ function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: Chart
             onClick={handleDownload}
             title={t('charts.download')}
             className="ml-auto h-7 px-2.5 flex items-center gap-1 rounded-lg text-xs font-semibold flex-shrink-0"
-            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(245,244,242,0.65)', border: 'none' }}
+            style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(242,244,246,0.65)', border: 'none' }}
           >
             <LuDownload className="w-3.5 h-3.5" />
             {t('charts.download')}
@@ -263,7 +263,7 @@ function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: Chart
               <XAxis
                 dataKey="date"
                 stroke="rgba(255,255,255,0.20)"
-                tick={{ fontSize: 10, fill: 'rgba(245,244,242,0.55)' }}
+                tick={{ fontSize: 10, fill: 'rgba(242,244,246,0.55)' }}
                 tickLine={false}
                 axisLine={false}
                 interval="preserveStartEnd"
@@ -274,7 +274,7 @@ function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: Chart
                   orientation="left"
                   domain={[0, 'auto']}
                   stroke="rgba(255,255,255,0.20)"
-                  tick={{ fontSize: 10, fill: 'rgba(245,244,242,0.55)' }}
+                  tick={{ fontSize: 10, fill: 'rgba(242,244,246,0.55)' }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(v: number) => (numAxisAllDuration ? `${v} min` : String(v))}
@@ -285,7 +285,7 @@ function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: Chart
                   yAxisId="time"
                   orientation="right"
                   stroke="rgba(255,255,255,0.20)"
-                  tick={{ fontSize: 10, fill: 'rgba(245,244,242,0.55)' }}
+                  tick={{ fontSize: 10, fill: 'rgba(242,244,246,0.55)' }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={formatMinutesAsHHMM}
@@ -295,21 +295,21 @@ function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: Chart
                 <YAxis yAxisId="unit" hide domain={[0, 1.1]} />
               )}
               <Tooltip
-                contentStyle={{ fontSize: 11, borderRadius: 10, background: '#273656', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#f5f4f2' }}
-                labelStyle={{ color: '#f5f4f2' }}
-                itemStyle={{ color: '#f5f4f2' }}
+                contentStyle={{ fontSize: 11, borderRadius: 10, background: '#26313d', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#f2f4f6' }}
+                labelStyle={{ color: '#f2f4f6' }}
+                itemStyle={{ color: '#f2f4f6' }}
               />
               <Legend
                 verticalAlign="bottom"
                 align="center"
-                wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default', color: '#f5f4f2' }}
+                wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default', color: '#f2f4f6' }}
                 onClick={(data) => {
                   if (traces.length <= 1) return
                   const name = data.value as string
                   setSelectedPractice(prev => prev === name ? null : name)
                 }}
                 formatter={(value) => (
-                  <span style={{ color: selectedPractice && selectedPractice !== value ? 'rgba(245,244,242,0.35)' : '#f5f4f2' }}>
+                  <span style={{ color: selectedPractice && selectedPractice !== value ? 'rgba(242,244,246,0.35)' : '#f2f4f6' }}>
                     {value}
                   </span>
                 )}
@@ -362,9 +362,9 @@ function GridTable({ chartData, practiceNames }: { chartData: ChartDataRow[]; pr
       <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: 'rgba(245,244,242,0.7)', borderBottom: `1px solid ${BORDER}` }}>{t('charts.date')}</th>
+            <th className="text-left px-2 py-1.5 font-semibold" style={{ color: 'rgba(242,244,246,0.7)', borderBottom: `1px solid ${BORDER}` }}>{t('charts.date')}</th>
             {practiceNames.map((name) => (
-              <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: 'rgba(245,244,242,0.7)', borderBottom: `1px solid ${BORDER}` }}>
+              <th key={name} className="text-right px-2 py-1.5 font-semibold" style={{ color: 'rgba(242,244,246,0.7)', borderBottom: `1px solid ${BORDER}` }}>
                 {name}
               </th>
             ))}
@@ -452,14 +452,14 @@ function ReportPicker({
               onClick={() => { onSelect(opt.id); setOpen(false) }}
               className="w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors"
               style={{
-                background: selectedId === opt.id ? 'rgba(200,114,74,0.06)' : 'transparent',
+                background: selectedId === opt.id ? 'rgba(58,166,160,0.06)' : 'transparent',
                 color: selectedId === opt.id ? ACCENT : TEXT,
                 border: 'none',
                 borderTop: i === 0 ? 'none' : `1px solid ${BORDER}`,
                 fontWeight: selectedId === opt.id ? 600 : 400,
               }}
             >
-              <span style={{ color: selectedId === opt.id ? ACCENT : 'rgba(245,244,242,0.7)' }}>{opt.icon}</span>
+              <span style={{ color: selectedId === opt.id ? ACCENT : 'rgba(242,244,246,0.7)' }}>{opt.icon}</span>
               <span className="truncate">{opt.label}</span>
               {selectedId === opt.id && <LuCheck className="w-3.5 h-3.5 ml-auto flex-shrink-0" />}
             </button>
@@ -564,7 +564,7 @@ function ReportCard({
       <div className="px-4 py-3 flex items-center gap-3">
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: isGridType ? 'rgba(99,102,241,0.10)' : 'rgba(200,114,74,0.10)' }}
+          style={{ background: isGridType ? 'rgba(99,102,241,0.10)' : 'rgba(58,166,160,0.10)' }}
         >
           {isGridType
             ? <FaTh className="w-3.5 h-3.5" style={{ color: '#6366f1' }} />
@@ -573,7 +573,7 @@ function ReportCard({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-base-content truncate">{report.name}</p>
-          <p className="text-xs mt-0.5" style={{ color: 'rgba(245,244,242,0.7)' }}>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(242,244,246,0.7)' }}>
             {t(isGridType ? 'charts.kindGrid' : 'charts.kindGraph')} · {t('charts.practiceCount', { count: currentIds.length })}
           </p>
         </div>
@@ -587,7 +587,7 @@ function ReportCard({
         <button
           onClick={() => setOpen(o => !o)}
           className="w-7 h-7 flex items-center justify-center rounded-xl flex-shrink-0"
-          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(245,244,242,0.65)', border: 'none' }}
+          style={{ background: 'rgba(0,0,0,0.05)', color: 'rgba(242,244,246,0.65)', border: 'none' }}
         >
           {open ? <LuChevronUp className="w-4 h-4" /> : <LuChevronDown className="w-4 h-4" />}
         </button>
@@ -633,7 +633,7 @@ function ReportCard({
                 ? report.definition.Grid.practices.map(pid => (
                     <div key={pid} className="flex items-center gap-2 py-0.5">
                       <span className="flex-1 text-xs text-base-content/80">{practiceMap[pid] ?? pid}</span>
-                      <button onClick={() => removeItem(pid)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(245,244,242,0.7)', border: 'none' }}>
+                      <button onClick={() => removeItem(pid)} className="w-5 h-5 flex items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(242,244,246,0.7)', border: 'none' }}>
                         <LuX className="w-3 h-3" />
                       </button>
                     </div>
@@ -653,7 +653,7 @@ function ReportCard({
                           <option value="Dot">{t('charts.traceDot')}</option>
                         </select>
                         <span className="flex-1 text-xs font-semibold text-base-content">{practiceMap[trace.practice] ?? trace.practice}</span>
-                        <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg flex-shrink-0" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(245,244,242,0.7)', border: 'none' }}>
+                        <button onClick={() => removeItem(trace.practice)} className="w-5 h-5 flex items-center justify-center rounded-lg flex-shrink-0" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(242,244,246,0.7)', border: 'none' }}>
                           <LuX className="w-3 h-3" />
                         </button>
                       </div>
@@ -766,7 +766,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
         <div className="rounded-2xl px-5 py-4 flex items-center gap-3" style={{ ...glass, position: 'relative', zIndex: 100 }}>
           <div
             className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(200,114,74,0.30)' }}
+            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(58,166,160,0.30)' }}
           >
             <FaChartLine className="w-4 h-4 text-white" />
           </div>
@@ -779,7 +779,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           <button
             onClick={copyShareLink}
             className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold flex-shrink-0"
-            style={{ background: shareCopied ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.06)', color: shareCopied ? ACCENT : 'rgba(245,244,242,0.65)', border: 'none' }}
+            style={{ background: shareCopied ? 'rgba(58,166,160,0.12)' : 'rgba(255,255,255,0.06)', color: shareCopied ? ACCENT : 'rgba(242,244,246,0.65)', border: 'none' }}
           >
             {shareCopied ? <LuCheck className="w-3.5 h-3.5" /> : <LuCopy className="w-3.5 h-3.5" />}
             {shareCopied ? t('charts.copied') : t('charts.share')}
@@ -839,7 +839,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(200,114,74,0.08)' }}
+              style={{ background: 'rgba(58,166,160,0.08)' }}
             >
               <LuChartLine className="w-6 h-6" style={{ color: ACCENT }} />
             </div>
@@ -854,7 +854,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
                 background: ACCENT_GRADIENT,
                 color: 'white',
                 textDecoration: 'none',
-                boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+                boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
               }}
             >
               {t('charts.create')}
@@ -868,7 +868,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           to="/charts/new"
           aria-label="New report"
           className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center"
-          style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(200,114,74,0.45)' }}
+          style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(58,166,160,0.45)' }}
         >
           <FaPlus className="w-5 h-5 text-white" />
         </Link>

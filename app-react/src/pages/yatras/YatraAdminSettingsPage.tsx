@@ -29,7 +29,7 @@ const inputStyle: React.CSSProperties = {
   borderRadius: '0.75rem',
   outline: 'none',
   fontSize: '0.9rem',
-  color: '#f5f4f2',
+  color: '#f2f4f6',
   padding: '0.5rem 0.875rem',
   width: '100%',
   transition: 'border-color 0.15s, box-shadow 0.15s',
@@ -47,7 +47,7 @@ const TYPE_META: Record<string, {
   bg: string
   tKey: string
 }> = {
-  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(200,114,74,0.10)',   tKey: 'practice.typeBool'     },
+  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(58,166,160,0.10)',   tKey: 'practice.typeBool'     },
   Int:      { icon: LuHash,        color: '#818cf8', bg: 'rgba(129,140,248,0.16)',  tKey: 'practice.typeInt'      },
   Duration: { icon: LuTimer,       color: '#fbbf24', bg: 'rgba(251,191,36,0.16)',  tKey: 'practice.typeDuration' },
   Time:     { icon: LuClock,       color: '#60a5fa', bg: 'rgba(96,165,250,0.16)',  tKey: 'practice.typeTime'     },
@@ -87,7 +87,7 @@ function isGoodForPractice(agg: Aggregation, dt: string): boolean {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: 'rgba(245,244,242,0.65)' }}>
+    <span className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: 'rgba(242,244,246,0.65)' }}>
       {children}
     </span>
   )
@@ -112,8 +112,8 @@ function SectionToggle({
       <SectionLabel>{label}</SectionLabel>
       <span className="flex-1" />
       {open
-        ? <FaChevronDown className="w-3 h-3" style={{ color: 'rgba(245,244,242,0.65)' }} />
-        : <FaChevronRight className="w-3 h-3" style={{ color: 'rgba(245,244,242,0.65)' }} />
+        ? <FaChevronDown className="w-3 h-3" style={{ color: 'rgba(242,244,246,0.65)' }} />
+        : <FaChevronRight className="w-3 h-3" style={{ color: 'rgba(242,244,246,0.65)' }} />
       }
     </button>
   )
@@ -252,8 +252,8 @@ export function YatraAdminSettingsPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
-            boxShadow: '0 4px 16px rgba(200,114,74,0.28)',
+            background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.28)',
           }}
         >
           <FaShieldAlt className="w-5 h-5 text-white" />
@@ -286,7 +286,7 @@ export function YatraAdminSettingsPage() {
             value={yatraName}
             required
             onChange={e => setYatraName(e.target.value)}
-            onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(200,114,74,0.12)` }}
+            onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(58,166,160,0.12)` }}
             onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.10)'; e.target.style.boxShadow = 'none' }}
           />
         </div>
@@ -326,9 +326,9 @@ export function YatraAdminSettingsPage() {
       >
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: copied ? 'rgba(200,114,74,0.10)' : 'rgba(255,255,255,0.06)' }}
+          style={{ background: copied ? 'rgba(58,166,160,0.10)' : 'rgba(255,255,255,0.06)' }}
         >
-          <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : 'rgba(245,244,242,0.65)' }} />
+          <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : 'rgba(242,244,246,0.65)' }} />
         </div>
         <span className="flex-1 text-sm font-semibold text-base-content">
           {copied ? t('yatras.inviteCopied') : t('yatras.copyInvite')}
@@ -390,7 +390,7 @@ export function YatraAdminSettingsPage() {
             style={{
               background: ACCENT_GRADIENT,
               color: 'white',
-              boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+              boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
             }}
           >
             <FaPlus className="w-3.5 h-3.5" />
@@ -407,7 +407,7 @@ export function YatraAdminSettingsPage() {
             <div key={m.user_id} className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
               <div
                 className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
-                style={{ background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)' }}
               >
                 {m.user_name.charAt(0).toUpperCase()}
               </div>
@@ -418,8 +418,8 @@ export function YatraAdminSettingsPage() {
                 disabled={toggleAdmin.isPending}
                 className="text-xs font-semibold px-2 py-0.5 rounded-full transition-colors"
                 style={{
-                  background: m.is_admin ? 'rgba(200,114,74,0.12)' : 'rgba(255,255,255,0.06)',
-                  color: m.is_admin ? '#c8724a' : 'rgba(245,244,242,0.7)',
+                  background: m.is_admin ? 'rgba(58,166,160,0.12)' : 'rgba(255,255,255,0.06)',
+                  color: m.is_admin ? '#3aa6a0' : 'rgba(242,244,246,0.7)',
                   border: 'none',
                   cursor: 'pointer',
                 }}
@@ -455,7 +455,7 @@ export function YatraAdminSettingsPage() {
         <div className="flex flex-col gap-3">
           {/* Visibility */}
           <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
-            <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#c8724a' }} />
+            <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#3aa6a0' }} />
             <span className="flex-1 text-sm font-medium text-base-content">{t('yatras.visibleTo')}</span>
             <select
               value={statsVisibleToAll ? 'Everyone' : 'Admins'}
@@ -494,7 +494,7 @@ export function YatraAdminSettingsPage() {
                     value={stat.label}
                     required
                     onChange={e => updateStat(idx, { label: e.target.value })}
-                    onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(200,114,74,0.12)` }}
+                    onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(58,166,160,0.12)` }}
                     onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.10)'; e.target.style.boxShadow = 'none' }}
                   />
                 </div>
@@ -548,12 +548,12 @@ export function YatraAdminSettingsPage() {
             type="button"
             onClick={addStat}
             className="rounded-2xl px-4 py-3.5 flex items-center gap-3 w-full"
-            style={{ ...glass, borderStyle: 'dashed', borderColor: 'rgba(200,114,74,0.30)', background: 'rgba(200,114,74,0.03)', cursor: 'pointer', border: '1px dashed rgba(200,114,74,0.30)' }}
+            style={{ ...glass, borderStyle: 'dashed', borderColor: 'rgba(58,166,160,0.30)', background: 'rgba(58,166,160,0.03)', cursor: 'pointer', border: '1px dashed rgba(58,166,160,0.30)' }}
           >
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(200,114,74,0.10)' }}>
-              <FaPlus className="w-3 h-3" style={{ color: '#c8724a' }} />
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(58,166,160,0.10)' }}>
+              <FaPlus className="w-3 h-3" style={{ color: '#3aa6a0' }} />
             </div>
-            <span className="text-sm font-semibold" style={{ color: '#c8724a' }}>{t('yatras.addStatistic')}</span>
+            <span className="text-sm font-semibold" style={{ color: '#3aa6a0' }}>{t('yatras.addStatistic')}</span>
           </button>
         </div>
       )}
@@ -567,7 +567,7 @@ export function YatraAdminSettingsPage() {
           background: ACCENT_GRADIENT,
           color: 'white',
           border: 'none',
-          boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+          boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
           opacity: saveMutation.isPending ? 0.7 : 1,
         }}
       >

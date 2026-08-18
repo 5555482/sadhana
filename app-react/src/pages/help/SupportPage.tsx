@@ -29,7 +29,7 @@ const inputStyle: React.CSSProperties = {
 
 function onFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
   e.target.style.borderColor = ACCENT
-  e.target.style.boxShadow = '0 0 0 3px rgba(200,114,74,0.15)'
+  e.target.style.boxShadow = '0 0 0 3px rgba(58,166,160,0.15)'
 }
 
 function onBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -58,7 +58,7 @@ export function SupportPage() {
       <div className="px-4 py-6 max-w-lg mx-auto flex flex-col items-center justify-center gap-4 pb-24" style={{ paddingTop: '6rem' }}>
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(200,114,74,0.12)' }}
+          style={{ background: 'rgba(58,166,160,0.12)' }}
         >
           <LuCheck className="w-7 h-7" style={{ color: ACCENT }} />
         </div>
@@ -83,8 +83,8 @@ export function SupportPage() {
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
-            boxShadow: '0 4px 16px rgba(200,114,74,0.28)',
+            background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
+            boxShadow: '0 4px 16px rgba(58,166,160,0.28)',
           }}
         >
           <LuMessageSquare className="w-5 h-5 text-white" />
@@ -156,10 +156,10 @@ export function SupportPage() {
           disabled={mutation.isPending || !canSubmit}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #d68a63 0%, #c8724a 100%)',
+            background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
             color: '#101a30',
             border: 'none',
-            boxShadow: '0 4px 20px rgba(200,114,74,0.35)',
+            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
             opacity: mutation.isPending || !canSubmit ? 0.55 : 1,
             transition: 'opacity 0.15s',
           }}
