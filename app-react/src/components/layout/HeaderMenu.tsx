@@ -68,11 +68,11 @@ export function HeaderMenu({ label, items }: { label: string; items: HeaderMenuI
               top: pos.top,
               left: pos.left,
               zIndex: 100,
-              background: 'rgba(18,24,36,0.92)',
-              border: '1px solid rgba(255,255,255,0.14)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              boxShadow: '0 12px 40px rgba(0,0,0,0.50)',
+              background: 'rgba(28,37,48,0.45)',
+              border: '1px solid rgba(255,255,255,0.16)',
+              backdropFilter: 'blur(24px) saturate(1.3)',
+              WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.35)',
             }}
           >
             {items.map((item) =>
