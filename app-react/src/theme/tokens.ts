@@ -13,8 +13,8 @@ export const SURFACE_1 = '#0e141b'
 export const SURFACE_2 = '#151d27'
 export const SURFACE_3 = '#1b2531'
 export const SURFACE_GLASS = 'rgba(20,28,38,0.72)'
-export const SURFACE_PANEL = 'rgba(20,28,38,0.55)'     // cards / chart panels (frosted glass over bg3)
-export const SURFACE_ELEVATED = 'rgba(26,35,47,0.58)'  // practice rows (frosted glass over bg3)
+export const SURFACE_PANEL = 'rgba(20,28,38,0.45)'     // cards / chart panels (frosted glass over bg3)
+export const SURFACE_ELEVATED = 'rgba(26,35,47,0.48)'  // practice rows (frosted glass over bg3)
 
 export const TEXT = '#eef3f8'
 export const TEXT_MUTED = 'rgba(238,243,248,0.58)'
@@ -32,4 +32,4 @@ export const APP_BACKDROP =
 export const APP_SCRIM =
   'radial-gradient(70% 55% at 84% -5%, rgba(45,212,191,0.18), transparent 50%),' +
   'radial-gradient(60% 45% at 8% 108%, rgba(56,189,248,0.10), transparent 55%),' +
-  'linear-gradient(160deg, rgba(7,10,14,0.35) 0%, rgba(7,10,14,0.60) 100%)'
+  'linear-gradient(160deg, rgba(7,10,14,0.28) 0%, rgba(7,10,14,0.52) 100%)'
