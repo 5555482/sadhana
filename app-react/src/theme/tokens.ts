@@ -26,3 +26,10 @@ export const APP_BACKDROP =
   'radial-gradient(70% 55% at 84% -5%, rgba(45,212,191,0.16), transparent 50%),' +
   'radial-gradient(60% 45% at 8% 108%, rgba(56,189,248,0.09), transparent 55%),' +
   'linear-gradient(160deg, #0b0f14 0%, #070a0e 100%)'
+
+// Deep Ink scrim + teal glow laid over the bg3 (green hills) photo on the
+// authenticated shell — hills stay faintly visible while text stays legible.
+export const APP_SCRIM =
+  'radial-gradient(70% 55% at 84% -5%, rgba(45,212,191,0.18), transparent 50%),' +
+  'radial-gradient(60% 45% at 8% 108%, rgba(56,189,248,0.10), transparent 55%),' +
+  'linear-gradient(160deg, rgba(7,10,14,0.55) 0%, rgba(7,10,14,0.80) 100%)'
