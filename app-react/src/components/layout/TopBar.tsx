@@ -32,7 +32,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
         <span
           style={{
             color: isActive ? '#ffffff' : 'rgba(255,255,255,0.72)',
-            fontWeight: isActive ? 600 : 500,
+            fontWeight: isActive ? 400 : 300,
           }}
         >
           {t(`nav.${navKey}`)}
