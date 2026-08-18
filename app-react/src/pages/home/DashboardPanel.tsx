@@ -170,8 +170,10 @@ export function DashboardPanel() {
       </div>
 
       {/* Charts (2/3) — desktop only; top-aligned with the practices column.
-          Lazy so recharts stays off the initial home critical path. */}
-      <div className="hidden lg:block lg:col-span-2">
+          Lazy so recharts stays off the initial home critical path.
+          `isolate` confines ChartsPage's internal z-indexes so they can't
+          paint over the fixed header while scrolling. */}
+      <div className="hidden lg:block lg:col-span-2 isolate">
         <Suspense fallback={<Spinner />}>
           <ChartsPage embedded />
         </Suspense>
