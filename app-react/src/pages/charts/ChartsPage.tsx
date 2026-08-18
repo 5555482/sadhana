@@ -29,9 +29,7 @@ import {
   axisKindFor,
   averageForType,
   formatMinutesAsHHMM,
-  groupTracesByUnit,
   type ChartDataRow,
-  type ChartUnit,
 } from './chartLogic'
 import { ACCENT, ACCENT_GRADIENT, BORDER, SURFACE_PANEL, TEXT, TEXT_MUTED } from '../../theme/tokens'
 
@@ -117,85 +115,6 @@ function csvValueToNumber(raw: unknown): number | null {
   return null
 }
 
-// ─── Single-unit chart section ──────────────────────────────────────────────
-
-type SectionTrace = { name: string; type_: TraceType; color: string; dataType: PracticeDataType }
-
-function ChartSection({
-  unit, traces, chartData, selectedPractice, onLegendClick,
-  averages,
-}: {
-  unit: ChartUnit
-  traces: SectionTrace[]
-  chartData: ChartDataRow[]
-  selectedPractice: string | null
-  onLegendClick: (name: string) => void
-  averages: { axis: 'num' | 'time' | 'unit'; value: number; color: string; name: string }[]
-}) {
-  const isBool = unit === 'bool'
-  const height = isBool ? 110 : 220
-  const yTickFormatter =
-    unit === 'time' ? formatMinutesAsHHMM
-    : unit === 'duration' ? (v: number) => `${v} min`
-    : (v: number) => String(v)
-
-  return (
-    <ResponsiveContainer width="100%" height={height}>
-      <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
-        <XAxis
-          dataKey="date"
-          stroke="rgba(255,255,255,0.15)"
-          tick={{ fontSize: 10, fill: 'rgba(238,243,248,0.55)' }}
-          tickLine={false} axisLine={false} interval="preserveStartEnd"
-        />
-        {isBool
-          ? <YAxis yAxisId="v" hide domain={[0, 1.1]} />
-          : <YAxis yAxisId="v" orientation="left" domain={[0, 'auto']}
-              stroke="rgba(255,255,255,0.15)"
-              tick={{ fontSize: 10, fill: 'rgba(238,243,248,0.55)' }}
-              tickLine={false} axisLine={false} tickFormatter={yTickFormatter} />}
-        <Tooltip
-          contentStyle={{ fontSize: 11, borderRadius: 10, background: '#151d27', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#eef3f8' }}
-          labelStyle={{ color: '#eef3f8' }} itemStyle={{ color: '#eef3f8' }}
-        />
-        <Legend
-          verticalAlign="bottom" align="center"
-          wrapperStyle={{ fontSize: 11, paddingTop: 6, cursor: traces.length > 1 ? 'pointer' : 'default', color: '#eef3f8' }}
-          onClick={(d) => { if (traces.length > 1) onLegendClick(d.value as string) }}
-          formatter={(value) => (
-            <span style={{ color: selectedPractice && selectedPractice !== value ? 'rgba(238,243,248,0.35)' : '#eef3f8' }}>{value}</span>
-          )}
-        />
-        {traces.map(({ name, type_, color }) => {
-          if (isBool) {
-            return <Line key={name} yAxisId="v" type="monotone" dataKey={name} stroke="none" strokeWidth={0}
-              dot={{ r: 4, fill: color, strokeWidth: 0, fillOpacity: 0.85 }} activeDot={{ r: 5, fill: color }} name={name} />
-          }
-          const label = traceLabel(type_)
-          if (label === 'Bar') {
-            return <Bar key={name} yAxisId="v" dataKey={name} fill={color} fillOpacity={0.35} radius={[2, 2, 0, 0]} maxBarSize={20} />
-          }
-          if (label === 'Dot') {
-            return <Line key={name} yAxisId="v" type="monotone" dataKey={name} stroke="none" strokeWidth={0}
-              dot={{ r: 4, fill: color, strokeWidth: 0, fillOpacity: 0.8 }} activeDot={{ r: 5, fill: color }} name={name} />
-          }
-          const isSquare = typeof type_ === 'object' && 'Line' in type_ && type_.Line.style === 'Square'
-          return <Line key={name} yAxisId="v" type={isSquare ? 'stepAfter' : 'natural'} dataKey={name}
-            stroke={color} strokeOpacity={0.85} strokeWidth={2}
-            dot={{ r: 2.5, fill: color, strokeWidth: 0 }} activeDot={{ r: 4 }} connectNulls name={name} />
-        })}
-        {averages
-          .filter((a) => traces.some((t) => t.name === a.name))
-          .map((a, i) => (
-            <ReferenceLine key={`avg-${i}`} yAxisId="v" y={a.value} stroke={a.color}
-              strokeDasharray="6 4" strokeOpacity={0.8} ifOverflow="extendDomain" />
-          ))}
-      </ComposedChart>
-    </ResponsiveContainer>
-  )
-}
-
 // ─── Main chart panel ───────────────────────────────────────────────────────
 
 interface ChartPanelProps {
@@ -205,7 +124,7 @@ interface ChartPanelProps {
   chartHeight?: number
 }
 
-function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
+function ChartPanel({ report, practices, practiceMap, chartHeight = 290 }: ChartPanelProps) {
   const { t, i18n } = useTranslation()
   const locale = i18n.language || 'en'
   const [duration, setDuration] = useState<ReportDuration>('Month')
@@ -262,20 +181,19 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
   )
   const isGridReport = report !== null && isGrid(report.definition)
 
+  const usedAxes = new Set(visibleTraces.map((t) => axisKindFor(t.dataType)))
+  const numAxisAllDuration =
+    visibleTraces.filter((t) => axisKindFor(t.dataType) === 'num').every((t) => t.dataType === 'Duration') &&
+    visibleTraces.some((t) => axisKindFor(t.dataType) === 'num')
+
   const averages = visibleTraces
     .filter((t) => t.showAverage)
     .map((t) => {
       const entries = rawValues.filter((e: { practice: string }) => e.practice === t.name)
       const avg = averageForType(entries as { cob_date: string; value: unknown }[], t.dataType, todayCob)
-      return avg === null ? null : { axis: axisKindFor(t.dataType), value: avg, color: t.color, name: t.name }
+      return avg === null ? null : { axis: axisKindFor(t.dataType), value: avg, color: t.color }
     })
-    .filter((a): a is { axis: 'num' | 'time' | 'unit'; value: number; color: string; name: string } => a !== null)
-
-  const unitGroups = groupTracesByUnit(
-    visibleTraces.map((t) => ({ name: t.name, type_: t.type_, color: t.color, dataType: t.dataType })),
-  )
-  const handleLegendClick = (name: string) =>
-    setSelectedPractice((prev) => (prev === name ? null : name))
+    .filter((a): a is { axis: 'num' | 'time' | 'unit'; value: number; color: string } => a !== null)
 
   async function handleDownload() {
     const entries = await chartsApi.getReportData(todayCob, duration)
@@ -295,7 +213,7 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
             style={{
               background: duration === d.value ? ACCENT : 'rgba(255,255,255,0.06)',
               color: duration === d.value ? 'white' : 'rgba(242,244,246,0.65)',
-              border: 'none',
+              border: duration === d.value ? 'none' : `1px solid ${BORDER}`,
             }}
           >
             {d.label}
@@ -333,19 +251,95 @@ function ChartPanel({ report, practices, practiceMap }: ChartPanelProps) {
         ) : isGridReport ? (
           <GridTable chartData={chartData} practiceNames={practiceNames} />
         ) : (
-          <div className="flex flex-col gap-4">
-            {unitGroups.map((g) => (
-              <ChartSection
-                key={g.unit}
-                unit={g.unit}
-                traces={g.traces}
-                chartData={chartData}
-                selectedPractice={selectedPractice}
-                onLegendClick={handleLegendClick}
-                averages={averages}
+          <ResponsiveContainer width="100%" height={chartHeight}>
+            <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
+              <XAxis
+                dataKey="date"
+                stroke="rgba(255,255,255,0.15)"
+                tick={{ fontSize: 10, fill: 'rgba(238,243,248,0.55)' }}
+                tickLine={false}
+                axisLine={false}
+                interval="preserveStartEnd"
               />
-            ))}
-          </div>
+              {usedAxes.has('num') && (
+                <YAxis
+                  yAxisId="num"
+                  orientation="left"
+                  domain={[0, 'auto']}
+                  stroke="rgba(255,255,255,0.15)"
+                  tick={{ fontSize: 10, fill: 'rgba(238,243,248,0.55)' }}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(v: number) => (numAxisAllDuration ? `${v} min` : String(v))}
+                />
+              )}
+              {usedAxes.has('time') && (
+                <YAxis
+                  yAxisId="time"
+                  orientation="right"
+                  stroke="rgba(255,255,255,0.15)"
+                  tick={{ fontSize: 10, fill: 'rgba(238,243,248,0.55)' }}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={formatMinutesAsHHMM}
+                />
+              )}
+              {usedAxes.has('unit') && (
+                <YAxis yAxisId="unit" hide domain={[0, 1.1]} />
+              )}
+              <Tooltip
+                contentStyle={{ fontSize: 11, borderRadius: 10, background: '#151d27', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#eef3f8' }}
+                labelStyle={{ color: '#eef3f8' }}
+                itemStyle={{ color: '#eef3f8' }}
+              />
+              <Legend
+                verticalAlign="bottom"
+                align="center"
+                wrapperStyle={{ fontSize: 11, paddingTop: 8, cursor: traces.length > 1 ? 'pointer' : 'default', color: '#eef3f8' }}
+                onClick={(data) => {
+                  if (traces.length <= 1) return
+                  const name = data.value as string
+                  setSelectedPractice(prev => prev === name ? null : name)
+                }}
+                formatter={(value) => (
+                  <span style={{ color: selectedPractice && selectedPractice !== value ? 'rgba(238,243,248,0.35)' : '#eef3f8' }}>
+                    {value}
+                  </span>
+                )}
+              />
+              {visibleTraces.map(({ name, type_, color, dataType }) => {
+                const yAxisId = axisKindFor(dataType)
+                const label = traceLabel(type_)
+                if (label === 'Bar') {
+                  return <Bar key={name} yAxisId={yAxisId} dataKey={name} fill={color} fillOpacity={0.35} radius={[2, 2, 0, 0]} maxBarSize={20} />
+                }
+                if (label === 'Dot') {
+                  return (
+                    <Line key={name} yAxisId={yAxisId} type="monotone" dataKey={name} stroke="none" strokeWidth={0}
+                      dot={{ r: 4, fill: color, strokeWidth: 0, fillOpacity: 0.8 }} activeDot={{ r: 5, fill: color }} name={name} />
+                  )
+                }
+                const isSquare = typeof type_ === 'object' && 'Line' in type_ && type_.Line.style === 'Square'
+                return (
+                  <Line key={name} yAxisId={yAxisId} type={isSquare ? 'stepAfter' : 'natural'} dataKey={name}
+                    stroke={color} strokeOpacity={0.85} strokeWidth={2}
+                    dot={{ r: 2.5, fill: color, strokeWidth: 0 }} activeDot={{ r: 4 }} connectNulls name={name} />
+                )
+              })}
+              {averages.map((a, i) => (
+                <ReferenceLine
+                  key={`avg-${i}`}
+                  yAxisId={a.axis}
+                  y={a.value}
+                  stroke={a.color}
+                  strokeDasharray="6 4"
+                  strokeOpacity={0.8}
+                  ifOverflow="extendDomain"
+                />
+              ))}
+            </ComposedChart>
+          </ResponsiveContainer>
         )}
       </div>
     </div>
