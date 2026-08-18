@@ -8,16 +8,16 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-base-100: #1c2530;
-  --color-base-200: #26313d;
-  --color-base-300: #313d4b;
-  --color-base-content: #f2f4f6;
-  --color-primary: #3aa6a0;
-  --color-primary-content: #101a30;
+  --color-base-100: #0e141b;
+  --color-base-200: #151d27;
+  --color-base-300: #1b2531;
+  --color-base-content: #eef3f8;
+  --color-primary: #2dd4bf;
+  --color-primary-content: #04201b;
   --color-secondary: #a8b0bf;
   --color-secondary-content: #101a30;
-  --color-accent: #52b3ac;
-  --color-accent-content: #101a30;
+  --color-accent: #5eead4;
+  --color-accent-content: #04201b;
   --color-neutral: #313d4b;
   --color-neutral-content: #f2f4f6;
   --color-info: #5aa9e6;
