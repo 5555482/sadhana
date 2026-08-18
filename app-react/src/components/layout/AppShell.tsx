@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { TopBar } from './TopBar'
 import { BottomNav } from './BottomNav'
 import { navItems } from './navItems'
-import { AuthBackground } from './AuthBackground'
+import { AppBackground } from './AppBackground'
 import { ToastContainer } from '../ui/Toast'
 import { PageTransition } from './PageTransition'
 import { SettingsModal } from './SettingsModal'
@@ -14,11 +14,7 @@ export function AppShell() {
   const showBottomNav = navItems.some((n) => n.to === location.pathname)
   return (
     <div className="relative">
-      <AuthBackground />
-      <div
-        className="fixed inset-0 -z-10 pointer-events-none"
-        style={{ background: 'rgba(20,28,38,0.15)' }}
-      />
+      <AppBackground />
       <TopBar />
       <main
         className={
