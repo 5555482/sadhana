@@ -83,3 +83,14 @@ input[type=number]::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+/* Native <select> option popups: match the Deep Ink surface instead of the
+   OS default grey. Scoped to the dark theme so light theme is unaffected. */
+[data-theme="dark"] option {
+  background-color: #151d27;
+  color: #eef3f8;
+}
+[data-theme="dark"] option:checked,
+[data-theme="dark"] option:hover {
+  background-color: #1b2531;
+}
