@@ -13,8 +13,8 @@ export const SURFACE_1 = '#0e141b'
 export const SURFACE_2 = '#151d27'
 export const SURFACE_3 = '#1b2531'
 export const SURFACE_GLASS = 'rgba(20,28,38,0.72)'
-export const SURFACE_PANEL = 'rgba(20,28,38,0.72)'     // cards / chart panels
-export const SURFACE_ELEVATED = 'rgba(26,35,47,0.80)'  // practice rows
+export const SURFACE_PANEL = 'rgba(20,28,38,0.55)'     // cards / chart panels (frosted glass over bg3)
+export const SURFACE_ELEVATED = 'rgba(26,35,47,0.58)'  // practice rows (frosted glass over bg3)
 
 export const TEXT = '#eef3f8'
 export const TEXT_MUTED = 'rgba(238,243,248,0.58)'
