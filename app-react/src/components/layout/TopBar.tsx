@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import { useNavigate, useLocation, NavLink, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaChevronLeft } from 'react-icons/fa'
@@ -19,20 +19,6 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
   const location = useLocation()
   const { t } = useTranslation()
   const openSettings = useUiStore((s) => s.openSettings)
-
-  // Auto-hide the header on scroll down, reveal on scroll up.
-  const [hidden, setHidden] = useState(false)
-  const lastY = useRef(0)
-  useEffect(() => {
-    function onScroll() {
-      const y = window.scrollY
-      if (y > lastY.current && y > 80) setHidden(true)
-      else if (y < lastY.current) setHidden(false)
-      lastY.current = y
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   const renderNavItem = ({ to, navKey, exact }: (typeof navItems)[number]) => (
     <NavLink
@@ -63,14 +49,13 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-14 items-center px-4 z-40 gap-3 transition-transform duration-300 ${showBack || showClose ? 'flex' : 'hidden sm:flex'}`}
+      className={`fixed top-0 left-0 right-0 h-14 items-center px-4 z-40 gap-3 ${showBack || showClose ? 'flex' : 'hidden sm:flex'}`}
       style={{
         // Frosted bar so content scrolling underneath stays clean and the
         // nav/logo remain legible over the backdrop.
         background: 'linear-gradient(180deg, rgba(12,16,24,0.62) 0%, rgba(12,16,24,0.18) 100%)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
-        transform: hidden && !showBack && !showClose ? 'translateY(-100%)' : 'translateY(0)',
       }}
     >
       {showClose ? (
