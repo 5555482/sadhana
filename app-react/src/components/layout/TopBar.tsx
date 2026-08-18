@@ -68,7 +68,10 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
       ) : (
         <Link to="/" className="flex items-center gap-2 no-underline">
           <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0) invert(1)' }} alt="Sadhana" />
-          <span className="font-serif text-lg font-semibold whitespace-nowrap" style={{ color: '#ffffff' }}>Sadhana Pro</span>
+          <span className="flex items-baseline gap-1 whitespace-nowrap font-serif leading-none">
+            <span className="text-xl font-medium tracking-wide" style={{ color: '#f2f4f6' }}>Sadhana</span>
+            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: '#3aa6a0' }}>Pro</span>
+          </span>
         </Link>
       )}
 
