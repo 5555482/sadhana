@@ -8,7 +8,7 @@ export type HeaderMenuItem =
   | { label: string; onClick: () => void }
 
 const pill =
-  'h-9 px-3 rounded-full text-sm font-medium flex items-center gap-1.5 transition-colors no-underline backdrop-blur-md'
+  'h-9 px-3 rounded-full text-[12.6px] font-medium flex items-center gap-1.5 transition-colors no-underline backdrop-blur-md'
 const glassPill = {
   background: 'rgba(255,255,255,0.12)',
   border: '1px solid rgba(255,255,255,0.18)',

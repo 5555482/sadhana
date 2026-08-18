@@ -27,7 +27,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
       end={exact}
       onClick={navKey === 'settings' ? (e) => { e.preventDefault(); openSettings() } : undefined}
       aria-label={t(`nav.${navKey}`)}
-      className={`h-9 inline-flex items-center px-3 rounded-full text-sm font-medium transition-colors ${navKey === 'charts' ? 'lg:hidden' : ''}`}
+      className={`h-9 inline-flex items-center px-3 rounded-full text-[12.6px] font-medium transition-colors ${navKey === 'charts' ? 'lg:hidden' : ''}`}
     >
       {({ isActive }) => (
         <span

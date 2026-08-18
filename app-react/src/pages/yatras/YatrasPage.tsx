@@ -8,14 +8,14 @@ import { yatrasApi } from '../../api/yatras'
 import { useUiStore } from '../../store/uiStore'
 import { Spinner } from '../../components/ui/Spinner'
 import type { UserYatraDataRow, ColourZonesConfig, ZoneColour } from '../../types/api'
-import { ACCENT, ACCENT_GRADIENT } from '../../theme/tokens'
+import { ACCENT, ACCENT_GRADIENT, SURFACE_PANEL, BORDER } from '../../theme/tokens'
 
 const glass: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.06)',
+  background: SURFACE_PANEL,
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.10)',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+  border: `1px solid ${BORDER}`,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
 }
 
 const SELECTED_YATRA_KEY = 'selected_yatra'
