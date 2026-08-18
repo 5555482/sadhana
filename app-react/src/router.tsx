@@ -1,8 +1,12 @@
 import { lazy } from 'react'
 import { createBrowserRouter, isRouteErrorResponse, useRouteError } from 'react-router-dom'
-import { AppShell } from './components/layout/AppShell'
 import { ProtectedRoute } from './components/layout/ProtectedRoute'
 import { GuestRoute } from './components/layout/GuestRoute'
+
+// AppShell is the authenticated layout; lazy-load it so the guest/login
+// bundle doesn't pull in the whole nav subtree (TopBar/BottomNav/
+// SettingsModal/HeaderMenu) and framer-motion via PageTransition.
+const AppShell = lazy(() => import('./components/layout/AppShell').then((m) => ({ default: m.AppShell })))
 
 function RootError() {
   const error = useRouteError()
