@@ -29,7 +29,7 @@ const inputStyle: React.CSSProperties = {
 
 function onFocus(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = ACCENT
-  e.target.style.boxShadow = '0 0 0 3px rgba(58,166,160,0.15)'
+  e.target.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.15)'
 }
 function onBlurInput(e: React.FocusEvent<HTMLInputElement>) {
   e.target.style.borderColor = BORDER
@@ -48,14 +48,14 @@ export function EditUserPage() {
   })
 
   return (
-    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
+    <div className="px-4 py-6 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-4 pb-24 sm:pb-8">
       {/* Header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.30)',
           }}
         >
           <LuUser className="w-5 h-5 text-white" />
@@ -117,11 +117,11 @@ export function EditUserPage() {
         className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-opacity"
         style={{
           background: success
-            ? 'rgba(58,166,160,0.12)'
+            ? 'rgba(245,158,11,0.12)'
             : ACCENT_GRADIENT,
           color: success ? ACCENT : 'white',
-          border: success ? '1px solid rgba(58,166,160,0.30)' : 'none',
-          boxShadow: success ? 'none' : '0 4px 20px rgba(58,166,160,0.35)',
+          border: success ? '1px solid rgba(245,158,11,0.30)' : 'none',
+          boxShadow: success ? 'none' : '0 4px 20px rgba(245,158,11,0.35)',
           opacity: mutation.isPending || !name.trim() ? 0.55 : 1,
           cursor: mutation.isPending || !name.trim() ? 'not-allowed' : 'pointer',
         }}

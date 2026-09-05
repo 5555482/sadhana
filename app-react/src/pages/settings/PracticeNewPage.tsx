@@ -17,14 +17,14 @@ export function PracticeNewPage() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   return (
-    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4">
+    <div className="px-4 py-6 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-4">
       {/* Page header with close button */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={cardStyle}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.30)',
           }}
         >
           <FaSeedling className="w-6 h-6 text-white" />

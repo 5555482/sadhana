@@ -38,7 +38,7 @@ export function YatraJoinPage() {
 
   if (isError || !data) {
     return (
-      <div className="px-4 py-6 max-w-lg mx-auto">
+      <div className="px-4 py-6 max-w-lg sm:max-w-2xl mx-auto">
         <div className="rounded-2xl px-5 py-12 flex flex-col items-center gap-4 text-center" style={glass}>
           <p className="text-sm font-semibold text-base-content/70">{t('yatras.notFound')}</p>
           <button
@@ -56,14 +56,14 @@ export function YatraJoinPage() {
   const initial = data.name.charAt(0).toUpperCase()
 
   return (
-    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24">
+    <div className="px-4 py-6 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-4 pb-24 sm:pb-8">
       {/* Header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(58,166,160,0.28)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.28)',
           }}
         >
           <FaUsers className="w-5 h-5 text-white" />
@@ -88,7 +88,7 @@ export function YatraJoinPage() {
           className="w-20 h-20 rounded-3xl flex items-center justify-center text-white text-3xl font-bold"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 8px 32px rgba(58,166,160,0.30)',
+            boxShadow: '0 8px 32px rgba(245,158,11,0.30)',
           }}
         >
           {initial}
@@ -115,7 +115,7 @@ export function YatraJoinPage() {
           background: ACCENT_GRADIENT,
           color: 'white',
           border: 'none',
-          boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+          boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
           opacity: join.isPending ? 0.7 : 1,
           cursor: join.isPending ? 'default' : 'pointer',
         }}

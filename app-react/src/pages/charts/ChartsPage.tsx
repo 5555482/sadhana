@@ -446,7 +446,7 @@ function ReportPicker({
               onClick={() => { onSelect(opt.id); setOpen(false) }}
               className="w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors"
               style={{
-                background: selectedId === opt.id ? 'rgba(58,166,160,0.06)' : 'transparent',
+                background: selectedId === opt.id ? 'rgba(245,158,11,0.06)' : 'transparent',
                 color: selectedId === opt.id ? ACCENT : TEXT,
                 border: 'none',
                 borderTop: i === 0 ? 'none' : `1px solid ${BORDER}`,
@@ -558,7 +558,7 @@ function ReportCard({
       <div className="px-4 py-3 flex items-center gap-3">
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: isGridType ? 'rgba(99,102,241,0.10)' : 'rgba(58,166,160,0.10)' }}
+          style={{ background: isGridType ? 'rgba(99,102,241,0.10)' : 'rgba(245,158,11,0.10)' }}
         >
           {isGridType
             ? <FaTh className="w-3.5 h-3.5" style={{ color: '#6366f1' }} />
@@ -755,12 +755,12 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
 
   return (
     <>
-      <div className={embedded ? 'flex flex-col gap-3' : 'px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24'}>
+      <div className={embedded ? 'flex flex-col gap-3' : 'px-4 py-6 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-3 pb-24 sm:pb-8'}>
         {/* Header — z-index needed so ReportPicker dropdown appears above the chart panel */}
         <div className="rounded-2xl px-5 py-4 flex items-center gap-3" style={{ ...glass, position: 'relative', zIndex: 100 }}>
           <div
             className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(58,166,160,0.30)' }}
+            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(245,158,11,0.30)' }}
           >
             <FaChartLine className="w-4 h-4 text-white" />
           </div>
@@ -773,7 +773,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           <button
             onClick={copyShareLink}
             className="h-9 px-3 flex items-center gap-1.5 rounded-xl text-xs font-semibold flex-shrink-0"
-            style={{ background: shareCopied ? 'rgba(58,166,160,0.12)' : 'rgba(255,255,255,0.06)', color: shareCopied ? ACCENT : 'rgba(242,244,246,0.65)', border: 'none' }}
+            style={{ background: shareCopied ? 'rgba(245,158,11,0.12)' : 'rgba(255,255,255,0.06)', color: shareCopied ? ACCENT : 'rgba(242,244,246,0.65)', border: 'none' }}
           >
             {shareCopied ? <LuCheck className="w-3.5 h-3.5" /> : <LuCopy className="w-3.5 h-3.5" />}
             {shareCopied ? t('charts.copied') : t('charts.share')}
@@ -833,7 +833,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(58,166,160,0.08)' }}
+              style={{ background: 'rgba(245,158,11,0.08)' }}
             >
               <LuChartLine className="w-6 h-6" style={{ color: ACCENT }} />
             </div>
@@ -848,7 +848,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
                 background: ACCENT_GRADIENT,
                 color: 'white',
                 textDecoration: 'none',
-                boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+                boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
               }}
             >
               {t('charts.create')}
@@ -862,7 +862,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           to="/charts/new"
           aria-label="New report"
           className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center"
-          style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(58,166,160,0.45)' }}
+          style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 24px rgba(245,158,11,0.45)' }}
         >
           <FaPlus className="w-5 h-5 text-white" />
         </Link>

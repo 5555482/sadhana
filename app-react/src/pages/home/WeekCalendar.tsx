@@ -147,7 +147,7 @@ export function WeekCalendar({ date, onDateChange }: WeekCalendarProps) {
               onClick={() => onDateChange(new Date())}
               aria-label="Go to today"
               className="text-xs font-semibold px-2 py-0.5 rounded-full focus:outline-none"
-              style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)', border: 'none', cursor: 'pointer' }}
+              style={{ color: ACCENT, background: 'rgba(245,158,11,0.08)', border: 'none', cursor: 'pointer' }}
             >
               {t('home.today')}
             </button>

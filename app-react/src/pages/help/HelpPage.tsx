@@ -50,14 +50,14 @@ export function HelpPage() {
   }))
 
   return (
-    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
+    <div className="px-4 py-6 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-3 pb-24 sm:pb-8">
       {/* Header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.30)',
           }}
         >
           <LuCircleHelp className="w-5 h-5 text-white" />
@@ -86,9 +86,9 @@ export function HelpPage() {
       >
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(58,166,160,0.10)' }}
+          style={{ background: 'rgba(245,158,11,0.10)' }}
         >
-          <LuMessageSquare className="w-4 h-4" style={{ color: '#3aa6a0' }} />
+          <LuMessageSquare className="w-4 h-4" style={{ color: '#f59e0b' }} />
         </div>
         <span className="flex-1 text-sm font-semibold text-base-content">{t('help.contactSupport')}</span>
       </Link>

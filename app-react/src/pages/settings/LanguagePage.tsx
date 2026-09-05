@@ -22,14 +22,14 @@ export function LanguagePage() {
   const current = i18n.resolvedLanguage?.slice(0, 2) ?? 'en'
 
   return (
-    <div className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-3 pb-24">
+    <div className="px-4 py-6 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-3 pb-24 sm:pb-8">
       {/* Header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.30)',
           }}
         >
           <LuGlobe className="w-5 h-5 text-white" />
@@ -58,7 +58,7 @@ export function LanguagePage() {
               onClick={() => i18n.changeLanguage(code)}
               className="w-full flex items-center gap-4 px-4 py-4 text-left transition-colors"
               style={{
-                background: active ? 'rgba(58,166,160,0.06)' : 'transparent',
+                background: active ? 'rgba(245,158,11,0.06)' : 'transparent',
                 border: 'none',
                 borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
               }}

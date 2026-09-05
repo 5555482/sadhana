@@ -267,7 +267,7 @@ export function YatraPracticeEditPage() {
 
       <form
         onSubmit={e => { e.preventDefault(); saveMutation.mutate() }}
-        className="px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3"
+        className="px-4 py-4 pb-28 sm:pb-8 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-3"
       >
 
         {/* Name */}
@@ -467,7 +467,7 @@ export function YatraPracticeEditPage() {
             background: ACCENT_GRADIENT,
             color: 'white',
             border: 'none',
-            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+            boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
             opacity: saveMutation.isPending ? 0.7 : 1,
           }}
         >

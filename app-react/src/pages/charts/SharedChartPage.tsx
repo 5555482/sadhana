@@ -40,14 +40,14 @@ export function SharedChartPage() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-8 max-w-lg mx-auto flex flex-col gap-4">
+    <div className="min-h-screen px-4 py-8 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-4">
       {/* Header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.30)',
           }}
         >
           <FaChartLine className="w-5 h-5 text-white" />
@@ -73,7 +73,7 @@ export function SharedChartPage() {
             <div key={r.id} className="rounded-2xl px-4 py-4 flex items-center gap-3" style={glass}>
               <div
                 className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: gridDef ? 'rgba(99,102,241,0.10)' : 'rgba(58,166,160,0.10)' }}
+                style={{ background: gridDef ? 'rgba(99,102,241,0.10)' : 'rgba(245,158,11,0.10)' }}
               >
                 {gridDef
                   ? <FaTh className="w-4 h-4" style={{ color: '#6366f1' }} />

@@ -59,7 +59,7 @@ export function PwdResetRequestPage() {
             Check your inbox.
           </h1>
           <p className="text-sm text-base-content/60">{t('auth.resetSent')}</p>
-          <Link to="/login" className="text-sm font-medium hover:underline" style={{ color: '#3aa6a0' }}>
+          <Link to="/login" className="text-sm font-medium hover:underline" style={{ color: '#f59e0b' }}>
             {t('auth.signIn')}
           </Link>
         </div>
@@ -92,7 +92,7 @@ export function PwdResetRequestPage() {
             placeholder="you@example.com"
             className="w-full h-12 px-4 rounded-xl text-base-content placeholder:text-base-content/45 text-sm focus:outline-none transition-colors"
             style={inputStyle}
-            onFocus={e => (e.target.style.borderColor = 'rgba(58,166,160,0.5)')}
+            onFocus={e => (e.target.style.borderColor = 'rgba(245,158,11,0.5)')}
             onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.10)')}
           />
         </div>
@@ -104,9 +104,9 @@ export function PwdResetRequestPage() {
           disabled={loading || !email}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
+            background: 'linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)',
             color: '#101a30',
-            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+            boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
             opacity: loading || !email ? 0.6 : 1,
             cursor: loading || !email ? 'not-allowed' : 'pointer',
           }}
@@ -118,7 +118,7 @@ export function PwdResetRequestPage() {
 
       <p className="text-center text-xs text-base-content/70">
         Remember it?{' '}
-        <Link to="/login" className="font-medium hover:underline" style={{ color: '#3aa6a0' }}>
+        <Link to="/login" className="font-medium hover:underline" style={{ color: '#f59e0b' }}>
           {t('auth.signIn')}
         </Link>
       </p>

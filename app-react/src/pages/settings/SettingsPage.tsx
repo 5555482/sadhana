@@ -36,7 +36,7 @@ function MenuItem({
         textDecoration: 'none',
       }}
     >
-      <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3aa6a0' }} />
+      <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#f59e0b' }} />
       <span className="flex-1 text-sm font-medium text-base-content">{label}</span>
       <FaChevronRight className="w-3 h-3 flex-shrink-0" style={{ color: '#d1d5db' }} />
     </Link>
@@ -78,14 +78,14 @@ export function SettingsPage() {
 
   return (
     <>
-    <div className="px-4 py-4 pt-[4.5rem] max-w-lg mx-auto flex flex-col gap-4 pb-24">
+    <div className="px-4 py-4 pt-16 sm:pt-[4.5rem] max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-4 pb-24 sm:pb-8">
       {/* Page header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 16px rgba(58,166,160,0.30)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.30)',
           }}
         >
           <FaCog className="w-5 h-5 text-white" />

@@ -223,7 +223,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
 
   return (
     <>
-      <div className={embedded ? 'flex flex-col gap-3' : 'px-4 py-4 pb-28 max-w-lg mx-auto flex flex-col gap-3'}>
+      <div className={embedded ? 'flex flex-col gap-3' : 'px-4 py-4 pb-28 sm:pb-8 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-3'}>
 
         {/* Yatra selector header */}
         <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
@@ -231,7 +231,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
               background: ACCENT_GRADIENT,
-              boxShadow: '0 4px 12px rgba(58,166,160,0.28)',
+              boxShadow: '0 4px 12px rgba(245,158,11,0.28)',
             }}
           >
             <FaUsers className="w-4 h-4 text-white" />
@@ -256,7 +256,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               to={`/yatra/${selectedYatra.id}/settings`}
               aria-label="Yatra settings"
               className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-              style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)' }}
+              style={{ color: ACCENT, background: 'rgba(245,158,11,0.08)' }}
             >
               <FaCog className="w-3.5 h-3.5" />
             </Link>
@@ -267,7 +267,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             onClick={() => qc.invalidateQueries({ queryKey: ['yatra-data', selectedYatra?.id, dateStr] })}
             aria-label={t('yatras.refresh')}
             className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-            style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)', border: 'none', cursor: 'pointer' }}
+            style={{ color: ACCENT, background: 'rgba(245,158,11,0.08)', border: 'none', cursor: 'pointer' }}
           >
             <LuRefreshCw className={`w-3.5 h-3.5 ${dataQuery.isFetching ? 'animate-spin' : ''}`} />
           </button>
@@ -277,7 +277,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             onClick={handleCreate}
             aria-label="Create yatra"
             className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-            style={{ color: ACCENT, background: 'rgba(58,166,160,0.08)', border: 'none' }}
+            style={{ color: ACCENT, background: 'rgba(245,158,11,0.08)', border: 'none' }}
           >
             <FaPlus className="w-3.5 h-3.5" />
           </button>
@@ -293,7 +293,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
           <div className="flex flex-col items-center py-16 gap-4">
             <div
               className="w-16 h-16 rounded-3xl flex items-center justify-center"
-              style={{ background: 'rgba(58,166,160,0.08)' }}
+              style={{ background: 'rgba(245,158,11,0.08)' }}
             >
               <FaUsers className="w-7 h-7" style={{ color: ACCENT }} />
             </div>
@@ -307,7 +307,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               style={{
                 background: ACCENT_GRADIENT,
                 color: 'white',
-                boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+                boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
               }}
             >
               {t('yatras.createButton')}
@@ -516,7 +516,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
           className="fixed sm:bottom-6 right-4 z-30 w-14 h-14 rounded-full hidden sm:flex items-center justify-center border-none cursor-pointer"
           style={{
             background: ACCENT_GRADIENT,
-            boxShadow: '0 4px 24px rgba(58,166,160,0.45)',
+            boxShadow: '0 4px 24px rgba(245,158,11,0.45)',
           }}
         >
           <FaPlus className="w-5 h-5 text-white" />
@@ -550,7 +550,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(58,166,160,0.30)' }}
+                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(245,158,11,0.30)' }}
               >
                 <FaUsers className="w-4 h-4 text-white" />
               </div>
@@ -581,7 +581,7 @@ export function YatrasPage({ embedded = false }: { embedded?: boolean } = {}) {
               className="w-full rounded-2xl px-4 h-12 text-sm font-semibold text-base-content outline-none"
               style={{
                 background: 'rgba(255,255,255,0.06)',
-                border: '1.5px solid rgba(58,166,160,0.30)',
+                border: '1.5px solid rgba(245,158,11,0.30)',
                 color: '#f2f4f6',
               }}
             />

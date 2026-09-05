@@ -19,9 +19,9 @@ export function NotFoundPage() {
       <div className="w-full max-w-sm rounded-3xl px-8 py-12 flex flex-col items-center gap-5 text-center" style={glass}>
         <div
           className="w-16 h-16 rounded-2xl flex items-center justify-center"
-          style={{ background: 'rgba(58,166,160,0.10)' }}
+          style={{ background: 'rgba(245,158,11,0.10)' }}
         >
-          <LuCompass className="w-8 h-8" style={{ color: '#3aa6a0' }} />
+          <LuCompass className="w-8 h-8" style={{ color: '#f59e0b' }} />
         </div>
         <div>
           <p className="text-5xl font-bold text-gray-200">404</p>
@@ -34,7 +34,7 @@ export function NotFoundPage() {
           style={{
             background: ACCENT_GRADIENT,
             color: 'white',
-            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+            boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
           }}
         >
           {t('notFound.goHome')}

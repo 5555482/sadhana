@@ -24,7 +24,7 @@ const TYPE_META: Record<PracticeDataType, {
   bg: string
   tKey: string
 }> = {
-  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(58,166,160,0.10)',   tKey: 'practice.typeBool'     },
+  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(245,158,11,0.10)',   tKey: 'practice.typeBool'     },
   Int:      { icon: LuHash,        color: '#818cf8', bg: 'rgba(129,140,248,0.16)',  tKey: 'practice.typeInt'      },
   Duration: { icon: LuTimer,       color: '#fbbf24', bg: 'rgba(251,191,36,0.16)',  tKey: 'practice.typeDuration' },
   Time:     { icon: LuClock,       color: '#60a5fa', bg: 'rgba(96,165,250,0.16)',  tKey: 'practice.typeTime'     },
@@ -130,12 +130,12 @@ export function YatraSettingsPage() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="px-4 py-6 pb-28 max-w-lg mx-auto flex flex-col gap-3">
+    <div className="px-4 py-6 pb-28 sm:pb-8 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-3">
         {/* Page header */}
         <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
           <div
             className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(58,166,160,0.30)' }}
+            style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 16px rgba(245,158,11,0.30)' }}
           >
             <FaCog className="w-5 h-5 text-white" />
           </div>
@@ -245,11 +245,11 @@ export function YatraSettingsPage() {
             className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
             style={{
               background: saved
-                ? 'rgba(58,166,160,0.12)'
+                ? 'rgba(245,158,11,0.12)'
                 : ACCENT_GRADIENT,
               color: saved ? ACCENT : 'white',
-              border: saved ? `1.5px solid rgba(58,166,160,0.30)` : 'none',
-              boxShadow: saved ? 'none' : '0 4px 20px rgba(58,166,160,0.35)',
+              border: saved ? `1.5px solid rgba(245,158,11,0.30)` : 'none',
+              boxShadow: saved ? 'none' : '0 4px 20px rgba(245,158,11,0.35)',
               opacity: saveMutation.isPending ? 0.7 : 1,
               transition: 'all 0.25s',
             }}
@@ -269,9 +269,9 @@ export function YatraSettingsPage() {
           >
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: 'rgba(58,166,160,0.10)' }}
+              style={{ background: 'rgba(245,158,11,0.10)' }}
             >
-              <FaCog className="w-4 h-4" style={{ color: '#3aa6a0' }} />
+              <FaCog className="w-4 h-4" style={{ color: '#f59e0b' }} />
             </div>
             <span className="flex-1 text-sm font-semibold text-base-content">{t('yatras.adminSettings')}</span>
             <span className="text-xs" style={{ color: '#d1d5db' }}>›</span>
@@ -287,7 +287,7 @@ export function YatraSettingsPage() {
           >
             <div
               className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: 'rgba(58,166,160,0.10)' }}
+              style={{ background: 'rgba(245,158,11,0.10)' }}
             >
               <FaPlus className="w-3.5 h-3.5" style={{ color: ACCENT }} />
             </div>
@@ -345,7 +345,7 @@ export function YatraSettingsPage() {
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(58,166,160,0.28)' }}
+                style={{ background: ACCENT_GRADIENT, boxShadow: '0 4px 12px rgba(245,158,11,0.28)' }}
               >
                 <FaUsers className="w-4.5 h-4.5 text-white" />
               </div>

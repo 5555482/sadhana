@@ -51,14 +51,14 @@ function PasswordField({ id, label, value, onChange, autoComplete }: {
           autoComplete={autoComplete}
           className="w-full h-12 px-4 pr-14 rounded-xl text-base-content text-sm focus:outline-none transition-colors"
           style={inputStyle}
-          onFocus={e => (e.target.style.borderColor = 'rgba(58,166,160,0.5)')}
+          onFocus={e => (e.target.style.borderColor = 'rgba(245,158,11,0.5)')}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.10)')}
         />
         <button
           type="button"
           onClick={() => setShow(v => !v)}
           className="absolute right-4 top-1/2 -translate-y-1/2"
-          style={{ color: '#3aa6a0', background: 'none', border: 'none' }}
+          style={{ color: '#f59e0b', background: 'none', border: 'none' }}
         >
           {show ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
         </button>
@@ -122,9 +122,9 @@ export function PwdResetPage() {
           disabled={loading || !password || !confirmPassword}
           className="w-full h-12 rounded-full text-sm font-semibold flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
+            background: 'linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)',
             color: '#101a30',
-            boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+            boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
             opacity: loading || !password || !confirmPassword ? 0.6 : 1,
             cursor: loading || !password || !confirmPassword ? 'not-allowed' : 'pointer',
           }}

@@ -90,7 +90,7 @@ export function DashboardPanel() {
 
   return (
     <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:items-start lg:max-w-[1400px] lg:mx-auto lg:px-6 lg:py-4">
-      <div className="px-4 py-4 max-w-lg mx-auto w-full lg:max-w-none lg:mx-0 lg:px-0 lg:py-0 lg:col-span-1 flex flex-col gap-3">
+      <div className="px-4 py-4 max-w-lg sm:max-w-2xl mx-auto w-full lg:max-w-none lg:mx-0 lg:px-0 lg:py-0 lg:col-span-1 flex flex-col gap-3">
         {/* Offline banner */}
         {!isOnline && (
           <div
@@ -154,7 +154,7 @@ export function DashboardPanel() {
                   background: ACCENT_GRADIENT,
                   color: 'white',
                   border: 'none',
-                  boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+                  boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
                 }}
               >
                 {seedMutation.isPending && <span className="loading loading-spinner loading-xs" />}

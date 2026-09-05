@@ -47,7 +47,7 @@ const TYPE_META: Record<string, {
   bg: string
   tKey: string
 }> = {
-  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(58,166,160,0.10)',   tKey: 'practice.typeBool'     },
+  Bool:     { icon: LuToggleRight, color: ACCENT,    bg: 'rgba(245,158,11,0.10)',   tKey: 'practice.typeBool'     },
   Int:      { icon: LuHash,        color: '#818cf8', bg: 'rgba(129,140,248,0.16)',  tKey: 'practice.typeInt'      },
   Duration: { icon: LuTimer,       color: '#fbbf24', bg: 'rgba(251,191,36,0.16)',  tKey: 'practice.typeDuration' },
   Time:     { icon: LuClock,       color: '#60a5fa', bg: 'rgba(96,165,250,0.16)',  tKey: 'practice.typeTime'     },
@@ -245,15 +245,15 @@ export function YatraAdminSettingsPage() {
   return (
     <form
       onSubmit={e => { e.preventDefault(); saveMutation.mutate() }}
-      className="px-4 py-6 max-w-lg mx-auto flex flex-col gap-4 pb-24"
+      className="px-4 py-6 max-w-lg sm:max-w-2xl mx-auto flex flex-col gap-4 pb-24 sm:pb-8"
     >
       {/* Header */}
       <div className="rounded-2xl px-5 py-5 flex items-center gap-4" style={glass}>
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)',
-            boxShadow: '0 4px 16px rgba(58,166,160,0.28)',
+            background: 'linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)',
+            boxShadow: '0 4px 16px rgba(245,158,11,0.28)',
           }}
         >
           <FaShieldAlt className="w-5 h-5 text-white" />
@@ -286,7 +286,7 @@ export function YatraAdminSettingsPage() {
             value={yatraName}
             required
             onChange={e => setYatraName(e.target.value)}
-            onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(58,166,160,0.12)` }}
+            onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(245,158,11,0.12)` }}
             onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.10)'; e.target.style.boxShadow = 'none' }}
           />
         </div>
@@ -326,7 +326,7 @@ export function YatraAdminSettingsPage() {
       >
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: copied ? 'rgba(58,166,160,0.10)' : 'rgba(255,255,255,0.06)' }}
+          style={{ background: copied ? 'rgba(245,158,11,0.10)' : 'rgba(255,255,255,0.06)' }}
         >
           <LuLink className="w-4 h-4" style={{ color: copied ? ACCENT : 'rgba(242,244,246,0.65)' }} />
         </div>
@@ -390,7 +390,7 @@ export function YatraAdminSettingsPage() {
             style={{
               background: ACCENT_GRADIENT,
               color: 'white',
-              boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+              boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
             }}
           >
             <FaPlus className="w-3.5 h-3.5" />
@@ -407,7 +407,7 @@ export function YatraAdminSettingsPage() {
             <div key={m.user_id} className="rounded-2xl px-4 py-3.5 flex items-center gap-3" style={glass}>
               <div
                 className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
-                style={{ background: 'linear-gradient(135deg, #52b3ac 0%, #3aa6a0 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)' }}
               >
                 {m.user_name.charAt(0).toUpperCase()}
               </div>
@@ -418,8 +418,8 @@ export function YatraAdminSettingsPage() {
                 disabled={toggleAdmin.isPending}
                 className="text-xs font-semibold px-2 py-0.5 rounded-full transition-colors"
                 style={{
-                  background: m.is_admin ? 'rgba(58,166,160,0.12)' : 'rgba(255,255,255,0.06)',
-                  color: m.is_admin ? '#3aa6a0' : 'rgba(242,244,246,0.7)',
+                  background: m.is_admin ? 'rgba(245,158,11,0.12)' : 'rgba(255,255,255,0.06)',
+                  color: m.is_admin ? '#f59e0b' : 'rgba(242,244,246,0.7)',
                   border: 'none',
                   cursor: 'pointer',
                 }}
@@ -455,7 +455,7 @@ export function YatraAdminSettingsPage() {
         <div className="flex flex-col gap-3">
           {/* Visibility */}
           <div className="rounded-2xl px-4 py-3 flex items-center gap-3" style={glass}>
-            <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#3aa6a0' }} />
+            <LuChartBar className="w-4 h-4 flex-shrink-0" style={{ color: '#f59e0b' }} />
             <span className="flex-1 text-sm font-medium text-base-content">{t('yatras.visibleTo')}</span>
             <select
               value={statsVisibleToAll ? 'Everyone' : 'Admins'}
@@ -494,7 +494,7 @@ export function YatraAdminSettingsPage() {
                     value={stat.label}
                     required
                     onChange={e => updateStat(idx, { label: e.target.value })}
-                    onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(58,166,160,0.12)` }}
+                    onFocus={e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px rgba(245,158,11,0.12)` }}
                     onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.10)'; e.target.style.boxShadow = 'none' }}
                   />
                 </div>
@@ -548,12 +548,12 @@ export function YatraAdminSettingsPage() {
             type="button"
             onClick={addStat}
             className="rounded-2xl px-4 py-3.5 flex items-center gap-3 w-full"
-            style={{ ...glass, borderStyle: 'dashed', borderColor: 'rgba(58,166,160,0.30)', background: 'rgba(58,166,160,0.03)', cursor: 'pointer', border: '1px dashed rgba(58,166,160,0.30)' }}
+            style={{ ...glass, borderStyle: 'dashed', borderColor: 'rgba(245,158,11,0.30)', background: 'rgba(245,158,11,0.03)', cursor: 'pointer', border: '1px dashed rgba(245,158,11,0.30)' }}
           >
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(58,166,160,0.10)' }}>
-              <FaPlus className="w-3 h-3" style={{ color: '#3aa6a0' }} />
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(245,158,11,0.10)' }}>
+              <FaPlus className="w-3 h-3" style={{ color: '#f59e0b' }} />
             </div>
-            <span className="text-sm font-semibold" style={{ color: '#3aa6a0' }}>{t('yatras.addStatistic')}</span>
+            <span className="text-sm font-semibold" style={{ color: '#f59e0b' }}>{t('yatras.addStatistic')}</span>
           </button>
         </div>
       )}
@@ -567,7 +567,7 @@ export function YatraAdminSettingsPage() {
           background: ACCENT_GRADIENT,
           color: 'white',
           border: 'none',
-          boxShadow: '0 4px 20px rgba(58,166,160,0.35)',
+          boxShadow: '0 4px 20px rgba(245,158,11,0.35)',
           opacity: saveMutation.isPending ? 0.7 : 1,
         }}
       >
