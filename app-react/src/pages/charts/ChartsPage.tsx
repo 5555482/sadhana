@@ -764,7 +764,7 @@ export function ChartsPage({ embedded = false }: { embedded?: boolean } = {}) {
           >
             <FaChartLine className="w-4 h-4 text-white" />
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="hidden sm:block min-w-0 flex-1">
             <h1 className="text-base font-bold font-serif text-base-content leading-tight">{t('charts.title')}</h1>
           </div>
           {/* Report picker */}

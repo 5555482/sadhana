@@ -54,7 +54,7 @@ export function HomePage() {
       <DashboardPanel />
       <section
         id="home-yatras"
-        className="px-4 pb-16 pt-10 lg:pt-16 lg:px-6 max-w-lg lg:max-w-[1400px] mx-auto w-full min-h-screen"
+        className="hidden lg:block px-4 pb-16 pt-10 lg:pt-16 lg:px-6 max-w-lg lg:max-w-[1400px] mx-auto w-full min-h-screen"
         style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
       >
         <DeferUntilVisible>

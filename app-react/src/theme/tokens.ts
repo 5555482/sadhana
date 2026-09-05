@@ -2,12 +2,12 @@
 // index.css). Prefer DaisyUI classes (bg-base-100, text-primary, …) where a
 // className is used; use these constants where a raw inline-style value is
 // required.
-export const ACCENT = '#2dd4bf'            // primary interactive teal (fills, active)
-export const ACCENT_LIGHT = '#5eead4'      // luminous teal for lines / highlights / glow
-export const ACCENT_GRADIENT = 'linear-gradient(135deg, #5eead4 0%, #2dd4bf 100%)'
-export const ACCENT_SHADOW = 'rgba(45,212,191,0.40)'
-export const ACCENT_SOFT = 'rgba(94,234,212,0.12)'
-export const ACCENT_RING = 'rgba(94,234,212,0.30)'
+export const ACCENT = '#f59e0b'            // primary interactive amber (fills, active)
+export const ACCENT_LIGHT = '#fcd34d'      // luminous amber for lines / highlights / glow
+export const ACCENT_GRADIENT = 'linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)'
+export const ACCENT_SHADOW = 'rgba(245,158,11,0.40)'
+export const ACCENT_SOFT = 'rgba(252,211,77,0.12)'
+export const ACCENT_RING = 'rgba(252,211,77,0.30)'
 
 export const SURFACE_1 = '#0e141b'
 export const SURFACE_2 = '#151d27'

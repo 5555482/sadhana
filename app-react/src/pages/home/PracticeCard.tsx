@@ -46,8 +46,8 @@ const field: React.CSSProperties = {
 }
 
 function fieldFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-  e.target.style.borderColor = 'rgba(45,212,191,0.55)'
-  e.target.style.background = 'rgba(45,212,191,0.08)'
+  e.target.style.borderColor = 'rgba(245,158,11,0.55)'
+  e.target.style.background = 'rgba(245,158,11,0.08)'
 }
 function fieldBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
   e.target.style.borderColor = 'rgba(255,255,255,0.10)'
@@ -205,7 +205,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
         boxShadow: errorFlash
           ? '0 2px 12px rgba(225,29,72,0.10)'
           : flash
-          ? '0 2px 12px rgba(45,212,191,0.16)'
+          ? '0 2px 12px rgba(245,158,11,0.16)'
           : '0 2px 12px rgba(0,0,0,0.20)',
       }}
     >
@@ -236,7 +236,7 @@ export const PracticeCard = memo(function PracticeCard({ practice, date, current
               className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
               style={{
                 background: localBool && practice.data_type === 'Bool'
-                  ? 'rgba(58,166,160,0.18)' : meta.bg,
+                  ? 'rgba(245,158,11,0.18)' : meta.bg,
               }}
             >
               <TypeIcon className="w-4 h-4" style={{ color: meta.color }} />

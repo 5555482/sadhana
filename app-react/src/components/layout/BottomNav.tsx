@@ -48,8 +48,6 @@ export function BottomNav() {
   const navigate = useNavigate()
   const logout = useAuthStore((s) => s.logout)
   const requestYatraCreate = useUiStore((s) => s.requestYatraCreate)
-  const openSettings = useUiStore((s) => s.openSettings)
-
   // Center button is context-aware per route:
   //   /charts   → new report
   //   /settings → logout
@@ -116,7 +114,7 @@ export function BottomNav() {
       <div className="flex-1 flex justify-center items-start">{center}</div>
 
       <Tab {...yatras} />
-      <Tab {...settings} onClick={openSettings} />
+      <Tab {...settings} />
     </nav>
   )
 }

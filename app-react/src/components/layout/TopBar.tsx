@@ -6,7 +6,7 @@ import { LuX } from 'react-icons/lu'
 import { navItems } from './navItems'
 import { HomeHeaderActions } from './HomeHeaderActions'
 import { useUiStore } from '../../store/uiStore'
-import { ACCENT_LIGHT, ACCENT_RING, TEXT, BORDER } from '../../theme/tokens'
+import { ACCENT_RING, TEXT, BORDER } from '../../theme/tokens'
 
 interface TopBarProps {
   title?: string
@@ -36,7 +36,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
             color: isActive ? '#ffffff' : 'rgba(255,255,255,0.72)',
             fontWeight: isActive ? 400 : 300,
             border: isActive ? `1px solid ${ACCENT_RING}` : '1px solid transparent',
-            background: isActive ? 'rgba(94,234,212,0.08)' : 'transparent',
+            background: isActive ? 'rgba(252,211,77,0.08)' : 'transparent',
           }}
         >
           {t(`nav.${navKey}`)}
@@ -71,10 +71,7 @@ export const TopBar = React.memo(function TopBar({ title, showBack, showClose, r
       ) : (
         <Link to="/" className="flex items-center gap-2 no-underline">
           <img src="/logo.png" className="h-[35px] w-[35px] object-contain" style={{ filter: 'brightness(0) invert(1)' }} alt="Sadhana" />
-          <span className="flex items-baseline gap-1 whitespace-nowrap font-serif leading-none">
-            <span className="text-xl font-medium tracking-wide" style={{ color: TEXT }}>Sadhana</span>
-            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: ACCENT_LIGHT }}>Pro</span>
-          </span>
+          <span style={{ fontFamily: "'Allura', cursive", fontSize: '1.9rem', fontWeight: 400, color: TEXT, lineHeight: 1, letterSpacing: '0.03em', marginTop: '4px' }}>Sadhana</span>
         </Link>
       )}
 
